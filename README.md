@@ -2,8 +2,10 @@
 
 Concept mockups for nightmareonthecrow.com (haunted trail, 6470 Harff Road, Greenfield MN).
 
+**Live demo:** https://iimacgyverii.github.io/nightmareonthecrow/ (GitHub Pages, deploys automatically from `main`).
+
 ## How to view
-Open `index.html` in any browser. It is the launcher/demo page: a gallery of all ten concepts with live, scaled previews of each actual page (same pattern as the CrowRiverSuspension launcher), a one-line "Try:" hint per concept, and an at-a-glance table.
+Open `index.html` in any browser, or use the live demo link above. It is the launcher/demo page: a gallery of all ten concepts with live, scaled previews of each actual page (same pattern as the CrowRiverSuspension launcher), a one-line "Try:" hint per concept, and an at-a-glance table.
 Every page is a single self-contained HTML file (inline CSS/JS, Google Fonts only), so nothing needs a server. It also deploys as-is to Vercel, Netlify or GitHub Pages if you want a shareable URL.
 
 ## Files
