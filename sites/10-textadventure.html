@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nightmare on the Crow — Harff Road: A Text Adventure</title>
+<meta name="description" content="Nightmare on the Crow is a neighbor-built haunted trail at 6470 Harff Road, Greenfield, MN. Oct 9, 10, 16, 17 · 7:30–10 PM · $20, or $15 with a food-shelf or winter-clothing donation. Play the text adventure or skip to the facts.">
+<meta name="theme-color" content="#050403">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=VT323&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CONCEPT #10 — HARFF ROAD: A TEXT ADVENTURE
+   Phosphor-amber CRT terminal hero + a readable "boring part".
+   ============================================================ */
+:root{
+  --bg:#050403;
+  --bg-2:#0b0906;
+  --amber:#ffb000;
+  --amber-dim:#a97400;
+  --amber-glow:rgba(255,176,0,.45);
+  --amber-soft:rgba(255,176,0,.10);
+  --green:#7fd67a;         /* system messages */
+  --green-dim:#52a44e;
+  --red:#ff5a3c;           /* fear: maximum */
+  --ink:#eadfc6;           /* body text on info page */
+  --muted:#8f8467;
+  --line:rgba(255,176,0,.22);
+  --term-font:"VT323","IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --info-font:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--info-font);font-size:15px;line-height:1.6;
+  overflow-x:hidden;
+}
+a{color:var(--amber)}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{
+  outline:2px solid var(--amber);outline-offset:3px;
+}
+.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- concept badge ---------- */
+.concept-badge{
+  position:fixed;top:8px;right:8px;z-index:90;
+  font:600 10px/1 var(--info-font);letter-spacing:.08em;text-transform:uppercase;
+  color:#000;background:var(--amber);padding:7px 9px;border-radius:3px;
+  box-shadow:0 0 12px var(--amber-glow);pointer-events:none;
+}
+
+/* ============================================================
+   TERMINAL (hero)
+   ============================================================ */
+.terminal-wrap{
+  min-height:100vh;min-height:100svh;
+  padding:12px;display:flex;align-items:stretch;justify-content:center;
+  background:
+    radial-gradient(ellipse at 50% 120%,rgba(255,176,0,.08),transparent 60%),
+    var(--bg);
+}
+.crt{
+  position:relative;width:100%;max-width:1120px;
+  height:calc(100vh - 24px);height:calc(100svh - 24px);
+  display:flex;flex-direction:column;
+  background:#070503;
+  border-radius:22px / 26px;
+  box-shadow:
+    0 0 0 4px #17130d,
+    0 0 0 6px #2a2216,
+    0 0 70px rgba(255,176,0,.10),
+    inset 0 0 90px rgba(0,0,0,.85);
+  overflow:hidden;
+  font-family:var(--term-font);font-size:21px;line-height:1.25;color:var(--amber);
+  text-shadow:0 0 6px var(--amber-glow);
+}
+/* scanlines */
+.crt::before{
+  content:"";position:absolute;inset:0;z-index:5;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.30) 0 1px,transparent 1px 3px);
+}
+/* curvature vignette + glass */
+.crt::after{
+  content:"";position:absolute;inset:0;z-index:6;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 50% 50%,transparent 58%,rgba(0,0,0,.62) 100%),
+    linear-gradient(180deg,rgba(255,255,255,.035),transparent 12%,transparent 88%,rgba(255,255,255,.02));
+}
+/* slow rolling band */
+.crt .roll{
+  position:absolute;left:0;right:0;height:120px;z-index:4;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(255,176,0,.05),transparent);
+  animation:roll 9s linear infinite;
+}
+@keyframes roll{from{top:-140px}to{top:110%}}
+@media (prefers-reduced-motion:reduce){.crt .roll{display:none}}
+
+/* header */
+.t-head{
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  padding:16px 22px 10px;border-bottom:1px dashed var(--line);
+}
+.t-head pre{
+  margin:0;font:inherit;font-size:15px;line-height:1.05;color:var(--amber-dim);
+  text-shadow:0 0 4px rgba(255,176,0,.25);white-space:pre;
+}
+.t-title{flex:1;min-width:200px}
+.t-title h1{margin:0;font:inherit;font-size:30px;letter-spacing:.06em;color:var(--amber)}
+.t-title p{margin:2px 0 0;color:var(--green);font-size:18px;text-shadow:none}
+.t-cta{
+  font:inherit;font-size:20px;letter-spacing:.06em;text-decoration:none;
+  color:#000;background:var(--amber);padding:6px 14px;border-radius:3px;
+  box-shadow:0 0 14px var(--amber-glow);text-shadow:none;white-space:nowrap;
+}
+.t-cta:hover{background:#ffc63d}
+
+/* status bar */
+.t-status{
+  display:flex;flex-wrap:wrap;gap:4px 18px;align-items:center;
+  padding:8px 22px;font-size:18px;color:var(--green);text-shadow:0 0 5px rgba(127,214,122,.35);
+  background:rgba(127,214,122,.04);border-bottom:1px dashed var(--line);
+}
+.t-status .k{color:var(--green-dim)}
+.t-status .fear{display:inline-flex;align-items:center;gap:8px}
+.meter{display:inline-flex;gap:2px;vertical-align:middle}
+.meter i{display:block;width:9px;height:14px;background:rgba(127,214,122,.15);border:1px solid rgba(127,214,122,.25)}
+.meter i.on{background:var(--amber);border-color:var(--amber);box-shadow:0 0 6px var(--amber-glow)}
+.meter.hot i.on{background:var(--red);border-color:var(--red);box-shadow:0 0 8px rgba(255,90,60,.6)}
+.meter.hot{animation:pulse .9s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.55}}
+@media (prefers-reduced-motion:reduce){.meter.hot{animation:none}}
+.t-status .hint{margin-left:auto;color:var(--green-dim);font-size:16px}
+.t-status .hint[hidden]{display:none}
+
+/* output */
+.t-out{
+  flex:1;overflow-y:auto;overflow-x:hidden;padding:14px 22px 10px;
+  scrollbar-width:thin;scrollbar-color:var(--amber-dim) transparent;
+  overscroll-behavior:contain;cursor:text;
+}
+.t-out .line{margin:0 0 .35em;white-space:pre-wrap;word-wrap:break-word;max-width:78ch}
+.t-out .sys{color:var(--green);text-shadow:0 0 5px rgba(127,214,122,.35)}
+.t-out .dim{color:var(--green-dim);text-shadow:none}
+.t-out .you{color:var(--amber-dim);text-shadow:none}
+.t-out .loc{color:var(--amber);letter-spacing:.08em;margin-top:.6em}
+.t-out .loc::before{content:"— "}
+.t-out .loc::after{content:" —"}
+.t-out .em{color:#fff2c7;text-shadow:0 0 8px var(--amber-glow)}
+.t-out .tlink{color:var(--amber);text-decoration:underline;text-underline-offset:3px}
+.t-out .tlink:hover{background:var(--amber);color:#000;text-shadow:none}
+.t-out .blank{height:.6em}
+
+/* command line with block cursor */
+.t-cmd{
+  position:relative;display:flex;align-items:center;gap:8px;
+  padding:6px 22px;border-top:1px dashed var(--line);cursor:text;
+}
+.t-cmd .prompt{color:var(--amber)}
+.t-cmd .mirror{white-space:pre;color:var(--amber);min-height:1.25em}
+.t-cmd .cursor{
+  display:inline-block;width:.6em;height:1.1em;background:var(--amber);
+  box-shadow:0 0 8px var(--amber-glow);vertical-align:-2px;
+  animation:blink 1.05s steps(1) infinite;
+}
+@keyframes blink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.t-cmd .cursor{animation:none}}
+.t-cmd input{
+  position:absolute;inset:0;width:100%;height:100%;opacity:0;
+  font:inherit;border:0;background:transparent;color:transparent;padding:0 22px;
+}
+.t-cmd input:focus-visible{outline:none}
+.t-cmd:focus-within{background:var(--amber-soft)}
+
+/* choices */
+.t-choices{display:flex;flex-wrap:wrap;gap:8px;padding:8px 22px 10px}
+.t-choices button{
+  font:inherit;font-size:19px;color:var(--amber);background:transparent;
+  border:1px solid var(--amber-dim);border-radius:3px;padding:3px 10px;cursor:pointer;
+  text-shadow:inherit;transition:background .12s,color .12s;
+}
+.t-choices button::before{content:"› "}
+.t-choices button:hover{background:var(--amber);color:#000;text-shadow:none}
+.t-choices.pending button{opacity:.6}
+
+/* bottom bar: skip link */
+.t-foot{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:8px 22px 12px;border-top:1px dashed var(--line);font-size:18px;color:var(--green-dim);
+}
+.skip-link{
+  color:#000;background:var(--green);text-decoration:none;padding:4px 12px;border-radius:3px;
+  letter-spacing:.06em;text-shadow:none;box-shadow:0 0 12px rgba(127,214,122,.4);
+}
+.skip-link:hover{background:#a6f0a1}
+
+/* floating "back to game" pill — visible only on the info page */
+.back-pill{
+  position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:80;
+  font:400 18px/1 var(--term-font);letter-spacing:.06em;text-decoration:none;
+  color:#000;background:var(--amber);padding:9px 16px;border-radius:999px;
+  box-shadow:0 0 16px var(--amber-glow);
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.back-pill.show{opacity:1;pointer-events:auto}
+
+/* ============================================================
+   THE BORING PART (info page)
+   ============================================================ */
+#info{position:relative;background:var(--bg-2)}
+#info::before{ /* faint scanlines for continuity */
+  content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 4px);
+}
+#info > *{position:relative;z-index:1}
+#info > .infonav{position:sticky} /* beats the rule above */
+
+.infonav{
+  position:sticky;top:0;z-index:20;
+  display:flex;flex-wrap:wrap;gap:6px;align-items:center;
+  padding:10px 16px;background:rgba(5,4,3,.92);backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line);
+}
+.infonav a{
+  font-size:11px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;
+  color:var(--amber);padding:6px 9px;border:1px solid transparent;border-radius:3px;
+}
+.infonav a:hover{border-color:var(--amber-dim)}
+.infonav a.cta{background:var(--amber);color:#000;font-weight:600;margin-left:auto}
+.infonav a.cta:hover{background:#ffc63d}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+section.block{padding:64px 0;border-bottom:1px solid var(--line)}
+.label{
+  font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--green);
+  margin:0 0 8px;
+}
+.label::before{content:"// "}
+h2{
+  font-size:clamp(26px,4vw,38px);line-height:1.1;margin:0 0 20px;
+  color:var(--amber);text-transform:uppercase;letter-spacing:.04em;font-weight:600;
+  text-shadow:0 0 12px rgba(255,176,0,.25);
+}
+h3{font-size:16px;margin:0 0 8px;color:var(--amber);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+p{margin:0 0 1em}
+.lead{font-size:17px;max-width:62ch}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+@media (max-width:820px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.card{
+  border:1px solid var(--line);border-radius:6px;padding:20px;background:rgba(0,0,0,.35);
+  box-shadow:inset 0 0 40px rgba(0,0,0,.5);
+}
+.card.hi{border-color:var(--amber);box-shadow:0 0 20px rgba(255,176,0,.15),inset 0 0 40px rgba(0,0,0,.5)}
+.btn{
+  display:inline-block;font:600 14px/1 var(--info-font);letter-spacing:.1em;text-transform:uppercase;
+  text-decoration:none;color:#000;background:var(--amber);padding:14px 22px;border-radius:4px;
+  box-shadow:0 0 16px var(--amber-glow);
+}
+.btn:hover{background:#ffc63d}
+.btn.ghost{background:transparent;color:var(--amber);border:1px solid var(--amber);box-shadow:none}
+.btn.ghost:hover{background:var(--amber-soft)}
+.mono-big{font-family:var(--term-font);font-size:44px;line-height:1;color:var(--amber);text-shadow:0 0 10px var(--amber-glow)}
+.muted{color:var(--muted)}
+.tag{display:inline-block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);border:1px solid var(--green-dim);padding:3px 7px;border-radius:3px}
+
+/* info hero */
+.info-hero{padding:56px 0 48px;border-bottom:1px solid var(--line)}
+.info-hero .top{display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap}
+.info-hero .crow{width:120px;height:auto;color:var(--amber);flex:none;filter:drop-shadow(0 0 10px var(--amber-glow))}
+.info-hero h2{font-size:clamp(30px,5vw,54px)}
+.tminus{margin-top:28px;border:1px solid var(--line);border-radius:6px;padding:18px 20px;background:rgba(0,0,0,.4);display:inline-block;max-width:100%}
+.tminus .label{margin-bottom:4px}
+.tminus .digits{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;font-family:var(--term-font);color:var(--amber);text-shadow:0 0 10px var(--amber-glow)}
+.tminus .d{display:flex;flex-direction:column;align-items:center}
+.tminus .n{font-size:clamp(40px,7vw,64px);line-height:1;font-variant-numeric:tabular-nums}
+.tminus .u{font:400 11px var(--info-font);letter-spacing:.2em;color:var(--green-dim)}
+.tminus .sep{font-size:clamp(30px,5vw,48px);color:var(--amber-dim);align-self:flex-start}
+.tminus .live{font-family:var(--term-font);font-size:22px;color:var(--amber)}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px;align-items:center}
+
+/* dates */
+.date{display:flex;flex-direction:column;gap:2px}
+.date .dow{font-size:12px;letter-spacing:.2em;color:var(--green)}
+.date .day{font-family:var(--term-font);font-size:54px;line-height:1;color:var(--amber);text-shadow:0 0 10px var(--amber-glow)}
+.date .hrs{color:var(--ink)}
+
+/* pricing */
+.price-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-bottom:1px dashed var(--line);padding:12px 0}
+.price-row:last-child{border-bottom:0}
+.price{font-family:var(--term-font);font-size:38px;line-height:1;color:var(--amber);text-shadow:0 0 10px var(--amber-glow);white-space:nowrap}
+.price.slash{color:var(--muted);text-decoration:line-through;font-size:26px;text-shadow:none}
+.vs{font-size:13px;color:var(--muted);border-left:2px solid var(--green-dim);padding-left:12px;margin-top:16px}
+
+/* placeholders where real photos would go */
+.ph{
+  position:relative;aspect-ratio:16/10;border:1px dashed var(--amber-dim);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;
+  background:
+    repeating-linear-gradient(0deg,rgba(255,176,0,.05) 0 2px,transparent 2px 6px),
+    radial-gradient(ellipse at 50% 60%,rgba(255,176,0,.12),transparent 65%),#000;
+  color:var(--amber-dim);font-size:12px;letter-spacing:.12em;text-transform:uppercase;overflow:hidden;
+}
+.ph::before{content:"NO SIGNAL";position:absolute;top:8px;left:10px;font-size:10px;color:var(--green-dim)}
+.ph::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse,transparent 55%,rgba(0,0,0,.6));pointer-events:none}
+.ph strong{display:block;color:var(--amber);font-weight:600;font-size:13px;margin-top:6px}
+
+/* attractions list */
+.attr li{display:grid;grid-template-columns:34px 1fr;gap:12px;padding:14px 0;border-bottom:1px dashed var(--line);align-items:start}
+.attr li:last-child{border-bottom:0}
+.attr{list-style:none;margin:0;padding:0}
+.attr .n{font-family:var(--term-font);font-size:26px;line-height:1;color:var(--green)}
+.attr p{margin:2px 0 0;color:var(--ink)}
+
+/* kids day */
+.kids{border:1px solid var(--green-dim);background:rgba(127,214,122,.05)}
+.kids h2{color:var(--green);text-shadow:0 0 12px rgba(127,214,122,.3)}
+.kids .mono-big{color:var(--green);text-shadow:0 0 10px rgba(127,214,122,.4)}
+
+/* faq */
+.faq details{border-bottom:1px dashed var(--line);padding:4px 0}
+.faq summary{
+  cursor:pointer;list-style:none;padding:14px 0 14px 28px;position:relative;color:var(--amber);font-weight:600;
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::before{content:">";position:absolute;left:0;top:14px;font-family:var(--term-font);font-size:24px;line-height:1;color:var(--green)}
+.faq details[open] summary::before{content:"v"}
+.faq details p{padding:0 0 16px 28px;margin:0;max-width:70ch}
+
+/* directions */
+.map{
+  position:relative;border:1px solid var(--line);border-radius:6px;background:#000;min-height:260px;overflow:hidden;
+  font-family:var(--term-font);color:var(--green-dim);
+}
+.map svg{width:100%;height:100%;position:absolute;inset:0}
+.map .lbl{position:absolute;left:14px;bottom:12px;font-size:16px;color:var(--amber-dim);letter-spacing:.08em}
+.addr{font-family:var(--term-font);font-size:30px;line-height:1.1;color:var(--amber);text-shadow:0 0 10px var(--amber-glow);margin:0 0 12px}
+
+/* footer */
+footer{padding:48px 0 90px;border-top:1px solid var(--line);background:#000}
+footer .row{display:flex;flex-wrap:wrap;gap:24px 40px;justify-content:space-between;align-items:flex-start}
+footer ul{list-style:none;margin:0;padding:0;display:flex;gap:14px;flex-wrap:wrap}
+footer a{text-decoration:none;font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+footer a:hover{text-decoration:underline}
+footer .crow{width:64px;color:var(--amber);display:block;margin-bottom:10px}
+footer small{display:block;color:var(--muted);font-size:12px;margin-top:20px}
+
+/* ---------- responsive ---------- */
+@media (max-width:640px){
+  .terminal-wrap{padding:6px}
+  .crt{height:calc(100vh - 12px);height:calc(100svh - 12px);font-size:19px;border-radius:14px}
+  .t-head{padding:34px 14px 8px;gap:12px}
+  .t-head pre{font-size:11px}
+  .t-title h1{font-size:24px}
+  .t-title p{font-size:16px}
+  .t-cta{font-size:18px;padding:5px 10px}
+  .t-status{padding:6px 14px;font-size:16px;gap:2px 12px}
+  .t-status .hint{display:none}
+  .t-out,.t-cmd,.t-choices,.t-foot{padding-left:14px;padding-right:14px}
+  .t-choices button{font-size:17px;padding:4px 9px}
+  .t-foot{font-size:15px}
+  .t-foot > span{display:none}
+  section.block{padding:44px 0}
+  .info-hero{padding:44px 0 36px}
+}
+</style>
+</head>
+<body>
+
+<div class="concept-badge" aria-label="Concept 10, Harff Road: A Text Adventure">Concept #10 — Harff Road: A Text Adventure</div>
+
+<!-- ============================================================
+     TERMINAL HERO
+     ============================================================ -->
+<header class="terminal-wrap" id="terminal">
+  <div class="crt" id="crt">
+    <div class="roll" aria-hidden="true"></div>
+
+    <div class="t-head">
+<pre aria-hidden="true">        ___
+     .-'o  `'-.__
+    /  ,-.--..    `-.
+    \_/   \  '-,__.-'
+        _/ _/     caw.
+       '-''-'</pre>
+      <div class="t-title">
+        <h1>HARFF ROAD</h1>
+        <p>A TEXT ADVENTURE · NIGHTMARE ON THE CROW · GREENFIELD, MN</p>
+      </div>
+      <a class="t-cta" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">[ GET TICKETS ]</a>
+    </div>
+
+    <div class="t-status" aria-label="Game status">
+      <span><span class="k">LOC:</span> <span id="s-loc">HARFF ROAD</span></span>
+      <span><span class="k">TIME:</span> <span id="s-time">7:29 PM</span></span>
+      <span><span class="k">WALLET:</span> <span id="s-wallet">$20</span></span>
+      <span class="fear"><span class="k">FEAR:</span> <span class="meter" id="s-meter" role="img" aria-label="Fear meter"></span> <span id="s-fear">0%</span></span>
+      <span class="hint" id="s-hint" hidden>ESC skips the typing</span>
+    </div>
+
+    <div class="t-out" id="out" role="log" aria-live="polite" aria-label="Game text">
+      <noscript><div class="line sys">JavaScript is off, so the adventure can't run. The facts are below: dates, prices, Kids Day, directions. <a class="tlink" href="#info">Skip to the boring part</a>.</div></noscript>
+    </div>
+
+    <form class="t-cmd" id="cmdline" autocomplete="off">
+      <span class="prompt" aria-hidden="true">&gt;</span>
+      <span class="mirror" id="mirror" aria-hidden="true"></span>
+      <span class="cursor" aria-hidden="true"></span>
+      <label for="cmd" class="visually-hidden">Type a command</label>
+      <input id="cmd" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" autocomplete="off" enterkeyhint="go">
+    </form>
+
+    <div class="t-choices" id="choices" aria-label="Choices"></div>
+
+    <div class="t-foot">
+      <span>Type HELP · ESC skips typing · This is a real haunted trail. The rest is fiction.</span>
+      <a class="skip-link" href="#info">SKIP TO THE BORING PART ↓</a>
+    </div>
+  </div>
+</header>
+
+<a class="back-pill" id="backpill" href="#terminal">↑ BACK TO THE GAME</a>
+
+<!-- ============================================================
+     THE BORING PART
+     ============================================================ -->
+<main id="info">
+  <nav class="infonav" aria-label="Page sections">
+    <a href="#terminal">↑ Game</a>
+    <a href="#dates">Dates</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#kids">Kids Day</a>
+    <a href="#expect">What to expect</a>
+    <a href="#community">Give back</a>
+    <a href="#crew">Crew</a>
+    <a href="#faq">FAQ</a>
+    <a href="#directions">Find us</a>
+    <a class="cta" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Tickets</a>
+  </nav>
+
+  <div class="info-hero">
+    <div class="wrap">
+      <div class="top">
+        <svg class="crow" viewBox="0 0 160 100" role="img" aria-label="Crow silhouette">
+          <path fill="currentColor" d="M118 30c6-2 14-1 22 4l-14 1c4 4 6 8 6 13-1 16-16 28-38 33l-18 3 6 5h-14l-4-5c-14 0-30-6-46-18 12 6 24 8 34 7l-24-4c12-1 22-5 30-14 6-7 14-12 24-14l6-9c4-6 12-9 20-7-3 2-6 5-8 9z"/>
+          <circle cx="122" cy="36" r="2.4" fill="#050403"/>
+        </svg>
+        <div>
+          <p class="label">The boring part (the part with the facts)</p>
+          <h2>Nightmare on the Crow</h2>
+          <p class="lead">A haunted trail built by three neighbors on Harff Road in Greenfield, Minnesota. Hayride in. Forest, tunnels, haunted buildings, corn, live actors. Walk out changed. <strong style="color:var(--amber)">$20. $15 if you bring a can of food or a warm coat.</strong></p>
+          <div class="hero-ctas">
+            <a class="btn" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
+            <a class="btn ghost" href="#pricing">See pricing</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="tminus" aria-live="off">
+        <p class="label">T-minus · gates open Fri Oct 9, 7:30 PM</p>
+        <div class="digits" id="countdown">
+          <span class="d"><span class="n" id="cd-d">--</span><span class="u">DAYS</span></span><span class="sep">:</span>
+          <span class="d"><span class="n" id="cd-h">--</span><span class="u">HRS</span></span><span class="sep">:</span>
+          <span class="d"><span class="n" id="cd-m">--</span><span class="u">MIN</span></span><span class="sep">:</span>
+          <span class="d"><span class="n" id="cd-s">--</span><span class="u">SEC</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATES -->
+  <section class="block" id="dates">
+    <div class="wrap">
+      <p class="label">01 · Dates &amp; hours</p>
+      <h2>Four nights. That's it.</h2>
+      <p class="lead">Gates open at 7:30 PM. Last entry 10:00 PM. Come early, leave rattled.</p>
+      <div class="grid g4">
+        <div class="card date"><span class="dow">FRIDAY · OCTOBER</span><span class="day">09</span><span class="hrs">7:30 – 10:00 PM</span></div>
+        <div class="card date"><span class="dow">SATURDAY · OCTOBER</span><span class="day">10</span><span class="hrs">7:30 – 10:00 PM<br><span class="muted">+ Kids Day, Noon – 3 PM</span></span></div>
+        <div class="card date"><span class="dow">FRIDAY · OCTOBER</span><span class="day">16</span><span class="hrs">7:30 – 10:00 PM</span></div>
+        <div class="card date"><span class="dow">SATURDAY · OCTOBER</span><span class="day">17</span><span class="hrs">7:30 – 10:00 PM</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="block" id="pricing">
+    <div class="wrap">
+      <p class="label">02 · Pricing</p>
+      <h2>Loud and proud: $20.</h2>
+      <div class="grid g2">
+        <div class="card hi">
+          <h3>Haunted Trail</h3>
+          <div class="price-row"><span>Standard admission</span><span class="price">$20</span></div>
+          <div class="price-row"><span><strong style="color:var(--green)">Bring a donation</strong><br><span class="muted">A food-shelf item, or winter clothing — hats, gloves, coats</span></span><span><span class="price slash">$20</span> <span class="price">$15</span></span></div>
+          <div class="price-row"><span>Kids Day ticket <span class="muted">(Sat Oct 10, Noon–3)</span></span><span class="price">$5</span></div>
+          <p class="muted" style="margin:14px 0 0;font-size:13px">Your Kids Day ticket is good for <strong style="color:var(--ink)">$5 off</strong> an evening haunt ticket.</p>
+          <p style="margin:18px 0 0"><a class="btn" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a></p>
+        </div>
+        <div class="card">
+          <h3>Why so cheap?</h3>
+          <p>Because three neighbors built this in their own woods and they'd rather fill a food shelf than a parking ramp. The $15 rate isn't a coupon — it's the point. Every can of beans and every coat goes to people in our community who need it.</p>
+          <p class="vs">The big Twin Cities haunts run $30–$50 and make you dig through a ticket vendor to find out. Ours is $20. It says so right here.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KIDS DAY -->
+  <section class="block" id="kids">
+    <div class="wrap">
+      <div class="card kids">
+        <p class="label">03 · Kids Day</p>
+        <h2>Lights on. Saturday, Oct 10. Noon – 3 PM.</h2>
+        <div class="grid g3">
+          <div><span class="mono-big">$5</span><p class="muted">per ticket</p></div>
+          <div><p>The same trail, with the lights on and the scares turned down to "friendly." Trick-or-treating, family activities, and actors who wave instead of lunge.</p></div>
+          <div><p><span class="tag">Bonus</span></p><p>Keep the ticket. It's worth <strong style="color:var(--green)">$5 off</strong> an evening haunt ticket — for the grown-ups, or the kid who insists.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT TO EXPECT -->
+  <section class="block" id="expect">
+    <div class="wrap">
+      <p class="label">04 · What to expect</p>
+      <h2>It all begins with a hayride.</h2>
+      <p class="lead">This isn't just a haunt. It's an experience designed to crawl under your skin.</p>
+      <div class="grid g2">
+        <ul class="attr">
+          <li><span class="n">01</span><div><h3>The hayride</h3><p>A wagon takes you from the road into the dark. No turning around after this.</p></div></li>
+          <li><span class="n">02</span><div><h3>The haunted trail</h3><p>A winding path through the forest along the Crow. Interactive scares. Things that move when you don't.</p></div></li>
+          <li><span class="n">03</span><div><h3>Tunnels &amp; winding paths</h3><p>Low, close, and built to make you lose the direction of the road.</p></div></li>
+          <li><span class="n">04</span><div><h3>Haunted buildings</h3><p>Rooms full of live actors and displays. Ben's skeleton-in-a-cage lives here. So does the zombie graveyard.</p></div></li>
+          <li><span class="n">05</span><div><h3>The corn maze</h3><p>Rows taller than you, and something two rows over that matches your pace.</p></div></li>
+        </ul>
+        <div class="grid" style="align-content:start">
+          <div class="ph">PHOTO<strong>Trail entrance at dusk, wagon in foreground</strong></div>
+          <div class="grid g2">
+            <div class="ph">PHOTO<strong>The cage (Ben's build)</strong></div>
+            <div class="ph">VIDEO LOOP<strong>Hayride departing, actors in the treeline</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMUNITY -->
+  <section class="block" id="community">
+    <div class="wrap">
+      <p class="label">05 · Community give-back</p>
+      <h2>Scare people. Feed people.</h2>
+      <p class="lead">Three neighbors started this because they loved two things: Halloween, and giving back. The second one is why the ticket drops to $15.</p>
+      <div class="grid g3">
+        <div class="card"><h3>Food shelf drive</h3><p>Bring a non-perishable food item to the gate and save $5. The bin fills up every night.</p></div>
+        <div class="card"><h3>Winter clothing drive</h3><p>Hats, gloves, coats. Minnesota winter starts about ten minutes after Halloween. Same $5 off.</p></div>
+        <div class="card"><h3>Hanover Fire Department</h3><p>We partner with the Hanover FD so what you bring gets to the people who need it.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CREW -->
+  <section class="block" id="crew">
+    <div class="wrap">
+      <p class="label">06 · Join the crew</p>
+      <h2>We need monsters.</h2>
+      <div class="grid g2">
+        <div>
+          <p class="lead">Nightmare on the Crow runs on volunteer actors. If you've ever wanted to lurk in a corn field for a good cause, this is your season. Four nights, one costume, unlimited screams.</p>
+          <p><strong style="color:var(--amber)">Evan</strong> plays Beetlejuice and runs our social and tech. <strong style="color:var(--amber)">Ben</strong> designs the sets — the skeleton trapped in the cage and the zombie graveyard are his.</p>
+          <div class="hero-ctas">
+            <a class="btn" href="#">Apply to act</a>
+            <a class="btn ghost" href="#">Actor login</a>
+          </div>
+        </div>
+        <div class="ph">PHOTO<strong>Crew in costume, porch light, Oct 2025</strong></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="block" id="faq">
+    <div class="wrap">
+      <p class="label">07 · FAQ</p>
+      <h2>Questions from the porch.</h2>
+      <div class="faq">
+        <details><summary>How scary is it?</summary><p>Scary. It's a real trail through real dark woods with live actors, tunnels, and buildings built by people who enjoy this a little too much. If you want the gentle version, come to Kids Day with the lights on.</p></details>
+        <details><summary>What age is it for?</summary><p>The evening trail is built for teens and adults who like being startled. Younger kids — and anyone who doesn't — should come Saturday, October 10, Noon–3 PM for Kids Day: $5, lights on, family-friendly.</p></details>
+        <details><summary>What if it rains?</summary><p>It's an outdoor trail in October in Minnesota. Dress for it: boots, layers, a coat you don't mind getting muddy. Check our Facebook or Instagram on the day for any weather updates.</p></details>
+        <details><summary>Where do I park?</summary><p>On site at 6470 Harff Road. Follow the signs and the crew when you pull in. Bring a flashlight for the walk back to the car — or don't, if you like a challenge.</p></details>
+        <details><summary>How long does it take?</summary><p>Budget about an hour for the hayride out, the trail, and a stop at the food trucks. Your pace decides the rest. Running is allowed.</p></details>
+        <details><summary>Will the actors touch me?</summary><p>No. The actors won't touch you, and you don't touch the actors. They're your neighbors. Be cool.</p></details>
+        <details><summary>Is it wheelchair accessible?</summary><p>The trail is a natural forest path with tunnels, uneven ground, and a corn maze, so it's not wheelchair accessible. Message us before you come and we'll talk through what's possible, especially for Kids Day.</p></details>
+        <details><summary>Is there food?</summary><p>Yes. Just in Time Concessions and Burger Box park on site. Bring a few extra dollars — the trail burns calories.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIRECTIONS -->
+  <section class="block" id="directions">
+    <div class="wrap">
+      <p class="label">08 · Directions</p>
+      <h2>End of Harff Road.</h2>
+      <div class="grid g2">
+        <div>
+          <p class="addr">6470 Harff Road<br>Greenfield, MN 55373</p>
+          <p>West metro, about 35 minutes from Minneapolis, near the Crow River. The last stretch is dark and the road is exactly as spooky as the game says.</p>
+          <p><span class="tag">Food trucks</span> Just in Time Concessions · Burger Box</p>
+          <div class="hero-ctas">
+            <a class="btn ghost" href="https://maps.google.com/?q=6470+Harff+Road+Greenfield+MN+55373" target="_blank" rel="noopener">Open in Maps</a>
+          </div>
+        </div>
+        <div class="map" role="img" aria-label="Stylized map placeholder: 6470 Harff Road, Greenfield, Minnesota, west of Minneapolis near the Crow River">
+          <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="rgba(127,214,122,.12)" stroke-width="1"/></pattern></defs>
+            <rect width="400" height="260" fill="url(#grid)"/>
+            <!-- Crow River -->
+            <path d="M-10 200 C60 170 90 230 150 200 S250 150 300 175 S380 230 420 200" fill="none" stroke="rgba(127,214,122,.5)" stroke-width="6" stroke-linecap="round"/>
+            <text x="230" y="150" fill="rgba(127,214,122,.7)" font-size="14" font-family="VT323, monospace">CROW RIVER</text>
+            <!-- roads -->
+            <path d="M0 60 H400" stroke="rgba(255,176,0,.35)" stroke-width="3"/>
+            <text x="8" y="52" fill="rgba(255,176,0,.6)" font-size="14" font-family="VT323, monospace">← MINNEAPOLIS ~35 MIN</text>
+            <path d="M120 60 V130 Q120 150 140 150 H200" fill="none" stroke="rgba(255,176,0,.75)" stroke-width="3" stroke-dasharray="6 5"/>
+            <text x="126" y="120" fill="rgba(255,176,0,.75)" font-size="14" font-family="VT323, monospace">HARFF RD</text>
+            <!-- destination -->
+            <circle cx="200" cy="150" r="14" fill="none" stroke="#ffb000" stroke-width="2"><animate attributeName="r" values="10;18;10" dur="2.4s" repeatCount="indefinite"/></circle>
+            <circle cx="200" cy="150" r="5" fill="#ffb000"/>
+            <text x="220" y="146" fill="#ffb000" font-size="16" font-family="VT323, monospace">6470 HARFF ROAD</text>
+            <text x="220" y="162" fill="#ffb000" font-size="13" font-family="VT323, monospace">GREENFIELD, MN 55373</text>
+            <!-- trees -->
+            <g fill="rgba(127,214,122,.35)"><path d="M40 110l8-16 8 16zM60 100l8-16 8 16zM30 135l8-16 8 16zM330 90l8-16 8 16zM350 110l8-16 8 16zM300 70l8-16 8 16z"/></g>
+          </svg>
+          <span class="lbl">MAP: embed live map here in production</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="row">
+        <div>
+          <svg class="crow" viewBox="0 0 160 100" role="img" aria-label="Nightmare on the Crow crow logo"><path fill="currentColor" d="M118 30c6-2 14-1 22 4l-14 1c4 4 6 8 6 13-1 16-16 28-38 33l-18 3 6 5h-14l-4-5c-14 0-30-6-46-18 12 6 24 8 34 7l-24-4c12-1 22-5 30-14 6-7 14-12 24-14l6-9c4-6 12-9 20-7-3 2-6 5-8 9z"/></svg>
+          <strong style="color:var(--amber);letter-spacing:.1em">NIGHTMARE ON THE CROW</strong><br>
+          <span class="muted">6470 Harff Road · Greenfield, MN 55373</span>
+        </div>
+        <ul aria-label="Social links">
+          <li><a href="#" aria-label="Facebook (placeholder link)">Facebook</a></li>
+          <li><a href="#" aria-label="Instagram (placeholder link)">Instagram</a></li>
+          <li><a href="#" aria-label="TikTok (placeholder link)">TikTok</a></li>
+        </ul>
+        <ul aria-label="Footer links">
+          <li><a href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Tickets</a></li>
+          <li><a href="#crew">Join the crew</a></li>
+          <li><a href="#">Actor login</a></li>
+          <li><a href="#terminal">Play again</a></li>
+        </ul>
+      </div>
+      <small>© 2026 Nightmare on the Crow. Built by three neighbors. It all begins with a hayride. · Concept #10 mockup — photo and map placeholders to be replaced in production.</small>
+    </div>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============================================================
+     CONFIG + DOM
+     ============================================================ */
+  var TICKET_URL = 'https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail';
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var canHover = window.matchMedia('(hover: hover)').matches;
+
+  function $(id) { return document.getElementById(id); }
+  var out = $('out'), input = $('cmd'), mirror = $('mirror'), form = $('cmdline'),
+      choicesEl = $('choices'), sLoc = $('s-loc'), sTime = $('s-time'),
+      sWallet = $('s-wallet'), sFear = $('s-fear'), sMeter = $('s-meter'), sHint = $('s-hint');
+
+  /* ============================================================
+     GAME STATE
+     ============================================================ */
+  var state = {
+    node: 'road', prev: [], wallet: 20, fear: 0, time: '7:29 PM',
+    paid: false, donated: false, hasBeans: true, history: [], hIdx: -1
+  };
+
+  /* ============================================================
+     NODES — the map of Harff Road.
+     text: array of lines. Inline markup: [[label|url]] = link, *text* = bright.
+     choices: [label, command] pairs rendered as buttons.
+     cmds: [pattern, action] — pattern is pipe-separated synonyms (already
+       normalized: lowercase, filler words removed). action is a node id,
+       an array of lines to print, or a function.
+     ============================================================ */
+  var NODES = {
+    road: {
+      name: 'HARFF ROAD', time: '7:29 PM', fear: 5,
+      text: [
+        'You are standing at the end of Harff Road, Greenfield, Minnesota. It is 7:29 PM. A wagon is waiting. Three neighbors are watching you from the porch.'
+      ],
+      choices: [['ride the wagon'], ['look around'], ['check my wallet'], ['ask about kids'], ['talk to neighbors'], ['help'], ['tickets']],
+      cmds: [
+        ['ride wagon|ride|wagon|board|board wagon|climb|climb on|get on|hayride', 'wagon'],
+        ['look|look around|l|examine', [
+          'Gravel. Fog. A hand-painted sign nailed to a fence post:',
+          '   *NIGHTMARE ON THE CROW — 6470 HARFF ROAD*',
+          '   *OCT 9, 10, 16, 17 — 7:30–10 PM. LAST ENTRY 10 PM.*',
+          'Somewhere past the treeline the Crow River is doing whatever rivers do in the dark. The wagon idles. The neighbors keep watching.'
+        ]],
+        ['talk neighbors|neighbors|talk|porch|neighbor|wave', 'porch']
+      ]
+    },
+
+    porch: {
+      name: 'THE PORCH', time: '7:29 PM', fear: 5,
+      text: [
+        'You walk up to the porch. Three neighbors. They have lived on this road a long time and they love two things: Halloween, and giving back.',
+        '"It all begins with a hayride," says the one in the middle, and the other two nod like it\'s scripture.',
+        '"Twenty dollars. Fifteen if you brought something for the food shelf, or a coat for someone who needs one. Kids come Saturday afternoon for five."',
+        'They point at the wagon.'
+      ],
+      choices: [['ride the wagon'], ['ask about donations'], ['ask about kids'], ['ask about the crew'], ['tickets']],
+      cmds: [
+        ['ride wagon|ride|wagon|board|climb|get on|hayride', 'wagon'],
+        ['ask about donations|donations|ask about donation', [
+          '"Food shelf drive. Winter clothing drive — hats, gloves, coats," says the tall one. "We work with the *Hanover Fire Department* to get it where it needs to go. You bring something, you save five bucks. Everybody wins."'
+        ]],
+        ['ask about crew|ask about actors|who are you', [
+          '"We\'re just neighbors," says the middle one. "Evan does Beetlejuice and the internet. Ben builds the sets — you\'ll meet his skeleton. Everyone else is a volunteer. You could be, too." (See: *JOIN THE CREW*, or type CREW.)'
+        ]]
+      ]
+    },
+
+    wagon: {
+      name: 'THE WAGON', time: '7:32 PM', fear: 15,
+      text: [
+        'You climb onto the hay. It smells like October. The tractor lurches and the porch light shrinks behind you.',
+        '*IT ALL BEGINS WITH A HAYRIDE.*',
+        'The driver doesn\'t turn around. "Trail\'s a walk through the forest," he says. "Tunnels. Buildings. Corn. You\'ll come out the other side. Most people do."',
+        'Ahead: a gate, a lantern, a ticket-taker.'
+      ],
+      choices: [['hold on'], ['look at the sign'], ['check my wallet'], ['jump off']],
+      cmds: [
+        ['hold on|hold|continue|forward|onward|keep going|next|gate|arrive', 'gate'],
+        ['look at sign|sign|read sign|look|read', [
+          'A sign swings past on a wire: *7:30 PM – 10:00 PM. LAST ENTRY 10 PM.* Below it, in smaller paint: *OCT 9 · 10 · 16 · 17.* Below that, smaller still: *NO REFUNDS FOR COWARDICE.* (That last line is fiction. The dates are not.)'
+        ]],
+        ['jump|jump off|get off|leave', [
+          'You consider it. The wagon is moving at roughly the speed of regret. You stay on.'
+        ]]
+      ]
+    },
+
+    gate: {
+      name: 'THE GATE', time: '7:36 PM', fear: 20,
+      text: [
+        'The ticket-taker holds out a hand. "Twenty."',
+        'Then she notices the canned beans in your bag. "That\'ll be $15 then."',
+        'She nods toward a bin marked *FOOD SHELF* and a rack marked *HATS · GLOVES · COATS* — a partnership with the Hanover Fire Department. Behind her, a laminated sign:',
+        '   TICKETS ONLINE → [[app.hauntpay.com/nightmare-on-the-crow|' + TICKET_URL + ']]'
+      ],
+      choices: [['donate the beans ($15)'], ['pay $20'], ['buy online'], ['ask about kids']],
+      cmds: [
+        ['donate beans $15|donate beans|donate|beans|give beans|$15|15|pay $15|pay 15', function () {
+          if (state.paid) { return ['She\'s already stamped your hand. "One trail per customer. Go."']; }
+          state.paid = true; state.donated = true; state.wallet = 5; state.hasBeans = false; renderStatus();
+          return [
+            'You drop the beans in the bin and pay *$15*.',
+            '"Five bucks left," she says. "That\'s a Kids Day ticket. Bring the small ones Saturday at noon — lights on, three till three." She stamps your hand with a crow. The gate opens.',
+            { t: '[wallet: $5 · donation logged · fear rising]', c: 'sys' }
+          ];
+        }],
+        ['pay $20|pay 20|pay|$20|20|pay full|full price', function () {
+          if (state.paid) { return ['Already paid. The stamp on your hand glows faintly. She points at the trail.']; }
+          state.paid = true; state.wallet = 0; renderStatus();
+          return [
+            'You hand over the *$20*. "Enjoy," she says, in a tone that suggests you won\'t.',
+            'She stamps your hand with a crow. The gate opens.',
+            { t: '[wallet: $0 · fear rising]', c: 'sys' }
+          ];
+        }],
+        ['buy online|online|buy|order', [
+          'She taps the laminated sign. "Skip the line. Get \'em here:"',
+          '   [[app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail|' + TICKET_URL + ']]',
+          '"Bring the beans anyway. The food shelf doesn\'t care how you paid."'
+        ]],
+        ['trail|go trail|enter|walk|forward|continue|go in|go on', function () {
+          if (!state.paid) { return ['She doesn\'t move. Neither does the gate. "Twenty. Or fifteen and the beans."']; }
+          go('trail'); return null;
+        }]
+      ]
+    },
+
+    trail: {
+      name: 'THE TRAILHEAD', time: '7:41 PM', fear: 35,
+      text: [
+        'The trailhead. Trees close over the path like knuckles. Somewhere ahead, a chainsaw that is either a prop or a landscaping emergency.',
+        'The path forks. *LEFT:* a black mouth in the hillside — the tunnels. *RIGHT:* rows of corn taller than you, whispering.',
+        'A sign between them: *LIVE ACTORS. THEY WON\'T TOUCH YOU. DON\'T TOUCH THEM.*'
+      ],
+      choices: [['go left (tunnels)'], ['go right (corn)'], ['listen'], ['go back']],
+      cmds: [
+        ['left tunnels|left|tunnels|tunnel|hillside|mouth', 'tunnels'],
+        ['right corn|right|corn|maze|corn maze|rows', 'corn'],
+        ['listen|wait|stand still', [
+          'Footsteps that stop when yours do. A laugh from inside the corn. Your own pulse, which you now count as a third party.'
+        ]],
+        ['chainsaw|check chainsaw', ['You decide the chainsaw is a prop. You decide this very firmly and then walk in the other direction.']]
+      ]
+    },
+
+    tunnels: {
+      name: 'THE TUNNELS', time: '7:48 PM', fear: 55,
+      text: [
+        'You duck into the tunnel. The walls sweat. The path winds, doubles back, winds again — you lose the direction of the road entirely, which is the point.',
+        'Something brushes your shoulder. It is a hand. It is not yours.',
+        '"Keep moving," says the hand\'s owner, politely. (They won\'t touch you. That was the wall. Probably.)',
+        'Light at the far end — roofs. Buildings.'
+      ],
+      choices: [['crawl forward'], ['go back'], ['scream']],
+      cmds: [
+        ['crawl forward|crawl|forward|light|continue|keep moving|buildings|onward', 'buildings'],
+        ['touch wall|wall|feel', ['The wall is damp and, for one second, warm. You stop touching the wall.']]
+      ]
+    },
+
+    corn: {
+      name: 'THE CORN MAZE', time: '7:52 PM', fear: 60,
+      text: [
+        'Corn on every side. The rows breathe. Every path looks like the last path.',
+        'Something moves two rows over, matching your pace. When you stop, it stops. When you speed up, it doesn\'t need to.',
+        'A voice is calling your name — or something that sounds like your name. At the far edge of the maze: roofs. Buildings.'
+      ],
+      choices: [['push through'], ['follow the voice'], ['go back']],
+      cmds: [
+        ['push through|push|through|forward|continue|buildings|edge|onward', 'buildings'],
+        ['follow voice|follow|voice|answer', function () {
+          say(['You follow the voice. The voice was a bad idea. It leads you past a scarecrow you could swear was a scarecrow — until it tips its hat — and out the far side.']);
+          go('buildings', true); return null;
+        }],
+        ['hide|crouch|duck', ['You crouch between the rows. The thing two rows over crouches too. This is not the win you hoped for.']]
+      ]
+    },
+
+    buildings: {
+      name: 'THE HAUNTED BUILDINGS', time: '8:03 PM', fear: 70,
+      text: [
+        'A cluster of haunted buildings in a clearing. Live actors in every doorway — no two the same, none of them blinking.',
+        'A shed with a lantern. A barn with something in it. Displays you\'d rather not describe with the lights off.',
+        'A man in a striped suit tips his hat. You get the strong feeling someone has said his name three times.'
+      ],
+      choices: [['enter the shed'], ['enter the barn'], ['keep moving'], ['talk to the man']],
+      cmds: [
+        ['enter shed|shed|lantern|cage', 'cage'],
+        ['enter barn|barn', 'barn'],
+        ['keep moving|move|forward|continue|onward|graveyard|run', 'graveyard'],
+        ['talk man|man|striped suit|beetlejuice|talk', [
+          '"It\'s showtime," he says, and grins with more teeth than the average neighbor. Somewhere under the makeup is a guy named Evan who also runs the Instagram. Do not say his name a third time.'
+        ]]
+      ]
+    },
+
+    cage: {
+      name: 'THE SHED', time: '8:07 PM', fear: 82,
+      text: [
+        'In the shed: a cage. In the cage: a *skeleton*.',
+        'It has been in there a long time. Or it just got in. Or — as the rattling suggests — it would like out.',
+        'The set is built by a neighbor named Ben, who also built what\'s waiting in the graveyard. He\'s very good at his job. That\'s the problem.'
+      ],
+      choices: [['get closer'], ['back away'], ['run']],
+      cmds: [
+        ['get closer|closer|approach|touch cage|open cage', function () {
+          say(['You get closer. The skeleton gets closer too. Fear: maximum. You are now running, and you do not remember deciding to.']);
+          go('graveyard', true); return null;
+        }],
+        ['back away|away|back out|leave', 'buildings'],
+        ['run|flee|escape|go|exit|out', 'graveyard']
+      ]
+    },
+
+    barn: {
+      name: 'THE BARN', time: '8:09 PM', fear: 78,
+      text: [
+        'Inside the barn: a display you\'ll be describing to a coworker on Monday using both hands.',
+        'Something in the rafters shifts its weight. An actor at the far door holds it open for you, which is somehow worse than blocking it.'
+      ],
+      choices: [['go through the door'], ['check the shed'], ['back away']],
+      cmds: [
+        ['go through door|door|through|go through|forward|continue|run|onward', 'graveyard'],
+        ['check shed|shed|cage', 'cage'],
+        ['back away|away|back out|leave', 'buildings']
+      ]
+    },
+
+    graveyard: {
+      name: 'THE ZOMBIE GRAVEYARD', time: '8:15 PM', fear: 95,
+      text: [
+        'The zombie graveyard. Headstones lean like they\'re listening. The ground moves — not metaphorically.',
+        'Hands. Many. The exit is a single porch light through the trees, roughly a hundred yards and one lifetime away.'
+      ],
+      choices: [['read the headstones'], ['run for the light']],
+      cmds: [
+        ['read headstones|headstones|read|graves|stones', [
+          '   *HERE LIES THE GUEST WHO DIDN\'T BRING A COAT.*',
+          '   *THE HAYRIDE WAS ONLY THE BEGINNING.*',
+          '   *SEE YOU OCT 16.*',
+          'One of them has your name on it. Probably a coincidence. Run.'
+        ]],
+        ['run for light|run|light|porch|exit|escape|flee|go|forward|onward', 'exit']
+      ]
+    },
+
+    exit: {
+      name: 'THE OTHER SIDE', time: '8:24 PM', fear: 0, resetFear: true,
+      text: [
+        'You burst out of the trees into light, noise, and the smell of fryer oil.',
+        '*JUST IN TIME CONCESSIONS* on the left. *BURGER BOX* on the right. Your heart rate returns to something a doctor would accept.',
+        'The three neighbors are back on the porch, waving. You made it.',
+        { t: 'Nightmare on the Crow is real. It\'s $20 — $15 with a can or a coat. It\'s at 6470 Harff Road, Greenfield, MN. Oct 9, 10, 16, 17, 7:30–10 PM.', c: 'sys' },
+        '   [[GET TICKETS → app.hauntpay.com|' + TICKET_URL + ']]'
+      ],
+      choices: [['tickets'], ['eat something'], ['play again'], ['skip to the boring part']],
+      cmds: [
+        ['eat|eat something|food|burger|hungry', [
+          'You get a burger from Burger Box and something fried from Just in Time. You eat both while watching the next wagon leave. Somebody screams. You smile. You\'ve become one of them.'
+        ]]
+      ]
+    }
+  };
+
+  /* ============================================================
+     GLOBAL COMMANDS — work in every room.
+     ============================================================ */
+  var HELP_LINES = [
+    { t: 'COMMANDS', c: 'sys' },
+    { t: '  look · wallet · kids · tickets · dates · where · donate · food · crew · fear · countdown', c: 'sys' },
+    { t: '  back · restart · clear · skip (jump to the boring part) · help', c: 'sys' },
+    { t: 'Or tap a choice. ESC or a tap on the text finishes the typing early.', c: 'dim' }
+  ];
+
+  var GLOBAL = [
+    ['help|?|commands|h|what can i do|what do i do', HELP_LINES],
+
+    ['tickets|ticket|buy|buy tickets|purchase|get tickets|admission', [
+      { t: 'TICKETS — Haunted Trail $20, or $15 with a food-shelf item or winter clothing. Kids Day $5.', c: 'sys' },
+      '   [[GET TICKETS → app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail|' + TICKET_URL + ']]',
+      { t: 'Opens in a new tab. Yes, this line is clickable. No, the skeleton is not.', c: 'dim' }
+    ]],
+
+    ['ask about kids|kids|kids day|children|kid|family', [
+      '*KIDS DAY — Saturday, October 10, Noon to 3 PM. $5.*',
+      'The lights stay on. The trail stays open. The actors stay friendly. Trick-or-treating and family activities on the grounds.',
+      'Keep the Kids Day ticket: it\'s worth *$5 off* an evening haunt ticket, if you\'re brave enough to come back after dark.'
+    ]],
+
+    ['check wallet|wallet|inventory|i|money|cash|bag|price|pricing|cost|how much', function () {
+      var l = ['Your wallet holds *$' + state.wallet + '*.'];
+      if (state.wallet === 20) l.push('That is exactly one Haunted Trail ticket. In your bag: a can of beans and a pair of gloves you don\'t remember packing. Either one knocks the ticket down to *$15*. (The food shelf and the winter clothing drive both say thanks.)');
+      else if (state.donated) l.push('Enough for a Kids Day ticket (Sat Oct 10, Noon–3, $5). The beans are gone. The gloves are still in the bag. Somebody will want them.');
+      else l.push('Twenty dollars ago you had twenty dollars. You still have the beans and the gloves. Drop them in the bins on the way out — the food shelf and the Hanover FD will put them to use.');
+      return l;
+    }],
+
+    ['dates|hours|when|time|schedule|season|open|what time', [
+      '*2026 SEASON: OCT 9 · 10 · 16 · 17 — 7:30 PM to 10:00 PM. LAST ENTRY 10 PM.*',
+      'Kids Day: Sat Oct 10, Noon–3 PM. Four nights. That\'s it. The crows leave after.'
+    ]],
+
+    ['where|directions|map|address|location|parking|how do i get there|find', [
+      '*6470 HARFF ROAD, GREENFIELD, MN 55373.* West metro, about 35 minutes from Minneapolis, near the Crow River.',
+      'Park on site and follow the crew. Type SKIP for the map, or:',
+      '   [[open in Google Maps|https://maps.google.com/?q=6470+Harff+Road+Greenfield+MN+55373]]'
+    ]],
+
+    ['donate|donation|food shelf|coat|gloves|hat|clothing|charity|give back', [
+      'Bring a *non-perishable food item* or *winter clothing* (hats, gloves, coats) and your ticket drops from $20 to *$15*.',
+      'Food shelf drive + winter clothing drive, in partnership with the *Hanover Fire Department*. Scare people, feed people.'
+    ]],
+
+    ['food|food trucks|eat|hungry|snacks|burger', [
+      'Two food trucks on site: *Just in Time Concessions* and *Burger Box*. Post-trail calories are medically necessary.'
+    ]],
+
+    ['crew|join|join crew|volunteer|actor|actors|act|work here|jobs', [
+      '*JOIN THE CREW.* Nightmare on the Crow runs on volunteer actors. Four nights, one costume, unlimited screams.',
+      'Evan plays Beetlejuice (and runs social + tech). Ben designs the sets — the skeleton in the cage and the zombie graveyard are his.',
+      '   [[Apply to act|#crew]]  ·  [[Actor login|#]]'
+    ]],
+
+    ['fear|status|how scared am i|scared', function () {
+      var f = state.fear;
+      return [{ t: 'FEAR: ' + f + '% — ' + (f < 10 ? 'You are fine. For now.' : f < 40 ? 'Mild unease. The hay is itchy.' : f < 70 ? 'Something is following you and it has opinions.' : f < 90 ? 'Your legs have filed a formal complaint.' : 'Maximum. Run.'), c: 'sys' }];
+    }],
+
+    ['countdown|t-minus|tminus|how long until|days until', function () {
+      return [{ t: 'T-MINUS ' + countdownString() + ' until the gates open (Fri Oct 9, 7:30 PM).', c: 'sys' }];
+    }],
+
+    ['skip|skip typing|boring|boring part|skip to boring part|facts|info|scroll', function () {
+      scrollToInfo();
+      return [{ t: 'Scrolling to the boring part. The skeleton will wait.', c: 'dim' }];
+    }],
+
+    ['look|l|look around|examine|where am i', function () { return NODES[state.node].text; }],
+
+    ['ride wagon|ride|wagon|hayride', [
+      'The wagon only leaves from the end of the road. Type RESTART to walk back there — or SKIP for the boring part, where the wagon is just a bullet point.'
+    ]],
+
+    ['clear|cls', function () { out.innerHTML = ''; return null; }],
+
+    ['restart|reset|again|play again|start over|new game|start', function () { restart(); return null; }],
+
+    ['back|go back|return|retreat', function () {
+      var p = state.prev.pop();
+      if (!p) return ['There is no back. There is only the porch, and the porch is behind you.'];
+      go(p, true, true); return null;
+    }],
+
+    ['north|south|east|west|n|s|e|w|up|down|northwest|southeast', [
+      'This isn\'t that kind of text adventure. Compass directions are for people who aren\'t being chased.'
+    ]],
+    ['xyzzy|plugh|plover', ['A hollow voice says "Fool." Then, quieter: "Nice."']],
+    ['scream|yell|shout', ['You scream. Somewhere in the corn, three actors scream back in harmony. They\'ve rehearsed.']],
+    ['pray|beg', ['You pray. The crows on the wire tilt their heads. It\'s unclear who received the message.']],
+    ['hello|hi|hey|hola', ['The neighbors wave back. Politely. Slowly. Without blinking.']],
+    ['sudo|sudo rm -rf|rm -rf|root|admin', ['Nice try. The tractor doesn\'t take sudo.']],
+    ['quit|exit game|leave|q', ['You can\'t quit. You can only scroll. Try SKIP.']],
+    ['open|use|take|get|pick up', ['You reach for it. It reaches back. You both agree to leave it where it is.']],
+    ['fight|attack|kill|punch|hit', ['You raise your fists at a volunteer actor. Reminder from the sign: THEY WON\'T TOUCH YOU. DON\'T TOUCH THEM. They\'re your neighbors. Be cool.']],
+    ['cry|weep|sob', ['You cry a little. It\'s allowed. Burger Box is at the exit.']],
+    ['wallet check|check', ['Check what? Try WALLET, DATES, or your pulse.']]
+  ];
+
+  var UNKNOWN = [
+    'The crows consider your command and reject it. Type HELP.',
+    'You try that. Nothing happens, which — given where you are — is the best outcome.',
+    'I don\'t know how to "{cmd}". Neither does the skeleton, and he\'s had a lot of time to think.',
+    'The fog swallows the word "{cmd}" and does not give it back. Try HELP.',
+    'That\'s not a thing you can do on Harff Road. Buying a ticket is. Type TICKETS.',
+    'A neighbor on the porch shakes her head slowly. Try LOOK, WALLET, or HELP.'
+  ];
+
+  /* ============================================================
+     TYPEWRITER + RENDER
+     ============================================================ */
+  var tw = { q: [], busy: false, fast: false, timer: null, step: null };
+
+  function instant() { return reduceMotion || tw.fast; }
+
+  // Parse "[[label|href]]" and "*bright*" tokens into segments.
+  function parse(text) {
+    var segs = [], re = /\[\[([^\]|]+)\|([^\]]+)\]\]|\*([^*]+)\*/g, last = 0, m;
+    while ((m = re.exec(text))) {
+      if (m.index > last) segs.push({ text: text.slice(last, m.index) });
+      if (m[1]) segs.push({ text: m[1], href: m[2] }); else segs.push({ text: m[3], em: true });
+      last = re.lastIndex;
+    }
+    if (last < text.length) segs.push({ text: text.slice(last) });
+    return segs;
+  }
+
+  function scrollOut() { out.scrollTop = out.scrollHeight; }
+
+  // Enqueue lines (strings or {t, c}) for typing.
+  function say(lines, cls) {
+    if (!lines) return;
+    if (!Array.isArray(lines)) lines = [lines];
+    lines.forEach(function (l) {
+      tw.q.push(typeof l === 'string' ? { t: l, c: cls || '' } : l);
+    });
+    if (!tw.busy) pump();
+  }
+
+  function pump() {
+    var item = tw.q.shift();
+    if (!item) { tw.busy = false; tw.fast = false; tw.step = null; choicesEl.classList.remove('pending'); sHint.hidden = true; out.setAttribute('aria-busy', 'false'); return; }
+    tw.busy = true; choicesEl.classList.add('pending'); sHint.hidden = reduceMotion; out.setAttribute('aria-busy', 'true');
+
+    var div = document.createElement('div');
+    div.className = 'line ' + (item.c || '');
+    out.appendChild(div);
+    if (item.blank) { div.className = 'line blank'; return next(); }
+
+    var segs = parse(item.t), si = 0, ci = 0, node = null;
+
+    function makeNode(seg) {
+      var n;
+      if (seg.href) {
+        n = document.createElement('a'); n.className = 'tlink'; n.href = seg.href;
+        if (seg.href.charAt(0) !== '#') { n.target = '_blank'; n.rel = 'noopener'; }
+      } else if (seg.em) { n = document.createElement('span'); n.className = 'em'; }
+      else { n = document.createTextNode(''); }
+      div.appendChild(n);
+      return n;
+    }
+    function append(n, s) { if (n.nodeType === 3) n.data += s; else n.textContent += s; }
+
+    function step() {
+      if (si >= segs.length) { scrollOut(); return next(); }
+      var seg = segs[si];
+      if (!node) node = makeNode(seg);
+      if (instant()) { append(node, seg.text.slice(ci)); si++; ci = 0; node = null; return step(); }
+      var ch = seg.text.charAt(ci++);
+      append(node, ch);
+      if (ci >= seg.text.length) { si++; ci = 0; node = null; }
+      scrollOut();
+      var d = /[.!?]/.test(ch) ? 120 : /[,;:—]/.test(ch) ? 45 : 13;
+      tw.timer = setTimeout(step, d);
+    }
+    function next() {
+      tw.step = null;
+      if (instant()) pump(); else tw.timer = setTimeout(pump, 80);
+    }
+    tw.step = step;
+    step();
+  }
+
+  // Finish everything queued instantly.
+  function flush() {
+    if (!tw.busy) return;
+    tw.fast = true;
+    clearTimeout(tw.timer);
+    if (tw.step) tw.step(); else pump();
+  }
+
+  function renderChoices(list) {
+    choicesEl.innerHTML = '';
+    (list || []).forEach(function (c) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.textContent = c[0]; b.setAttribute('data-cmd', c[1] || c[0]);
+      choicesEl.appendChild(b);
+    });
+  }
+
+  function renderStatus() {
+    var n = NODES[state.node];
+    sLoc.textContent = n.name; sTime.textContent = state.time; sWallet.textContent = '$' + state.wallet;
+    sFear.textContent = state.fear + '%';
+    var on = Math.round(state.fear / 10), html = '';
+    for (var i = 0; i < 10; i++) html += '<i class="' + (i < on ? 'on' : '') + '"></i>';
+    sMeter.innerHTML = html;
+    sMeter.className = 'meter' + (state.fear >= 80 ? ' hot' : '');
+    sMeter.setAttribute('aria-label', 'Fear meter ' + state.fear + ' percent');
+  }
+
+  /* ============================================================
+     STATE MACHINE
+     ============================================================ */
+  // Move to a node. skipHeader: omit the "— NAME —" line on the road (the opening text stands alone). isBack: don't push history.
+  function go(id, skipHeader, isBack) {
+    var n = NODES[id];
+    if (!n) return;
+    if (!isBack && state.node !== id) state.prev.push(state.node);
+    state.node = id;
+    state.time = n.time;
+    state.fear = n.resetFear ? n.fear : Math.max(state.fear, n.fear);
+    renderStatus();
+    renderChoices(n.choices);
+    var lines = [];
+    if (!skipHeader || id !== 'road') lines.push({ t: n.name, c: 'loc' });
+    say(lines.concat(n.text));
+  }
+
+  var FILLER = /\b(the|a|an|my|please|go|walk|head|to|into|at|on|of|some)\b/g;
+  function normalize(raw) {
+    return raw.toLowerCase().replace(/[^a-z0-9$?\s\-]/g, ' ').replace(FILLER, ' ').replace(/\s+/g, ' ').trim();
+  }
+
+  // Find a matching [pattern, action] in a list. Exact synonym first, then whole-word keyword.
+  function match(list, cmd) {
+    var i, syns, j, words = cmd.split(' ');
+    for (i = 0; i < list.length; i++) {
+      syns = list[i][0].split('|');
+      for (j = 0; j < syns.length; j++) if (syns[j] === cmd) return list[i][1];
+    }
+    for (i = 0; i < list.length; i++) {
+      syns = list[i][0].split('|');
+      for (j = 0; j < syns.length; j++) {
+        if (syns[j].indexOf(' ') === -1 && syns[j].length >= 3 && words.indexOf(syns[j]) !== -1) return list[i][1];
+      }
+    }
+    return null;
+  }
+
+  function run(action, cmd) {
+    if (typeof action === 'string') { go(action); return; }
+    if (typeof action === 'function') { var r = action(cmd); if (r) say(r); return; }
+    say(action);
+  }
+
+  function handle(raw) {
+    var text = String(raw || '').trim();
+    if (!text) return;
+    flush();
+    say({ t: '> ' + text, c: 'you' });
+    state.history.unshift(text); state.hIdx = -1;
+
+    var cmd = normalize(text);
+    if (!cmd) { say(['Say something. The neighbors are listening.']); return; }
+
+    var action = match(NODES[state.node].cmds || [], cmd);
+    if (action === null) action = match(GLOBAL, cmd);
+    if (action === null) {
+      var line = UNKNOWN[Math.floor(Math.random() * UNKNOWN.length)].replace('{cmd}', text);
+      say([{ t: line, c: 'sys' }]);
+      return;
+    }
+    run(action, cmd);
+  }
+
+  function restart() {
+    out.innerHTML = '';
+    state.node = 'road'; state.prev = []; state.wallet = 20; state.fear = 0;
+    state.paid = false; state.donated = false; state.hasBeans = true;
+    say([
+      { t: 'NIGHTMARE ON THE CROW // HARFF ROAD v2026.10', c: 'sys' },
+      { t: 'loading greenfield.map ... ok · loading neighbors ... 3 found · loading fear ... standby', c: 'dim' },
+      { blank: true }
+    ]);
+    go('road', true, true);
+    say([{ t: 'Type a command or tap a choice. HELP lists commands. ESC skips the typing.', c: 'dim' }]);
+  }
+
+  /* ============================================================
+     INPUT
+     ============================================================ */
+  input.addEventListener('input', function () { mirror.textContent = input.value; });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = input.value; input.value = ''; mirror.textContent = '';
+    handle(v);
+  });
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (!state.history.length) return;
+      state.hIdx = e.key === 'ArrowUp' ? Math.min(state.hIdx + 1, state.history.length - 1) : Math.max(state.hIdx - 1, -1);
+      input.value = state.hIdx === -1 ? '' : state.history[state.hIdx];
+      mirror.textContent = input.value;
+    }
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') flush(); });
+  form.addEventListener('click', function () { input.focus(); });
+  out.addEventListener('click', function (e) {
+    if (e.target.closest('a')) return;
+    if (tw.busy) flush(); else if (canHover && !String(window.getSelection && window.getSelection()).length) input.focus();
+  });
+  choicesEl.addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b) return;
+    handle(b.getAttribute('data-cmd'));
+    if (canHover) input.focus();
+  });
+
+  /* ============================================================
+     COUNTDOWN — Fri Oct 9, 2026, 7:30 PM America/Chicago (CDT = UTC-5)
+     ============================================================ */
+  var TARGET = new Date('2026-10-09T19:30:00-05:00');
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function parts() {
+    var diff = TARGET.getTime() - Date.now();
+    if (isNaN(diff) || diff <= 0) return null;
+    var s = Math.floor(diff / 1000);
+    return { d: Math.floor(s / 86400), h: Math.floor(s % 86400 / 3600), m: Math.floor(s % 3600 / 60), s: s % 60 };
+  }
+  function countdownString() {
+    var p = parts();
+    return p ? p.d + 'd ' + pad(p.h) + 'h ' + pad(p.m) + 'm ' + pad(p.s) + 's' : '0 — the gates are open';
+  }
+  function tickCountdown() {
+    var p = parts(), box = $('countdown');
+    if (!p) {
+      box.innerHTML = '<span class="live">THE GATES ARE OPEN — SEE YOU ON THE TRAIL</span>';
+      return;
+    }
+    $('cd-d').textContent = pad(p.d); $('cd-h').textContent = pad(p.h);
+    $('cd-m').textContent = pad(p.m); $('cd-s').textContent = pad(p.s);
+  }
+  tickCountdown();
+  setInterval(tickCountdown, 1000);
+
+  /* ============================================================
+     SKIP / BACK PILL
+     ============================================================ */
+  function scrollToInfo() {
+    $('info').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+  }
+  var pill = $('backpill'), term = $('terminal');
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      pill.classList.toggle('show', !entries[0].isIntersecting);
+    }, { threshold: 0.05 }).observe(term);
+  }
+
+  /* ============================================================
+     BOOT
+     ============================================================ */
+  renderStatus();
+  restart();
+  if (canHover) input.focus({ preventScroll: true });
+})();
+</script>
+</body>
+</html>

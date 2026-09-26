@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nightmare on the Crow — Survive the Trail | Haunted Trail, Greenfield MN</title>
+<meta name="description" content="Nightmare on the Crow is a haunted trail through the woods at 6470 Harff Road, Greenfield, MN. Four nights in October 2026. $20, or $15 with a food-shelf or winter-clothing donation. Follow the map. Don't leave the path.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   CONCEPT #4 — SURVIVE THE TRAIL
+   A hand-drawn field map of the property is the centerpiece. Everything
+   else on the page is a note pinned around it.
+   ===================================================================== */
+
+/* ---------- Tokens ---------- */
+:root{
+  --bg:#0a0f0c;          /* forest green-black */
+  --bg2:#111a14;
+  --bg3:#182319;
+  --parch:#e8dcc0;       /* parchment */
+  --parch2:#d8c8a4;
+  --parch3:#c9b78f;
+  --ink:#2a1f14;         /* map ink */
+  --ink2:#5a4630;
+  --red:#c8441c;         /* hotspot ink */
+  --red2:#e8632c;
+  --river:#5c7d8a;
+  --river2:#8aa5ad;
+  --text:#e9e2d3;
+  --muted:#aaa494;
+  --wood:#4a2f1a;
+  --wood2:#6a4526;
+  --display:'Caveat','Comic Sans MS',cursive;
+  --body:'Lora',Georgia,'Times New Roman',serif;
+  --max:1180px;
+  --radius:12px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:var(--body);font-size:17px;line-height:1.65;
+  overflow-x:hidden;
+}
+img{max-width:100%}
+a{color:var(--red2)}
+a:hover{color:#ffb08a}
+h1,h2,h3,h4{margin:0 0 .4em;line-height:1.1;font-weight:700}
+h2{font-family:var(--display);font-size:clamp(2.4rem,5vw,3.6rem);color:var(--parch);letter-spacing:.01em}
+h3{font-family:var(--display);font-size:1.9rem;color:var(--parch)}
+p{margin:0 0 1em}
+:focus-visible{outline:3px solid var(--red2);outline-offset:3px;border-radius:4px}
+.wrap{width:min(var(--max),100% - 32px);margin-inline:auto}
+section{padding:72px 0}
+.eyebrow{font-family:var(--display);color:var(--red2);font-size:1.35rem;letter-spacing:.04em;margin:0 0 .3em}
+.lead{font-size:1.1rem;color:var(--muted);max-width:62ch}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:.5em;
+  padding:.85em 1.5em;border-radius:6px;border:2px solid transparent;
+  font-family:var(--body);font-weight:600;font-size:1rem;text-decoration:none;
+  cursor:pointer;transition:transform .15s ease,background .15s ease,color .15s ease;
+  line-height:1.2;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn--primary{background:var(--red);color:#fff8ef;box-shadow:0 8px 22px -8px rgba(232,99,44,.7)}
+.btn--primary:hover{background:var(--red2);color:#fff}
+.btn--ghost{border-color:var(--parch3);color:var(--parch)}
+.btn--ghost:hover{background:rgba(232,220,192,.08);color:#fff}
+.btn--ink{background:var(--ink);color:var(--parch)}
+.btn--ink:hover{background:#3d2d1d;color:#fff}
+
+/* ---------- Concept badge ---------- */
+.concept-badge{
+  position:fixed;left:12px;bottom:12px;z-index:200;
+  background:#fff;color:#111;font:700 11px/1.2 system-ui,sans-serif;
+  letter-spacing:.06em;text-transform:uppercase;
+  padding:7px 10px;border-radius:4px;box-shadow:0 2px 10px rgba(0,0,0,.5);
+  pointer-events:none;
+}
+
+/* ---------- Nav ---------- */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,15,12,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(232,220,192,.12);
+}
+.nav__in{display:flex;align-items:center;gap:20px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--parch);font-family:var(--display);font-size:1.5rem;font-weight:700;line-height:1;white-space:nowrap}
+.brand svg{width:34px;height:24px;flex:none}
+.nav__links{display:flex;gap:2px;margin-left:auto;list-style:none;padding:0;margin-block:0;flex-wrap:nowrap}
+.nav__links a{color:var(--parch);text-decoration:none;font-size:.88rem;padding:8px 9px;border-radius:4px;opacity:.85;white-space:nowrap}
+.nav__links a:hover{opacity:1;background:rgba(232,220,192,.08)}
+.nav .btn{padding:.6em 1.1em;font-size:.9rem}
+.nav__toggle{display:none;margin-left:auto;background:none;border:1px solid var(--parch3);color:var(--parch);width:44px;height:40px;border-radius:6px;cursor:pointer;font-size:0}
+.nav__toggle span,.nav__toggle span::before,.nav__toggle span::after{display:block;width:20px;height:2px;background:var(--parch);position:relative;margin:0 auto;content:"";transition:transform .2s}
+.nav__toggle span::before{position:absolute;top:-6px}
+.nav__toggle span::after{position:absolute;top:6px}
+@media (max-width:1100px){
+  .nav__toggle{display:block}
+  .nav .btn--primary{display:none}
+  .nav__links{
+    display:none;position:absolute;left:0;right:0;top:64px;
+    flex-direction:column;gap:0;background:var(--bg2);border-bottom:1px solid rgba(232,220,192,.15);
+    padding:8px 16px 16px;
+  }
+  .nav__links.is-open{display:flex}
+  .nav__links a{display:block;padding:12px 8px;font-size:1.05rem;border-bottom:1px solid rgba(232,220,192,.08)}
+  .nav__links li:last-child{margin-top:10px}
+  .nav__links li:last-child a{background:var(--red);color:#fff;text-align:center;border-radius:6px;border:0}
+}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;overflow:hidden;padding:70px 0 0;min-height:min(82vh,820px);display:flex;align-items:center;
+  background:
+    radial-gradient(ellipse 60% 40% at 80% 15%,rgba(232,220,192,.10),transparent 60%),
+    linear-gradient(180deg,#0b120e 0%,#0a0f0c 60%,#070a08 100%);
+}
+.hero__grid{display:grid;grid-template-columns:1.25fr .9fr;gap:40px;align-items:center;position:relative;z-index:2;padding-bottom:110px}
+.hero h1{font-family:var(--display);font-size:clamp(2.7rem,6.4vw,5.2rem);color:var(--parch);line-height:1.02;margin:0 0 .35em;text-shadow:0 2px 0 rgba(0,0,0,.6)}
+.hero h1 em{font-style:normal;color:var(--red2)}
+.hero .lead{font-size:1.15rem;margin-bottom:1.6em}
+.hero__cta{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.hero__moon{position:absolute;right:8%;top:9%;width:120px;height:120px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,#fff8e3,#e8dcc0 55%,#cbbd97 100%);
+  box-shadow:0 0 60px 20px rgba(232,220,192,.16),0 0 140px 50px rgba(232,220,192,.06);z-index:1}
+.hero__moon::after{content:"";position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle at 62% 60%,rgba(90,70,48,.25) 0 9px,transparent 10px),
+             radial-gradient(circle at 30% 65%,rgba(90,70,48,.2) 0 6px,transparent 7px),
+             radial-gradient(circle at 55% 28%,rgba(90,70,48,.18) 0 5px,transparent 6px)}
+.hero__trees{position:absolute;left:0;right:0;bottom:-2px;width:100%;height:auto;z-index:1;display:block}
+.fog{position:absolute;left:-20%;right:-20%;bottom:0;height:45%;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,transparent,rgba(232,220,192,.06) 40%,rgba(232,220,192,.12));
+  filter:blur(24px);animation:fogDrift 18s ease-in-out infinite alternate}
+@keyframes fogDrift{from{transform:translateX(-4%)}to{transform:translateX(4%)}}
+@media (max-width:900px){
+  .hero{min-height:0;padding-top:96px}
+  .hero__grid{grid-template-columns:1fr;gap:30px;padding-bottom:120px}
+  .signpost{justify-self:stretch;width:100%}
+  .hero__moon{width:72px;height:72px;right:18px;top:14px}
+}
+
+/* Trailhead signpost = countdown */
+.signpost{position:relative;justify-self:center;width:min(100%,360px)}
+.signpost__post{width:14px;height:90px;margin:-4px auto 0;background:linear-gradient(90deg,#3a2414,#5a3a22 50%,#2f1c10);border-radius:0 0 4px 4px}
+.sign{
+  background:linear-gradient(180deg,var(--wood2),var(--wood));
+  border:4px solid #2c1a0e;border-radius:8px;padding:18px 20px 16px;color:var(--parch);
+  box-shadow:0 20px 40px -20px #000,inset 0 0 0 1px rgba(232,220,192,.08);
+  position:relative;transform:rotate(-1.5deg);
+}
+.sign::before,.sign::after{content:"";position:absolute;top:8px;width:9px;height:9px;border-radius:50%;background:#1a100a;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+.sign::before{left:10px}.sign::after{right:10px}
+.sign__title{font-family:var(--display);font-size:1.6rem;text-align:center;margin:0 0 6px;letter-spacing:.03em}
+.cd{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center}
+.cd div{background:rgba(0,0,0,.35);border-radius:6px;padding:8px 2px 6px}
+.cd b{display:block;font-family:var(--display);font-size:2.1rem;line-height:1;font-weight:700;color:#fff3dd}
+.cd span{display:block;font-size:.7rem;text-transform:uppercase;letter-spacing:.14em;color:var(--parch3);margin-top:3px}
+.sign__foot{text-align:center;font-family:var(--display);font-size:1.15rem;margin:10px 0 0;color:var(--parch2)}
+.sign__foot strong{color:#fff}
+
+/* Photo placeholder (production: real photo/video goes here) */
+.ph{
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  border:2px dashed rgba(232,220,192,.45);color:var(--parch2);
+  background:repeating-linear-gradient(135deg,rgba(232,220,192,.06) 0 10px,transparent 10px 20px),#0e1510;
+  font:600 .78rem/1.4 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;
+  padding:14px;border-radius:6px;min-height:120px;
+}
+.ph--light{border-color:var(--ink2);color:var(--ink2);background:repeating-linear-gradient(135deg,rgba(42,31,20,.08) 0 10px,transparent 10px 20px),var(--parch2)}
+.polaroid{background:var(--parch);padding:10px 10px 34px;transform:rotate(3deg);width:min(100%,300px);margin:26px auto 0;box-shadow:0 18px 30px -18px #000;position:relative}
+.polaroid .ph{min-height:170px}
+.polaroid::after{content:"trail entrance, dusk";position:absolute;left:0;right:0;bottom:6px;text-align:center;font-family:var(--display);color:var(--ink);font-size:1.15rem}
+.polaroid::before{content:"";position:absolute;top:-12px;left:50%;width:70px;height:22px;transform:translateX(-50%) rotate(-3deg);background:rgba(200,180,140,.7);border-left:1px dashed rgba(0,0,0,.2);border-right:1px dashed rgba(0,0,0,.2)}
+
+/* ---------- Map section ---------- */
+.mapsec{background:linear-gradient(180deg,#070a08,#0b120e 20%,#0b120e 80%,#070a08)}
+.mapsec__head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:26px}
+.map-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr);gap:28px;align-items:start}
+.parch-outer{filter:drop-shadow(0 22px 34px rgba(0,0,0,.6)) drop-shadow(0 0 1px rgba(232,220,192,.3))}
+.parch{
+  position:relative;
+  background:
+    radial-gradient(ellipse at 20% 15%,rgba(255,250,235,.55),transparent 55%),
+    radial-gradient(ellipse at 85% 90%,rgba(150,120,80,.35),transparent 50%),
+    radial-gradient(ellipse at 50% 50%,transparent 60%,rgba(120,90,50,.25) 100%),
+    var(--parch);
+  padding:3.2% 3% 3%;
+  /* torn edge */
+  clip-path:polygon(.5% 1%,4% .2%,9% 1.2%,15% .4%,22% 1.5%,30% .3%,38% 1.1%,46% .5%,55% 1.4%,63% .2%,71% 1.2%,79% .4%,87% 1.3%,94% .3%,99.5% 1.2%,99.2% 8%,100% 16%,99% 26%,99.6% 36%,98.8% 47%,99.7% 58%,99% 69%,99.8% 80%,99.1% 90%,99.6% 99%,93% 98.8%,85% 99.8%,76% 98.9%,67% 99.7%,58% 98.7%,49% 99.6%,40% 98.8%,31% 99.8%,22% 98.9%,13% 99.7%,5% 98.8%,.3% 99.5%,1% 90%,.2% 80%,1.2% 69%,.3% 58%,1% 47%,.2% 36%,1.1% 26%,.3% 16%,1% 8%);
+}
+.map-wrap{position:relative}
+.map{display:block;width:100%;height:auto;font-family:var(--display)}
+.map text{fill:var(--ink);font-family:var(--display);font-weight:700}
+.map .lbl{font-size:17px;letter-spacing:.02em}
+.map .lbl--sm{font-size:14px;font-weight:500}
+.map .lbl--big{font-size:30px;letter-spacing:.06em}
+.map .contour{fill:none;stroke:var(--ink);stroke-width:1;opacity:.12}
+.map .trail{fill:none;stroke:var(--red);stroke-width:4;stroke-dasharray:12 9;stroke-linecap:round}
+.trail-dashes line{stroke:var(--red);stroke-width:4;stroke-linecap:round;opacity:0;transition:opacity .3s ease}
+.trail-dashes.is-drawn line{opacity:1}
+
+/* Hotspots: real <button>s positioned over the SVG by viewBox percentage */
+.hotspot{
+  position:absolute;transform:translate(-50%,-50%);
+  width:36px;height:36px;border-radius:50%;border:2px solid #fff3dd;
+  background:var(--red);color:#fff8ef;font:700 17px/1 var(--display);
+  cursor:pointer;padding:0;display:grid;place-items:center;
+  box-shadow:0 3px 8px rgba(0,0,0,.45);transition:transform .15s ease,background .15s ease;
+}
+.hotspot::before{content:"";position:absolute;inset:-7px;border-radius:50%;border:2px solid var(--red2);opacity:.7;animation:pulse 2s ease-out infinite}
+@keyframes pulse{0%{transform:scale(.7);opacity:.8}100%{transform:scale(1.35);opacity:0}}
+.hotspot:hover,.hotspot.is-active{transform:translate(-50%,-50%) scale(1.18);background:var(--red2);z-index:3}
+.hotspot.is-active::before{animation:none;opacity:1;transform:scale(1);border-color:var(--ink)}
+.hotspot.is-visited{background:var(--ink);border-color:var(--parch)}
+.hotspot.is-visited::before{animation:none;opacity:0}
+.hotspot.is-visited.is-active{background:var(--red2)}
+.hotspot.is-visited::after{content:"";position:absolute;right:-5px;top:-5px;width:14px;height:14px;border-radius:50%;background:var(--red2);border:2px solid var(--parch)}
+.hotspot:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+
+/* Field-note aside */
+.notes{position:sticky;top:84px}
+.progress{margin-bottom:14px}
+.progress__label{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--display);font-size:1.35rem;color:var(--parch)}
+.progress__label strong{color:var(--red2)}
+.pips{display:flex;gap:6px;margin-top:8px}
+.pips span{flex:1;height:10px;border-radius:5px;background:rgba(232,220,192,.15);border:1px solid rgba(232,220,192,.25);transition:background .3s}
+.pips span.on{background:var(--red2);border-color:var(--red2)}
+.note{
+  background:var(--parch);color:var(--ink);padding:22px 22px 20px;border-radius:3px;position:relative;
+  box-shadow:0 18px 30px -18px #000;transform:rotate(-.6deg);
+  background-image:repeating-linear-gradient(0deg,transparent 0 27px,rgba(42,31,20,.08) 27px 28px);
+  background-position:0 60px;min-height:300px;
+}
+.note::before{content:"";position:absolute;top:-10px;left:22px;width:80px;height:22px;background:rgba(200,180,140,.75);transform:rotate(-4deg);border-left:1px dashed rgba(0,0,0,.2);border-right:1px dashed rgba(0,0,0,.2)}
+.note__tag{font:700 .72rem/1 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin:0 0 8px}
+.note h3{color:var(--ink);font-size:2.1rem;margin-bottom:.2em}
+.note p{margin-bottom:.8em}
+.note__tip{font-family:var(--display);font-size:1.2rem;color:var(--ink2);border-top:1px dashed var(--ink2);padding-top:10px;margin-top:6px}
+.note__tip b{color:var(--red)}
+.note .ph{margin:8px 0 12px;min-height:90px}
+.note__nav{display:flex;justify-content:space-between;gap:10px;margin-top:14px}
+.note__nav button{background:none;border:1.5px solid var(--ink2);color:var(--ink);font-family:var(--display);font-weight:700;font-size:1.1rem;padding:6px 14px;border-radius:4px;cursor:pointer}
+.note__nav button:hover{background:var(--ink);color:var(--parch)}
+.note__hint{color:var(--ink2);font-style:italic}
+.survived{
+  display:none;margin-top:16px;background:var(--red);color:#fff8ef;padding:18px 20px;border-radius:6px;
+  box-shadow:0 16px 30px -14px rgba(232,99,44,.8);transform:rotate(.6deg);
+}
+.survived.is-on{display:block;animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.85) rotate(.6deg);opacity:0}to{transform:scale(1) rotate(.6deg);opacity:1}}
+.survived h3{color:#fff;font-size:1.9rem}
+.survived p{margin-bottom:.9em}
+.survived .btn{background:var(--parch);color:var(--ink)}
+.survived .btn:hover{background:#fff}
+@media (max-width:960px){
+  .map-grid{grid-template-columns:1fr}
+  .notes{position:static}
+  .hotspot{width:32px;height:32px;font-size:15px}
+}
+@media (max-width:480px){.hotspot{width:30px;height:30px;font-size:14px}}
+
+/* ---------- Schedule board ---------- */
+.board-sec{background:var(--bg)}
+.board{
+  background:
+    repeating-linear-gradient(90deg,transparent 0 60px,rgba(0,0,0,.12) 60px 63px),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.03) 0 2px,transparent 2px 9px),
+    linear-gradient(180deg,var(--wood2),var(--wood));
+  border:8px solid #2c1a0e;border-radius:6px;padding:26px 22px;position:relative;
+  box-shadow:0 30px 50px -30px #000,inset 0 0 40px rgba(0,0,0,.35);
+  color:var(--parch);
+}
+.board::before,.board::after{content:"";position:absolute;top:10px;width:12px;height:12px;border-radius:50%;background:#1a100a;box-shadow:inset 0 1px 0 rgba(255,255,255,.15)}
+.board::before{left:10px}.board::after{right:10px}
+.board h3{text-align:center;font-size:2.2rem;margin:0 0 4px}
+.board__sub{text-align:center;font-family:var(--display);color:var(--parch2);font-size:1.25rem;margin-bottom:18px}
+.board__rows{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.board__rows li{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;background:rgba(0,0,0,.28);border:1px solid rgba(232,220,192,.12);padding:12px 16px;border-radius:4px}
+.board__rows .day{font-family:var(--display);font-size:1.8rem;font-weight:700;line-height:1;min-width:120px}
+.board__rows .day small{display:block;font-size:.95rem;font-weight:500;color:var(--parch2);letter-spacing:.06em}
+.board__rows .what{color:var(--parch2)}
+.board__rows .hrs{font-family:var(--display);font-size:1.4rem;font-weight:700;color:#fff;text-align:right;white-space:nowrap}
+.board__rows li.kids{background:rgba(232,180,60,.14);border-color:rgba(232,180,60,.4)}
+.board__rows li.kids .hrs{color:#ffd77a}
+.board__foot{margin:16px 0 0;text-align:center;font-family:var(--display);font-size:1.2rem;color:var(--parch2)}
+.board-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center}
+@media (max-width:860px){
+  .board-grid{grid-template-columns:1fr}
+  .board__rows li{grid-template-columns:1fr auto}
+  .board__rows .what{grid-column:1/-1;font-size:.95rem}
+}
+
+/* ---------- Trail passes (ticket stubs) ---------- */
+.passes{background:linear-gradient(180deg,var(--bg),var(--bg2))}
+.pass-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch;margin-top:26px}
+.pass{
+  --edge:var(--bg2);
+  display:grid;grid-template-columns:1fr 112px;background:var(--parch);color:var(--ink);border-radius:8px;position:relative;overflow:visible;
+  box-shadow:0 20px 34px -22px #000;
+  -webkit-mask-image:radial-gradient(circle at 0 12px,transparent 6px,#000 6.5px);mask-image:radial-gradient(circle at 0 12px,transparent 6px,#000 6.5px);
+  -webkit-mask-size:100% 24px;mask-size:100% 24px;-webkit-mask-repeat:repeat-y;mask-repeat:repeat-y;
+}
+.pass__main{padding:22px 20px 20px 26px;display:flex;flex-direction:column}
+.pass__kind{font:700 .7rem/1 system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--ink2);margin:0 0 6px}
+.pass h3{color:var(--ink);font-size:2rem;line-height:1;margin:0 0 .35em}
+.pass p{font-size:.95rem;margin-bottom:.6em}
+.pass__meta{margin-top:auto;font-family:var(--display);font-size:1.1rem;color:var(--ink2)}
+.pass__stub{border-left:2px dashed var(--ink2);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px 10px;position:relative;text-align:center}
+.pass__stub::before,.pass__stub::after{content:"";position:absolute;left:-13px;width:24px;height:24px;border-radius:50%;background:var(--edge)}
+.pass__stub::before{top:-13px}.pass__stub::after{bottom:-13px}
+.price{font-family:var(--display);font-size:3.2rem;font-weight:700;line-height:1;color:var(--ink)}
+.price sup{font-size:1.4rem;vertical-align:top;top:.35em;position:relative}
+.pass__stub small{display:block;font:700 .62rem/1.2 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);margin-top:8px}
+.pass__stub .serial{font:.6rem/1 monospace;letter-spacing:.2em;color:var(--ink2);margin-top:14px;writing-mode:vertical-rl;opacity:.7}
+.pass--best{background:linear-gradient(180deg,#f3e8cc,var(--parch));outline:3px solid var(--red2);outline-offset:-3px}
+.pass--best .price{color:var(--red)}
+.pass--best h3{font-size:2.15rem}
+.stamp{
+  position:absolute;right:10px;top:12px;transform:rotate(-8deg);
+  font:700 .72rem/1 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--red);border:2.5px solid var(--red);padding:6px 8px;border-radius:4px;background:rgba(243,232,204,.9);
+  box-shadow:inset 0 0 0 1px rgba(200,68,28,.3);
+}
+.pass--kids{background:linear-gradient(180deg,#fbeec9,#f0dfae)}
+.pass--kids .price{color:#b8681a}
+.pass-cta{margin-top:28px;display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.pass-cta p{margin:0;color:var(--muted)}
+@media (max-width:980px){.pass-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.pass-grid{grid-template-columns:1fr}}
+
+/* ---------- Daylight Trail ---------- */
+.daylight{
+  background:
+    radial-gradient(ellipse 50% 60% at 85% 0%,rgba(255,210,110,.28),transparent 60%),
+    linear-gradient(180deg,#f2e3b8,#e8dcc0);
+  color:var(--ink);position:relative;overflow:hidden;
+}
+.daylight h2,.daylight h3{color:var(--ink)}
+.daylight .eyebrow{color:#b8681a}
+.daylight .lead{color:var(--ink2)}
+.day-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.sun{width:min(100%,320px);height:auto;margin-inline:auto;display:block}
+.sun .rays{transform-origin:160px 160px;animation:spin 60s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.day-facts{list-style:none;padding:0;margin:0 0 20px;display:grid;gap:10px}
+.day-facts li{display:flex;gap:12px;align-items:baseline;background:rgba(255,255,255,.4);padding:12px 14px;border-radius:6px;border:1px solid rgba(42,31,20,.15)}
+.day-facts b{font-family:var(--display);font-size:1.5rem;color:#b8681a;min-width:92px;line-height:1}
+.daylight .btn--primary{background:#b8681a}
+.daylight .btn--primary:hover{background:#d27a22}
+@media (max-width:820px){.day-grid{grid-template-columns:1fr}.sun{width:220px}}
+
+/* ---------- Ranger's Notes ---------- */
+.ranger{background:var(--bg2);position:relative}
+.ranger-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:30px}
+.rnote{
+  background:var(--parch);color:var(--ink);padding:26px 22px 22px;position:relative;
+  box-shadow:0 20px 30px -20px #000;transform:rotate(-1.2deg);
+}
+.rnote:nth-child(2){transform:rotate(1deg)}
+.rnote:nth-child(3){transform:rotate(-.5deg)}
+.rnote::before{content:"";position:absolute;top:-9px;left:50%;transform:translateX(-50%) rotate(-2deg);width:90px;height:22px;background:rgba(200,180,140,.75);border-left:1px dashed rgba(0,0,0,.2);border-right:1px dashed rgba(0,0,0,.2)}
+.rnote h3{color:var(--ink);font-size:1.85rem}
+.rnote p{font-size:.98rem}
+.rnote .pin{position:absolute;right:16px;top:14px;width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#ff8a5b,var(--red) 60%,#8a2a0e);box-shadow:0 2px 4px rgba(0,0,0,.4)}
+.rnote__badge{display:inline-block;font:700 .68rem/1 system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:var(--red);padding:5px 8px;border-radius:3px;margin-bottom:10px}
+.trucks{margin-top:34px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;color:var(--muted)}
+.trucks span{display:inline-block;background:rgba(232,220,192,.08);border:1px solid rgba(232,220,192,.2);padding:8px 14px;border-radius:30px;color:var(--parch);font-family:var(--display);font-size:1.2rem}
+@media (max-width:900px){.ranger-grid{grid-template-columns:1fr}.rnote,.rnote:nth-child(2),.rnote:nth-child(3){transform:none}}
+
+/* ---------- Wanted poster ---------- */
+.wanted-sec{background:linear-gradient(180deg,var(--bg2),var(--bg))}
+.wanted-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:40px;align-items:center}
+.wanted{
+  background:linear-gradient(180deg,#e2d3ac,#cfbc90);color:var(--ink);padding:30px 26px;text-align:center;
+  border:3px double var(--ink2);box-shadow:0 26px 40px -24px #000;transform:rotate(1.4deg);position:relative;
+  clip-path:polygon(1% 0,99% 1%,100% 12%,98.5% 30%,100% 52%,98.6% 74%,100% 99%,60% 98.5%,30% 100%,0 99%,1.5% 70%,0 45%,1.2% 20%);
+}
+.wanted__top{font:700 3rem/1 var(--display);letter-spacing:.14em;text-transform:uppercase;border-bottom:3px double var(--ink2);padding-bottom:8px;margin-bottom:14px}
+.wanted__mid{font-family:var(--display);font-size:1.5rem;line-height:1.2;margin-bottom:12px}
+.wanted .ph{min-height:150px;margin:0 0 14px}
+.wanted__reward{font-family:var(--display);font-size:1.3rem;color:var(--red);border-top:2px solid var(--ink2);padding-top:10px;margin-top:4px}
+.crew-list{list-style:none;padding:0;margin:0 0 22px;display:grid;gap:12px}
+.crew-list li{background:rgba(232,220,192,.05);border-left:3px solid var(--red2);padding:12px 16px;border-radius:0 6px 6px 0}
+.crew-list b{font-family:var(--display);font-size:1.35rem;color:var(--parch)}
+@media (max-width:860px){.wanted-grid{grid-template-columns:1fr}.wanted{transform:none;max-width:460px;margin-inline:auto}}
+
+/* ---------- FAQ ---------- */
+.faq{background:var(--bg)}
+.faq-list{display:grid;gap:10px;margin-top:24px;max-width:860px}
+.faq details{background:var(--bg2);border:1px solid rgba(232,220,192,.14);border-radius:8px}
+.faq summary{cursor:pointer;padding:16px 20px;font-family:var(--display);font-size:1.45rem;color:var(--parch);list-style:none;display:flex;justify-content:space-between;gap:16px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--body);color:var(--red2);font-size:1.4rem;line-height:1;flex:none}
+.faq details[open] summary::after{content:"–"}
+.faq details p{padding:0 20px 18px;margin:0;color:var(--text)}
+
+/* ---------- Directions ---------- */
+.dir{background:linear-gradient(180deg,var(--bg),#070a08)}
+.dir-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.addr{font-family:var(--display);font-size:2rem;line-height:1.15;color:var(--parch);margin:0 0 6px}
+.steps{list-style:none;padding:0;margin:22px 0;counter-reset:s;display:grid;gap:12px}
+.steps li{counter-increment:s;display:flex;gap:14px;align-items:flex-start}
+.steps li::before{content:counter(s);flex:none;width:32px;height:32px;border-radius:50%;background:var(--red);color:#fff;font:700 1.05rem/32px var(--display);text-align:center}
+.dir .ph{min-height:220px}
+@media (max-width:820px){.dir-grid{grid-template-columns:1fr}}
+
+/* ---------- Footer ---------- */
+footer{background:#050807;border-top:1px solid rgba(232,220,192,.1);padding:40px 0 90px;color:var(--muted);font-size:.95rem}
+.foot-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:30px}
+.foot-grid h4{font-family:var(--display);color:var(--parch);font-size:1.4rem;margin-bottom:.4em}
+.foot-grid ul{list-style:none;padding:0;margin:0;display:grid;gap:6px}
+.foot-grid a{color:var(--parch2);text-decoration:none}
+.foot-grid a:hover{color:#fff;text-decoration:underline}
+.socials{display:flex;gap:10px;margin-top:10px}
+.socials a{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:50%;border:1px solid rgba(232,220,192,.3);color:var(--parch)}
+.socials a:hover{background:var(--red);border-color:var(--red);color:#fff}
+.socials svg{width:18px;height:18px;fill:currentColor}
+.foot-bottom{margin-top:30px;padding-top:18px;border-top:1px solid rgba(232,220,192,.1);display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.85rem}
+@media (max-width:760px){.foot-grid{grid-template-columns:1fr}}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  .fog{display:none}
+  .btn:hover{transform:none}
+}
+</style>
+</head>
+<body>
+
+<div class="concept-badge" aria-hidden="true">Concept #4 — Survive the Trail</div>
+
+<!-- ============================ NAV ============================ -->
+<header class="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="#top" aria-label="Nightmare on the Crow — home">
+      <svg viewBox="0 0 60 40" aria-hidden="true" focusable="false"><path fill="currentColor" d="M2 30C10 18 22 12 34 14c4-6 10-8 16-6l8-2-8 6c4 4 0 10-6 12-4 8-14 12-22 10l-8 6 4-7C10 34 4 33 2 30Z"/></svg>
+      Nightmare on the Crow
+    </a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="navLinks" id="navToggle">Menu<span></span></button>
+    <ul class="nav__links" id="navLinks">
+      <li><a href="#map">The Map</a></li>
+      <li><a href="#nights">Nights</a></li>
+      <li><a href="#passes">Trail Passes</a></li>
+      <li><a href="#daylight">Daylight Trail</a></li>
+      <li><a href="#ranger">Ranger's Notes</a></li>
+      <li><a href="#crew">Crew</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#directions">Directions</a></li>
+      <li><a href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a></li>
+    </ul>
+    <a class="btn btn--primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
+  </div>
+</header>
+
+<main id="top">
+
+<!-- ============================ HERO ============================ -->
+<section class="hero" aria-labelledby="heroTitle">
+  <div class="hero__moon" aria-hidden="true"></div>
+  <div class="fog" aria-hidden="true"></div>
+  <div class="wrap hero__grid">
+    <div>
+      <p class="eyebrow">Haunted Trail · Greenfield, Minnesota · Along the Crow River</p>
+      <h1 id="heroTitle">6470 Harff Road.<br>Follow the path.<br><em>Don't leave it.</em></h1>
+      <p class="lead">Four October nights. Three neighbors. One trail into the woods — tunnels, a corn maze, haunted buildings, and live actors who know these trees better than you do. This isn't just a haunt. It's an experience designed to crawl under your skin.</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets — $20</a>
+        <a class="btn btn--ghost" href="#map">Open the map</a>
+      </div>
+      <div class="polaroid" aria-hidden="true"><div class="ph">PHOTO: trail entrance at dusk, lanterns lit</div></div>
+    </div>
+
+    <!-- Countdown as a trailhead signpost -->
+    <div class="signpost" role="timer" aria-live="off" aria-label="Countdown to opening night">
+      <div class="sign">
+        <p class="sign__title" id="cdLabel">Trail opens in</p>
+        <div class="cd" id="cd">
+          <div><b id="cdD">--</b><span>days</span></div>
+          <div><b id="cdH">--</b><span>hrs</span></div>
+          <div><b id="cdM">--</b><span>min</span></div>
+          <div><b id="cdS">--</b><span>sec</span></div>
+        </div>
+        <p class="sign__foot"><strong>Fri, Oct 9 · 7:30 PM</strong> — then Oct 10, 16 &amp; 17</p>
+      </div>
+      <div class="signpost__post" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <!-- Treeline silhouette -->
+  <svg class="hero__trees" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path fill="#070a08" d="M0 180V120l18-30 14 30 10-50 14 50 22-70 20 70 16-40 12 40 20-60 18 60 24-80 22 80 14-30 12 30 20-55 16 55 26-90 24 90 18-40 14 40 22-65 20 65 16-35 12 35 24-75 22 75 14-30 12 30 20-55 16 55 26-95 24 95 18-40 14 40 22-65 20 65 16-35 12 35 24-70 22 70 14-30 12 30 20-55 16 55 26-85 24 85 18-40 14 40 22-65 20 65 16-35 12 35 24-70 22 70 14-30 12 30 20-55 16 55 26-95 24 95 18-40 14 40 22-65 20 65 16-35 12 35 24-70 22 70 14-30 12 30 20-55 16 55 26-85 24 85 18-40 14 40 22-65 20 65 16-30 14 30 20-60 18 60 22-70 20 70 16-35 12 35 20-55 18 55V180Z"/>
+  </svg>
+</section>
+
+<!-- ============================ THE MAP ============================ -->
+<section class="mapsec" id="map" aria-labelledby="mapHeading">
+  <div class="wrap">
+    <div class="mapsec__head">
+      <div>
+        <p class="eyebrow">Field map · 2026 season</p>
+        <h2 id="mapHeading">Survive the Trail</h2>
+      </div>
+      <p class="lead" style="margin:0">Seven marked stops between the parking field and the way out. Hover, tap, or tab through them — every one has a field note from the crew.</p>
+    </div>
+
+    <div class="map-grid">
+      <!-- MAP -->
+      <div class="parch-outer">
+        <div class="parch">
+          <div class="map-wrap">
+            <svg class="map" viewBox="0 0 1000 700" role="img" aria-labelledby="mapTitle mapDesc" focusable="false">
+              <title id="mapTitle">Hand-drawn map of the Nightmare on the Crow property at night</title>
+              <desc id="mapDesc">A dashed trail leaves the parking field, passes the ticket barn, winds through the woods, the tunnels, the haunted buildings, the corn maze, the zombie graveyard and the skeleton cage, then returns to the exit. The Crow River runs along the left edge; a moon hangs top right.</desc>
+              <defs>
+                <pattern id="cornHatch" width="11" height="11" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                  <line x1="0" y1="0" x2="0" y2="11" stroke="#7a5a2c" stroke-width="2"/>
+                </pattern>
+                <pattern id="darkHatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+                  <line x1="0" y1="0" x2="0" y2="6" stroke="#2a1f14" stroke-width="2"/>
+                </pattern>
+                <!-- pine tree -->
+                <symbol id="pine" viewBox="-12 -26 24 40">
+                  <path d="M0-24 8-12 4-12 10-2 5-2 11 6-11 6-5-2-10-2-4-12-8-12Z" fill="#33432c" stroke="#1d2a1a" stroke-width="1.2" stroke-linejoin="round"/>
+                  <line x1="0" y1="6" x2="0" y2="12" stroke="#3b2a16" stroke-width="2.4"/>
+                </symbol>
+                <!-- round tree -->
+                <symbol id="blob" viewBox="-13 -15 26 32">
+                  <ellipse cx="0" cy="-2" rx="11" ry="10" fill="#3d4f33" stroke="#1d2a1a" stroke-width="1.2"/>
+                  <circle cx="-4" cy="-7" r="5.5" fill="#4a5e3e"/>
+                  <line x1="0" y1="8" x2="0" y2="15" stroke="#3b2a16" stroke-width="2.4"/>
+                </symbol>
+                <!-- tombstone -->
+                <symbol id="stone" viewBox="0 0 16 20">
+                  <path d="M2 20V7a6 6 0 0 1 12 0v13Z" fill="#cfc3a6" stroke="#3b2a16" stroke-width="1.4"/>
+                  <line x1="5" y1="10" x2="11" y2="10" stroke="#3b2a16" stroke-width="1.2"/>
+                  <line x1="8" y1="7" x2="8" y2="14" stroke="#3b2a16" stroke-width="1.2"/>
+                </symbol>
+                <!-- haunted hut -->
+                <symbol id="hut" viewBox="0 0 32 44">
+                  <polygon points="1,20 16,2 31,20" fill="#3b2a16" stroke="#1a1410" stroke-width="1.2"/>
+                  <rect x="4" y="20" width="24" height="22" fill="#5a4630" stroke="#1a1410" stroke-width="1.2"/>
+                  <rect x="13" y="30" width="7" height="12" fill="#120d09"/>
+                  <rect x="6" y="24" width="5" height="5" fill="#e8b34a"/>
+                  <rect x="21" y="24" width="5" height="5" fill="#e8b34a"/>
+                </symbol>
+                <!-- car -->
+                <symbol id="car" viewBox="0 0 20 10">
+                  <rect x="1" y="2" width="18" height="7" rx="2" fill="none" stroke="#5a4630" stroke-width="1.4"/>
+                  <line x1="6" y1="2" x2="14" y2="2" stroke="#5a4630" stroke-width="1.4"/>
+                </symbol>
+              </defs>
+
+              <!-- faint contour lines -->
+              <path class="contour" d="M120 300c80-40 160-10 240-40s140-60 240-30 160 60 260 20"/>
+              <path class="contour" d="M110 340c90-30 170 10 250-20s150-50 240-20 170 60 270 30"/>
+              <path class="contour" d="M300 660c80-30 150-20 240-40s150-20 250-50"/>
+              <path class="contour" d="M130 200c70-20 140 20 220 0s140-40 230-20 150 20 240-10"/>
+
+              <!-- the Crow River, left edge -->
+              <g aria-hidden="true">
+                <path d="M70 0C40 80 100 140 60 220S90 380 50 460 100 600 60 700" fill="none" stroke="#5c7d8a" stroke-width="30" opacity=".35" stroke-linecap="round"/>
+                <path d="M70 0C40 80 100 140 60 220S90 380 50 460 100 600 60 700" fill="none" stroke="#6f909c" stroke-width="16" stroke-linecap="round"/>
+                <path d="M70 0C40 80 100 140 60 220S90 380 50 460 100 600 60 700" fill="none" stroke="#b7ccd2" stroke-width="2.5" stroke-dasharray="10 14" stroke-linecap="round" opacity=".9"/>
+                <path d="M58 40q6 4 12 0t12 0M52 300q6 4 12 0t12 0M62 540q6 4 12 0t12 0" fill="none" stroke="#dfeaee" stroke-width="2" stroke-linecap="round"/>
+                <text class="lbl" transform="translate(104 430) rotate(-86)" text-anchor="middle" fill="#3b5560" style="fill:#3b5560;font-size:19px">the Crow River</text>
+              </g>
+
+              <!-- moon + crow -->
+              <g aria-hidden="true">
+                <circle cx="905" cy="78" r="46" fill="#f4ecd2" opacity=".35"/>
+                <circle cx="905" cy="78" r="34" fill="#f6eed6" stroke="#2a1f14" stroke-width="2"/>
+                <circle cx="915" cy="70" r="6" fill="none" stroke="#2a1f14" stroke-width="1.2" opacity=".5"/>
+                <circle cx="896" cy="90" r="4" fill="none" stroke="#2a1f14" stroke-width="1.2" opacity=".5"/>
+                <circle cx="920" cy="92" r="2.5" fill="none" stroke="#2a1f14" stroke-width="1.2" opacity=".5"/>
+                <path d="M2 30C10 18 22 12 34 14c4-6 10-8 16-6l8-2-8 6c4 4 0 10-6 12-4 8-14 12-22 10l-8 6 4-7C10 34 4 33 2 30Z" fill="#2a1f14" transform="translate(818 88) scale(.75)"/>
+                <path d="M2 30C10 18 22 12 34 14c4-6 10-8 16-6l8-2-8 6c4 4 0 10-6 12-4 8-14 12-22 10l-8 6 4-7C10 34 4 33 2 30Z" fill="#2a1f14" transform="translate(858 46) scale(.45)"/>
+              </g>
+
+              <!-- title cartouche -->
+              <g aria-hidden="true">
+                <text class="lbl--big" x="500" y="152" text-anchor="middle" style="font-size:30px">NIGHTMARE ON THE CROW</text>
+                <text class="lbl--sm" x="500" y="173" text-anchor="middle" style="font-size:15px">— property map, 2026 season · not to scale · not safe —</text>
+                <line x1="340" y1="182" x2="660" y2="182" stroke="#2a1f14" stroke-width="1.2" stroke-dasharray="3 4"/>
+              </g>
+
+              <!-- compass rose -->
+              <g aria-hidden="true" transform="translate(165 105)">
+                <circle r="36" fill="none" stroke="#2a1f14" stroke-width="1.5"/>
+                <circle r="30" fill="none" stroke="#2a1f14" stroke-width=".8" stroke-dasharray="2 3"/>
+                <polygon points="0,-30 6,0 0,-8 -6,0" fill="#c8441c"/>
+                <polygon points="0,30 6,0 0,8 -6,0" fill="#2a1f14"/>
+                <polygon points="-30,0 0,-6 -8,0 0,6" fill="#2a1f14"/>
+                <polygon points="30,0 0,-6 8,0 0,6" fill="#2a1f14"/>
+                <text x="0" y="-40" text-anchor="middle" class="lbl">N</text>
+              </g>
+
+              <!-- tree bands -->
+              <g aria-hidden="true">
+                <use href="#pine" x="120" y="28" width="24" height="40"/><use href="#pine" x="150" y="48" width="20" height="34"/><use href="#pine" x="185" y="22" width="28" height="46"/>
+                <use href="#blob" x="225" y="46" width="24" height="30"/><use href="#pine" x="258" y="24" width="24" height="40"/><use href="#pine" x="292" y="52" width="20" height="34"/>
+                <use href="#pine" x="330" y="20" width="28" height="46"/><use href="#blob" x="372" y="46" width="24" height="30"/><use href="#pine" x="412" y="24" width="24" height="40"/>
+                <use href="#pine" x="450" y="52" width="20" height="34"/><use href="#pine" x="488" y="22" width="28" height="46"/><use href="#blob" x="532" y="48" width="24" height="30"/>
+                <use href="#pine" x="570" y="26" width="24" height="40"/><use href="#pine" x="608" y="52" width="20" height="34"/><use href="#pine" x="646" y="22" width="28" height="46"/>
+                <use href="#blob" x="690" y="46" width="24" height="30"/><use href="#pine" x="728" y="26" width="24" height="40"/><use href="#pine" x="766" y="52" width="20" height="34"/>
+                <use href="#pine" x="804" y="30" width="26" height="42"/>
+                <!-- right band -->
+                <use href="#pine" x="925" y="140" width="24" height="40"/><use href="#pine" x="952" y="182" width="20" height="34"/><use href="#blob" x="922" y="224" width="24" height="30"/>
+                <use href="#pine" x="948" y="264" width="26" height="42"/><use href="#pine" x="922" y="312" width="22" height="36"/><use href="#blob" x="952" y="356" width="24" height="30"/>
+                <use href="#pine" x="924" y="400" width="26" height="42"/><use href="#pine" x="954" y="446" width="20" height="34"/><use href="#pine" x="926" y="490" width="24" height="40"/>
+                <!-- scattered interior -->
+                <use href="#pine" x="330" y="228" width="24" height="40"/><use href="#blob" x="296" y="290" width="24" height="30"/><use href="#pine" x="352" y="186" width="20" height="34"/>
+                <use href="#pine" x="470" y="178" width="20" height="34"/><use href="#blob" x="255" y="240" width="26" height="32"/><use href="#pine" x="285" y="176" width="22" height="36"/>
+                <use href="#pine" x="640" y="140" width="20" height="34"/><use href="#pine" x="700" y="122" width="24" height="40"/><use href="#pine" x="862" y="146" width="22" height="36"/>
+                <use href="#blob" x="880" y="196" width="24" height="30"/><use href="#pine" x="600" y="296" width="22" height="36"/><use href="#pine" x="648" y="334" width="26" height="42"/>
+                <use href="#blob" x="480" y="376" width="26" height="32"/><use href="#pine" x="560" y="418" width="24" height="40"/><use href="#pine" x="618" y="440" width="22" height="36"/>
+                <use href="#blob" x="672" y="372" width="24" height="30"/><use href="#pine" x="850" y="462" width="24" height="40"/><use href="#blob" x="818" y="512" width="26" height="32"/>
+                <use href="#pine" x="500" y="292" width="22" height="36"/><use href="#pine" x="230" y="330" width="24" height="40"/><use href="#pine" x="180" y="400" width="22" height="36"/>
+                <use href="#blob" x="140" y="470" width="24" height="30"/><use href="#pine" x="190" y="510" width="22" height="36"/><use href="#pine" x="380" y="410" width="24" height="40"/>
+                <use href="#pine" x="880" y="380" width="24" height="40"/><use href="#pine" x="670" y="600" width="24" height="40"/><use href="#blob" x="700" y="640" width="26" height="32"/>
+                <use href="#pine" x="640" y="640" width="22" height="36"/>
+                <!-- THE WOODS cluster (stop 2) -->
+                <use href="#pine" x="432" y="548" width="24" height="40"/><use href="#pine" x="446" y="612" width="26" height="42"/><use href="#blob" x="486" y="628" width="26" height="32"/>
+                <use href="#pine" x="526" y="618" width="24" height="40"/><use href="#pine" x="552" y="570" width="22" height="36"/><use href="#blob" x="514" y="546" width="24" height="30"/>
+                <use href="#pine" x="576" y="606" width="24" height="40"/><use href="#pine" x="412" y="606" width="22" height="36"/><use href="#blob" x="560" y="640" width="24" height="30"/>
+                <use href="#pine" x="600" y="646" width="20" height="34"/>
+                <text class="lbl" x="490" y="678" text-anchor="middle">THE WOODS</text>
+                <text class="lbl--sm" x="490" y="694" text-anchor="middle">(stay on the path)</text>
+              </g>
+
+              <!-- parking field -->
+              <g aria-hidden="true">
+                <rect x="130" y="565" width="190" height="98" rx="8" fill="none" stroke="#5a4630" stroke-width="1.6" stroke-dasharray="6 5"/>
+                <use href="#car" x="145" y="580" width="20" height="10"/><use href="#car" x="170" y="580" width="20" height="10"/><use href="#car" x="195" y="580" width="20" height="10"/><use href="#car" x="220" y="580" width="20" height="10"/>
+                <use href="#car" x="145" y="600" width="20" height="10"/><use href="#car" x="170" y="600" width="20" height="10"/><use href="#car" x="195" y="600" width="20" height="10"/>
+                <text class="lbl" x="225" y="646" text-anchor="middle">PARKING FIELD</text>
+                <text class="lbl--sm" x="225" y="626" text-anchor="middle" style="fill:#c8441c">you are here (for now)</text>
+                <!-- hay wagon -->
+                <g transform="translate(248 538)">
+                  <rect x="0" y="0" width="34" height="14" rx="2" fill="#c9a24a" stroke="#3b2a16" stroke-width="1.4"/>
+                  <path d="M3 0q4-8 8 0t8 0 8 0 8 0" fill="#e2c46a" stroke="#3b2a16" stroke-width="1.2"/>
+                  <circle cx="7" cy="16" r="4" fill="#5a4630" stroke="#2a1f14" stroke-width="1.2"/><circle cx="27" cy="16" r="4" fill="#5a4630" stroke="#2a1f14" stroke-width="1.2"/>
+                </g>
+                <text class="lbl--sm" x="200" y="548" text-anchor="middle">it all begins with a hayride</text>
+              </g>
+
+              <!-- ticket barn + food trucks (stop 1) -->
+              <g aria-hidden="true">
+                <polygon points="328,520 328,496 340,484 355,477 370,484 382,496 382,520" fill="#8a3b2a" stroke="#2a1f14" stroke-width="1.6" stroke-linejoin="round"/>
+                <rect x="348" y="500" width="14" height="20" fill="#3b2a16"/>
+                <path d="M348 500l14 20M362 500l-14 20" stroke="#c9a24a" stroke-width="1.2"/>
+                <text class="lbl" x="355" y="468" text-anchor="middle">TICKET BARN</text>
+                <g transform="translate(268 486)">
+                  <rect x="0" y="0" width="26" height="14" rx="2" fill="#c9bda0" stroke="#3b2a16" stroke-width="1.4"/><rect x="18" y="4" width="8" height="10" fill="#3b2a16"/>
+                  <circle cx="6" cy="15" r="3" fill="#3b2a16"/><circle cx="20" cy="15" r="3" fill="#3b2a16"/>
+                  <rect x="34" y="0" width="26" height="14" rx="2" fill="#c9bda0" stroke="#3b2a16" stroke-width="1.4"/><rect x="52" y="4" width="8" height="10" fill="#3b2a16"/>
+                  <circle cx="40" cy="15" r="3" fill="#3b2a16"/><circle cx="54" cy="15" r="3" fill="#3b2a16"/>
+                </g>
+                <text class="lbl--sm" x="298" y="478" text-anchor="middle">FOOD TRUCKS</text>
+              </g>
+
+              <!-- tunnels (stop 3) -->
+              <g aria-hidden="true">
+                <path d="M582 578a17 17 0 0 1 34 0Z" fill="#2a1f14" stroke="#2a1f14" stroke-width="2"/>
+                <path d="M582 578a17 17 0 0 1 34 0Z" fill="url(#darkHatch)" opacity=".4"/>
+                <path d="M622 580a14 14 0 0 1 28 0Z" fill="#2a1f14" stroke="#2a1f14" stroke-width="2"/>
+                <path d="M572 580h88" stroke="#5a4630" stroke-width="1.5" stroke-dasharray="3 3"/>
+                <text class="lbl" x="620" y="602" text-anchor="middle">THE TUNNELS</text>
+              </g>
+
+              <!-- haunted buildings (stop 4) -->
+              <g aria-hidden="true">
+                <use href="#hut" x="700" y="400" width="32" height="44"/><use href="#hut" x="738" y="386" width="34" height="46"/><use href="#hut" x="778" y="404" width="30" height="42"/>
+                <text class="lbl" x="758" y="500" text-anchor="middle">HAUNTED BUILDINGS</text>
+                <text class="lbl--sm" x="758" y="516" text-anchor="middle">(something lives in every one)</text>
+              </g>
+
+              <!-- corn maze (stop 5) -->
+              <g aria-hidden="true">
+                <rect x="700" y="198" width="192" height="148" rx="4" fill="url(#cornHatch)" stroke="#5a4630" stroke-width="1.8"/>
+                <rect x="700" y="198" width="192" height="148" rx="4" fill="#e8dcc0" opacity=".25"/>
+                <path d="M724 220h60v40h-30M760 300h80v-50h-30M724 320h100M840 240v80" fill="none" stroke="#2a1f14" stroke-width="2.2" stroke-linecap="round"/>
+                <text class="lbl" x="796" y="189" text-anchor="middle">CORN MAZE</text>
+                <text class="lbl--sm" x="796" y="364" text-anchor="middle">(don't count the rows)</text>
+              </g>
+
+              <!-- zombie graveyard (stop 6) -->
+              <g aria-hidden="true">
+                <rect x="500" y="190" width="120" height="76" rx="3" fill="none" stroke="#5a4630" stroke-width="1.6" stroke-dasharray="2 5"/>
+                <use href="#stone" x="510" y="204" width="16" height="20"/><use href="#stone" x="532" y="196" width="16" height="20"/><use href="#stone" x="556" y="230" width="16" height="20"/>
+                <use href="#stone" x="580" y="200" width="16" height="20"/><use href="#stone" x="598" y="236" width="14" height="18"/><use href="#stone" x="520" y="238" width="14" height="18"/>
+                <path d="M566 214q6-10 12 0" fill="none" stroke="#5a4630" stroke-width="1.4"/>
+                <text class="lbl" x="560" y="288" text-anchor="middle">ZOMBIE GRAVEYARD</text>
+              </g>
+
+              <!-- skeleton cage (stop 7) -->
+              <g aria-hidden="true" transform="translate(-26 0)">
+                <rect x="393" y="262" width="44" height="56" rx="6" fill="#d8c8a4" stroke="#2a1f14" stroke-width="2"/>
+                <path d="M403 262v56M413 262v56M423 262v56M433 262v56" stroke="#2a1f14" stroke-width="1.6"/>
+                <circle cx="415" cy="286" r="8" fill="#f4ecd2" stroke="#2a1f14" stroke-width="1.5"/>
+                <circle cx="412" cy="285" r="1.8" fill="#2a1f14"/><circle cx="418" cy="285" r="1.8" fill="#2a1f14"/>
+                <path d="M411 292h8M415 294v10M409 300h12" stroke="#2a1f14" stroke-width="1.5" stroke-linecap="round"/>
+                <text class="lbl" x="415" y="340" text-anchor="middle">SKELETON CAGE</text>
+              </g>
+
+              <!-- exit -->
+              <g aria-hidden="true">
+                <text class="lbl" x="214" y="554" text-anchor="end" style="fill:#c8441c">OUT</text>
+                <path d="M222 548l14 8-14 8" fill="none" stroke="#c8441c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
+
+              <!-- legend -->
+              <g aria-hidden="true">
+                <rect x="742" y="552" width="228" height="128" rx="4" fill="#d8c8a4" stroke="#2a1f14" stroke-width="1.6"/>
+                <text class="lbl" x="856" y="574" text-anchor="middle">LEGEND</text>
+                <line x1="754" y1="592" x2="788" y2="592" stroke="#c8441c" stroke-width="4" stroke-dasharray="8 6" stroke-linecap="round"/>
+                <text class="lbl--sm" x="798" y="597">the trail (one way only)</text>
+                <circle cx="771" cy="614" r="8" fill="#c8441c" stroke="#fff3dd" stroke-width="1.5"/><text x="771" y="618" text-anchor="middle" style="fill:#fff;font-size:11px">1</text>
+                <text class="lbl--sm" x="798" y="619">a stop — tap to read the note</text>
+                <use href="#pine" x="761" y="626" width="20" height="30"/>
+                <text class="lbl--sm" x="798" y="641">woods (do not enter alone)</text>
+                <rect x="756" y="652" width="30" height="16" fill="url(#cornHatch)" stroke="#5a4630"/>
+                <text class="lbl--sm" x="798" y="664">corn (do not enter at all)</text>
+                <path d="M756 674q6-5 12 0t12 0" fill="none" stroke="#5c7d8a" stroke-width="2.5"/>
+                <text class="lbl--sm" x="798" y="678" style="font-size:12px">the Crow River</text>
+              </g>
+
+              <!-- THE TRAIL (drawn last so it sits on top; JS splits it into dashes that draw on scroll) -->
+              <path id="trailPath" class="trail" d="M235 598C270 575 300 535 345 520S430 585 475 590S545 545 600 545S690 500 730 450S790 350 790 290S720 210 660 230S590 250 555 215S470 230 420 300S340 380 290 460S250 520 235 560"/>
+            </svg>
+
+            <!-- Hotspots (HTML buttons, positioned by viewBox percentage: left = x/10 %, top = y/7 %) -->
+            <div class="hotspots" id="hotspots">
+              <button class="hotspot" type="button" data-stop="0" style="left:33.4%;top:77.4%" aria-label="Stop 1: The Ticket Barn">1</button>
+              <button class="hotspot" type="button" data-stop="1" style="left:48%;top:84.6%" aria-label="Stop 2: The Woods">2</button>
+              <button class="hotspot" type="button" data-stop="2" style="left:60.5%;top:77.9%" aria-label="Stop 3: The Tunnels">3</button>
+              <button class="hotspot" type="button" data-stop="3" style="left:73.5%;top:64.3%" aria-label="Stop 4: The Haunted Buildings">4</button>
+              <button class="hotspot" type="button" data-stop="4" style="left:79.5%;top:41.4%" aria-label="Stop 5: The Corn Maze">5</button>
+              <button class="hotspot" type="button" data-stop="5" style="left:55.5%;top:30.7%" aria-label="Stop 6: The Zombie Graveyard">6</button>
+              <button class="hotspot" type="button" data-stop="6" style="left:44.4%;top:41.6%" aria-label="Stop 7: The Skeleton Cage">7</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FIELD NOTES (this is the attractions section) -->
+      <aside class="notes" aria-labelledby="notesHeading">
+        <div class="progress">
+          <div class="progress__label"><span id="notesHeading">Progress: <strong id="progCount">0</strong>/7 explored</span><span id="progWord" aria-hidden="true">untouched</span></div>
+          <div class="pips" id="pips" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+
+        <article class="note" id="note" aria-live="polite">
+          <p class="note__tag" id="noteTag">Field note</p>
+          <h3 id="noteTitle">Pick a stop on the map</h3>
+          <div id="noteBody">
+            <p class="note__hint">Every red number is a place on the property where something happens to you. Hover or tap one — or press Tab — and the crew's note appears here.</p>
+            <p class="note__hint">Find all seven and you've survived the map. The real thing is $20.</p>
+          </div>
+          <p class="note__tip" id="noteTip"><b>Ranger's tip:</b> the trail only goes one direction. So do you.</p>
+          <div class="note__nav">
+            <button type="button" id="notePrev" aria-label="Previous stop">← Back</button>
+            <button type="button" id="noteNext" aria-label="Next stop">Next stop →</button>
+          </div>
+        </article>
+
+        <div class="survived" id="survived" role="status">
+          <h3>You survived. Now do it for real.</h3>
+          <p>Seven stops on paper. Out there it's dark, the corn is taller than you, and the actors don't wait for a hover.</p>
+          <a class="btn" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets — $20 · $15 with a donation</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ SCHEDULE BOARD ============================ -->
+<section class="board-sec" id="nights" aria-labelledby="nightsHeading">
+  <div class="wrap board-grid">
+    <div>
+      <p class="eyebrow">Dates &amp; hours</p>
+      <h2 id="nightsHeading">Trail Schedule</h2>
+      <p class="lead">Four nights only. The trail opens at 7:30 and the last group goes in at 10. Come early, eat something from the trucks, and let your eyes adjust.</p>
+      <p class="lead">Saturday, October 10 is a double: the lights-on Daylight Trail at noon for the kids, then the real thing after dark.</p>
+      <a class="btn btn--primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
+    </div>
+    <div class="board" role="table" aria-label="2026 season schedule">
+      <h3>2026 Season</h3>
+      <p class="board__sub">Gates 7:30 PM · Last entry 10:00 PM</p>
+      <ul class="board__rows">
+        <li role="row"><span class="day" role="cell">Oct 9<small>Friday</small></span><span class="what" role="cell">Opening night · haunted trail</span><span class="hrs" role="cell">7:30–10 PM</span></li>
+        <li role="row" class="kids"><span class="day" role="cell">Oct 10<small>Saturday</small></span><span class="what" role="cell">Daylight Trail (Kids Day) · lights on</span><span class="hrs" role="cell">Noon–3 PM</span></li>
+        <li role="row"><span class="day" role="cell">Oct 10<small>Saturday</small></span><span class="what" role="cell">Haunted trail</span><span class="hrs" role="cell">7:30–10 PM</span></li>
+        <li role="row"><span class="day" role="cell">Oct 16<small>Friday</small></span><span class="what" role="cell">Haunted trail</span><span class="hrs" role="cell">7:30–10 PM</span></li>
+        <li role="row"><span class="day" role="cell">Oct 17<small>Saturday</small></span><span class="what" role="cell">Closing night · haunted trail</span><span class="hrs" role="cell">7:30–10 PM</span></li>
+      </ul>
+      <p class="board__foot">6470 Harff Road, Greenfield, MN · rain or shine, see FAQ</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ TRAIL PASSES ============================ -->
+<section class="passes" id="passes" aria-labelledby="passHeading">
+  <div class="wrap">
+    <p class="eyebrow">Pricing, out loud</p>
+    <h2 id="passHeading">Trail Passes</h2>
+    <p class="lead">No prices hidden behind a ticket vendor. Two numbers. The smaller one helps a neighbor stay fed and warm this winter.</p>
+
+    <div class="pass-grid">
+      <article class="pass">
+        <div class="pass__main">
+          <p class="pass__kind">Trail pass · evening</p>
+          <h3>Haunted Trail</h3>
+          <p>The full trail, after dark: woods, tunnels, haunted buildings, corn maze, live actors. Valid any of the four nights.</p>
+          <p class="pass__meta">Oct 9 · 10 · 16 · 17 — 7:30 to 10 PM</p>
+        </div>
+        <div class="pass__stub"><span class="price"><sup>$</sup>20</span><small>admit one</small><span class="serial">NOTC-2026</span></div>
+      </article>
+
+      <article class="pass pass--best">
+        <span class="stamp">Best deal</span>
+        <div class="pass__main">
+          <p class="pass__kind">Trail pass · evening + donation</p>
+          <h3>Haunted Trail + Give Back</h3>
+          <p><strong>Bring a food-shelf donation or a winter clothing item</strong> — hats, gloves, coats — and the trail is five bucks cheaper. Same scares. Someone else gets warm.</p>
+          <p class="pass__meta">Hand your donation in at the Ticket Barn</p>
+        </div>
+        <div class="pass__stub"><span class="price"><sup>$</sup>15</span><small>with donation</small><span class="serial">NOTC-2026</span></div>
+      </article>
+
+      <article class="pass pass--kids">
+        <div class="pass__main">
+          <p class="pass__kind">Daylight trail · kids day</p>
+          <h3>Daylight Trail</h3>
+          <p>Sat Oct 10, Noon–3 PM. Lights on, trick-or-treating, family activities. Your Kids Day ticket is worth <strong>$5 off</strong> an evening haunt ticket.</p>
+          <p class="pass__meta">Sun up. Same trail. Fewer screams.</p>
+        </div>
+        <div class="pass__stub"><span class="price"><sup>$</sup>5</span><small>all ages</small><span class="serial">NOTC-DAY</span></div>
+      </article>
+    </div>
+
+    <div class="pass-cta">
+      <a class="btn btn--primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
+      <p>Tickets sold through HauntPay. Compare: most Twin Cities haunts run $30–50 and won't tell you until checkout.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ DAYLIGHT TRAIL ============================ -->
+<section class="daylight" id="daylight" aria-labelledby="dayHeading">
+  <div class="wrap day-grid">
+    <div>
+      <svg class="sun" viewBox="0 0 320 320" role="img" aria-label="A hand-drawn sun over the same trail, lights on" focusable="false">
+        <g class="rays" fill="none" stroke="#b8681a" stroke-width="5" stroke-linecap="round">
+          <path d="M160 18v34M160 268v34M18 160h34M268 160h34M60 60l24 24M236 236l24 24M60 260l24-24M236 84l24-24M94 30l13 31M213 259l13 31M30 94l31 13M259 213l31 13M30 226l31-13M259 107l31-13M94 290l13-31M213 61l13-31"/>
+        </g>
+        <circle cx="160" cy="160" r="82" fill="#ffd96a" stroke="#b8681a" stroke-width="5"/>
+        <circle cx="160" cy="160" r="68" fill="none" stroke="#e9a93c" stroke-width="3" stroke-dasharray="4 8"/>
+        <path d="M128 148q8-10 16 0M176 148q8-10 16 0" fill="none" stroke="#2a1f14" stroke-width="4" stroke-linecap="round"/>
+        <path d="M126 178q34 30 68 0" fill="none" stroke="#2a1f14" stroke-width="4" stroke-linecap="round"/>
+        <path d="M60 300q50-60 100-40t100-10" fill="none" stroke="#c8441c" stroke-width="4" stroke-dasharray="10 8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div>
+      <p class="eyebrow">Kids Day · Saturday, October 10</p>
+      <h2 id="dayHeading">The Daylight Trail</h2>
+      <p class="lead">Same woods, same sets, same skeleton in the cage — with the sun up and the lights on. Walk the trail, trick-or-treat along the way, and see how the crew builds a nightmare before it's dark enough to be one.</p>
+      <ul class="day-facts">
+        <li><b>Noon–3 PM</b><span>Saturday, October 10 only</span></li>
+        <li><b>$5</b><span>per ticket, all ages</span></li>
+        <li><b>$5 off</b><span>Your Kids Day ticket is redeemable for $5 off an evening haunt ticket</span></li>
+        <li><b>Lights on</b><span>Trick-or-treating and family activities on the trail</span></li>
+      </ul>
+      <a class="btn btn--primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Daylight Trail Tickets</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RANGER'S NOTES (community) ============================ -->
+<section class="ranger" id="ranger" aria-labelledby="rangerHeading">
+  <div class="wrap">
+    <p class="eyebrow">Community give-back</p>
+    <h2 id="rangerHeading">Ranger's Notes</h2>
+    <p class="lead">Nightmare on the Crow started as three neighbors who loved Halloween and loved giving back. The scares got bigger. The reason didn't change.</p>
+
+    <div class="ranger-grid">
+      <article class="rnote">
+        <span class="pin" aria-hidden="true"></span>
+        <span class="rnote__badge">Food shelf drive</span>
+        <h3>Bring a can, save five bucks</h3>
+        <p>Non-perishable food goes to the local food shelf. Drop it at the Ticket Barn on your way in and your $20 trail pass becomes $15.</p>
+        <p>Pantry staples, the boring ones, are the ones that help most.</p>
+      </article>
+      <article class="rnote">
+        <span class="pin" aria-hidden="true"></span>
+        <span class="rnote__badge">Winter clothing drive</span>
+        <h3>Hats. Gloves. Coats.</h3>
+        <p>Minnesota winter is scarier than anything on the trail. A new or gently used winter clothing item also gets you the $15 pass.</p>
+        <p>Kids' sizes are always short.</p>
+      </article>
+      <article class="rnote">
+        <span class="pin" aria-hidden="true"></span>
+        <span class="rnote__badge">Hanover Fire Department</span>
+        <h3>Our partners with the big truck</h3>
+        <p>We're proud to partner with the Hanover Fire Department. Come say thanks to the folks who keep the neighborhood standing the other 361 nights of the year.</p>
+      </article>
+    </div>
+
+    <div class="trucks">
+      <span aria-hidden="true">🍔</span>
+      <strong style="color:var(--parch)">Food trucks on site:</strong>
+      <span>Just in Time Concessions</span>
+      <span>Burger Box</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ WANTED: TRAIL GUIDES (join the crew) ============================ -->
+<section class="wanted-sec" id="crew" aria-labelledby="crewHeading">
+  <div class="wrap wanted-grid">
+    <aside class="wanted" aria-hidden="true">
+      <div class="wanted__top">Wanted</div>
+      <div class="wanted__mid">Trail Guides · Actors · Set Builders · Makeup · Parking Crew</div>
+      <div class="ph ph--light">PHOTO: crew in makeup, ticket barn, pre-show</div>
+      <div class="wanted__mid">No experience required. Must enjoy the dark.</div>
+      <div class="wanted__reward">Reward: the best October of your life</div>
+    </aside>
+    <div>
+      <p class="eyebrow">Join the crew</p>
+      <h2 id="crewHeading">Wanted: Trail Guides</h2>
+      <p class="lead">Every scream on the trail is a volunteer. Neighbors, students, parents, people who just really like fog machines. We'll teach you the rest.</p>
+      <ul class="crew-list">
+        <li><b>Evan</b> — plays Beetlejuice, runs our social feeds and the tech that keeps the lights flickering on cue.</li>
+        <li><b>Ben</b> — set designer. The skeleton trapped in the cage and the zombie graveyard are his. He has ideas for next year and he needs hands.</li>
+        <li><b>You</b> — actor, builder, greeter, parking flashlight. Four nights, one crew, free hot food from the trucks (that part we can promise).</li>
+      </ul>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="#">Join the Crew</a>
+        <a class="btn btn--ghost" href="#">Actor login</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ FAQ ============================ -->
+<section class="faq" id="faq" aria-labelledby="faqHeading">
+  <div class="wrap">
+    <p class="eyebrow">Before you go in</p>
+    <h2 id="faqHeading">Trail Questions</h2>
+    <div class="faq-list">
+      <details>
+        <summary>How scary is it, really?</summary>
+        <p>It's a real haunt: dark woods, tight tunnels, live actors, jump scares, and a corn maze that doesn't care about your sense of direction. It's designed to crawl under your skin. If you want the sets without the scares, the Daylight Trail on Saturday, October 10 is the lights-on version.</p>
+      </details>
+      <details>
+        <summary>What age is it for?</summary>
+        <p>Parents know their kids best. As a rule of thumb, the evening trail suits teens and adults; younger kids (and nervous grown-ups) love the Daylight Trail at noon on October 10. Kids Day tickets are also worth $5 off an evening ticket if they decide they're brave.</p>
+      </details>
+      <details>
+        <summary>What if it rains? Or snows? It's Minnesota.</summary>
+        <p>The trail is outdoors and runs in October weather. Dress warm, wear shoes you don't mind muddying, and check our Facebook and Instagram the day of for any weather updates.</p>
+      </details>
+      <details>
+        <summary>Where do I park?</summary>
+        <p>On site, in the parking field at 6470 Harff Road. Follow the signs and the crew with flashlights. Then walk to the Ticket Barn, where the hayride begins.</p>
+      </details>
+      <details>
+        <summary>How long does the trail take?</summary>
+        <p>Long enough. The path winds through the woods, the tunnels, the haunted buildings and the corn maze, and groups move at the pace of their slowest screamer. Plan on a good chunk of your evening, and get in line before the 10 PM last entry.</p>
+      </details>
+      <details>
+        <summary>Will the actors touch me? Can I touch them?</summary>
+        <p>Our actors won't touch you, and we ask the same of you: no touching actors, props or sets. They're neighbors and volunteers, and the skeleton in the cage took Ben a long time to build.</p>
+      </details>
+      <details>
+        <summary>Is the trail wheelchair accessible?</summary>
+        <p>It's a natural forest trail with uneven ground, roots, tunnels, and very little light, so it isn't paved or fully accessible. The Daylight Trail is easier to navigate, and we'll do what we can — reach out on our socials before your visit and we'll talk it through.</p>
+      </details>
+      <details>
+        <summary>Is there food?</summary>
+        <p>Yes. Just in Time Concessions and Burger Box park by the Ticket Barn on trail nights. Eat before you go in; nobody wants a burger in the corn maze.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ DIRECTIONS ============================ -->
+<section class="dir" id="directions" aria-labelledby="dirHeading">
+  <div class="wrap dir-grid">
+    <div>
+      <p class="eyebrow">Find the trailhead</p>
+      <h2 id="dirHeading">Directions</h2>
+      <p class="addr">6470 Harff Road<br>Greenfield, MN 55373</p>
+      <p class="lead">West metro, about 35 minutes from Minneapolis, right near the Crow River. You'll know you're close when the trees close in.</p>
+      <ol class="steps">
+        <li>Put <strong>6470 Harff Road, Greenfield</strong> in your maps. Trust it, even when the road gets dark.</li>
+        <li>Turn into the parking field and follow the flashlights.</li>
+        <li>Walk to the Ticket Barn. Hand over your donation, grab your pass, get a burger.</li>
+        <li>It all begins with a hayride. After that, you're on the trail. Don't leave it.</li>
+      </ol>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="https://maps.google.com/?q=6470+Harff+Road+Greenfield+MN" target="_blank" rel="noopener">Open in Google Maps</a>
+        <a class="btn btn--ghost" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
+      </div>
+    </div>
+    <div>
+      <div class="ph" style="min-height:260px">PHOTO / MAP EMBED: the driveway sign at 6470 Harff Road, lit at dusk</div>
+      <p style="margin-top:14px;color:var(--muted);font-size:.95rem">In production, a Google Maps embed sits here. For this concept, use the button.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#top" aria-label="Nightmare on the Crow — back to top">
+          <svg viewBox="0 0 60 40" aria-hidden="true" focusable="false"><path fill="currentColor" d="M2 30C10 18 22 12 34 14c4-6 10-8 16-6l8-2-8 6c4 4 0 10-6 12-4 8-14 12-22 10l-8 6 4-7C10 34 4 33 2 30Z"/></svg>
+          Nightmare on the Crow
+        </a>
+        <p style="margin-top:10px">It All Begins with a Hayride! A haunted trail built by three neighbors in Greenfield, Minnesota. Every ticket gives something back.</p>
+        <div class="socials">
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8h3.3z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7.3a4.7 4.7 0 1 0 0 9.4 4.7 4.7 0 0 0 0-9.4zm0 7.7a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm5-8a1.1 1.1 0 1 1-2.2 0 1.1 1.1 0 0 1 2.2 0zM12 3c-2.4 0-2.7 0-3.7.1-2.6.1-4.1 1.6-4.2 4.2C4 8.3 4 8.6 4 11s0 2.7.1 3.7c.1 2.6 1.6 4.1 4.2 4.2 1 .1 1.3.1 3.7.1s2.7 0 3.7-.1c2.6-.1 4.1-1.6 4.2-4.2.1-1 .1-1.3.1-3.7s0-2.7-.1-3.7c-.1-2.6-1.6-4.1-4.2-4.2C14.7 3 14.4 3 12 3zm0 1.7c2.4 0 2.6 0 3.6.1 1.7.1 2.6.9 2.6 2.6.1 1 .1 1.2.1 3.6s0 2.6-.1 3.6c-.1 1.7-.9 2.6-2.6 2.6-1 .1-1.2.1-3.6.1s-2.6 0-3.6-.1c-1.7-.1-2.6-.9-2.6-2.6-.1-1-.1-1.2-.1-3.6s0-2.6.1-3.6c.1-1.7.9-2.6 2.6-2.6 1-.1 1.2-.1 3.6-.1z"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 1 0 4.9 5.7V9.1a7.4 7.4 0 0 0 4.3 1.4V7.4a4.3 4.3 0 0 1-3.2-1.6z"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>The trail</h4>
+        <ul>
+          <li><a href="#map">Field map</a></li>
+          <li><a href="#nights">Dates &amp; hours</a></li>
+          <li><a href="#passes">Trail passes</a></li>
+          <li><a href="#daylight">Daylight Trail (Kids Day)</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>The crew</h4>
+        <ul>
+          <li><a href="#ranger">Ranger's Notes</a></li>
+          <li><a href="#crew">Join the Crew</a></li>
+          <li><a href="#">Actor login</a></li>
+          <li><a href="#directions">Directions</a></li>
+          <li><a href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; <span id="year">2026</span> Nightmare on the Crow · 6470 Harff Road, Greenfield, MN 55373</span>
+      <span>Follow the path. Don't leave it.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* =====================================================================
+   Survive the Trail — page logic
+   1. Mobile nav
+   2. Field notes / hotspots / progress tracker
+   3. Trail draws itself on scroll (dash-by-dash, respects reduced motion)
+   4. Countdown to Fri Oct 9, 2026 7:30 PM (America/Chicago, CDT = -05:00)
+   ===================================================================== */
+(function () {
+  'use strict';
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- 1. Mobile nav ---------- */
+  var navToggle = document.getElementById('navToggle');
+  var navLinks = document.getElementById('navLinks');
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', function () {
+      var open = navLinks.classList.toggle('is-open');
+      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    navLinks.addEventListener('click', function (e) {
+      if (e.target.tagName === 'A') {
+        navLinks.classList.remove('is-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  /* ---------- 2. Field notes ---------- */
+  var STOPS = [
+    {
+      title: 'The Ticket Barn',
+      tag: 'Field note 01 · start',
+      photo: 'PHOTO: ticket barn window, hay wagon waiting',
+      body: [
+        'Park in the field, walk toward the light. This is where you hand over your $20 — or $15 and a can of soup or a pair of gloves — and pick up your pass.',
+        'Just in Time Concessions and Burger Box are parked right here. Eat now. And yes, the sign is true: it all begins with a hayride.'
+      ],
+      tip: 'The crew at the barn are the last friendly faces you’ll see for a while.'
+    },
+    {
+      title: 'The Woods',
+      tag: 'Field note 02 · forest trail',
+      photo: 'PHOTO: trail in the trees, single lantern',
+      body: [
+        'The trail narrows, the lanterns thin out, and the forest along the Crow gets very quiet. The path winds — on purpose. You will lose sight of the group in front of you.',
+        'Live actors work these trees. Some of them are standing very still right now.'
+      ],
+      tip: 'Stay on the path. The path is the only thing we promise is ours.'
+    },
+    {
+      title: 'The Tunnels',
+      tag: 'Field note 03 · underground',
+      photo: 'PHOTO: tunnel mouth, fog rolling out',
+      body: [
+        'Low ceiling, no light, and walls that are closer than they were a second ago. The tunnels connect the woods to the buildings, and something is always in them.',
+        'Keep one hand on the person ahead of you. Not because it helps. Because it feels better.'
+      ],
+      tip: 'Duck. Then keep ducking.'
+    },
+    {
+      title: 'The Haunted Buildings',
+      tag: 'Field note 04 · structures',
+      photo: 'PHOTO: building interior, actor in doorway',
+      body: [
+        'A cluster of buildings the neighbors have been filling for years: rooms of displays, dead ends, and live actors who know exactly where you’re about to look.',
+        'Every door on the trail leads somewhere. Not every somewhere leads out.'
+      ],
+      tip: 'If a room feels empty, it isn’t.'
+    },
+    {
+      title: 'The Corn Maze',
+      tag: 'Field note 05 · the corn',
+      photo: 'PHOTO: corn rows at night, flashlight beam',
+      body: [
+        'Eight feet of corn on every side and a maze that doesn’t match the one on this map. Interactive scares in here mean the corn talks back.',
+        'The rows are close enough to touch. We’d recommend not touching them.'
+      ],
+      tip: 'Left, left, right, scream, left.'
+    },
+    {
+      title: 'The Zombie Graveyard',
+      tag: 'Field note 06 · ben’s build',
+      photo: 'PHOTO: zombie graveyard set, fog and stones',
+      body: [
+        'Ben’s handiwork. A graveyard where the tenants haven’t accepted the arrangement. Headstones, fog, and a lot of hands that don’t belong to anyone standing up.',
+        'It looks great in daylight on the Daylight Trail. It looks like this at night.'
+      ],
+      tip: 'The stones are props. Read them anyway.'
+    },
+    {
+      title: 'The Skeleton Cage',
+      tag: 'Field note 07 · last stop',
+      photo: 'PHOTO: skeleton trapped in the cage',
+      body: [
+        'The last thing between you and the way out: Ben’s skeleton, trapped in the cage, and whatever is standing guard over it tonight.',
+        'Past this the trail loops back toward the parking field. You’ll know you’re out when you can see the barn lights again.'
+      ],
+      tip: 'Don’t run. Everyone runs. Don’t.'
+    }
+  ];
+
+  var hotspots = Array.prototype.slice.call(document.querySelectorAll('.hotspot'));
+  var noteTag = document.getElementById('noteTag');
+  var noteTitle = document.getElementById('noteTitle');
+  var noteBody = document.getElementById('noteBody');
+  var noteTip = document.getElementById('noteTip');
+  var notePrev = document.getElementById('notePrev');
+  var noteNext = document.getElementById('noteNext');
+  var progCount = document.getElementById('progCount');
+  var progWord = document.getElementById('progWord');
+  var pips = document.querySelectorAll('#pips span');
+  var survived = document.getElementById('survived');
+  var visited = {};
+  var visitedCount = 0;
+  var current = -1;
+  var WORDS = ['untouched', 'nervous', 'committed', 'halfway', 'sweating', 'almost', 'one more', 'survived'];
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function showStop(i, fromClick) {
+    if (i < 0 || i >= STOPS.length) return;
+    var s = STOPS[i];
+    current = i;
+    noteTag.textContent = s.tag;
+    noteTitle.textContent = (i + 1) + '. ' + s.title;
+    noteBody.innerHTML = '<div class="ph ph--light">' + escapeHtml(s.photo) + '</div>' +
+      s.body.map(function (p) { return '<p>' + escapeHtml(p) + '</p>'; }).join('');
+    noteTip.innerHTML = '<b>Ranger’s tip:</b> ' + escapeHtml(s.tip);
+    hotspots.forEach(function (b, j) {
+      b.classList.toggle('is-active', j === i);
+      b.setAttribute('aria-pressed', j === i ? 'true' : 'false');
+    });
+    markVisited(i);
+    /* On narrow screens the note sits under the map; nudge it into view on a tap */
+    if (fromClick && window.innerWidth <= 960) {
+      document.getElementById('note').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest' });
+    }
+  }
+
+  function markVisited(i) {
+    if (visited[i]) return;
+    visited[i] = true;
+    visitedCount++;
+    hotspots[i].classList.add('is-visited');
+    progCount.textContent = visitedCount;
+    progWord.textContent = WORDS[visitedCount];
+    for (var k = 0; k < visitedCount && k < pips.length; k++) pips[k].classList.add('on');
+    if (visitedCount === STOPS.length) {
+      survived.classList.add('is-on');
+    }
+  }
+
+  hotspots.forEach(function (btn) {
+    var i = parseInt(btn.getAttribute('data-stop'), 10);
+    btn.addEventListener('click', function () { showStop(i, true); });
+    btn.addEventListener('mouseenter', function () { showStop(i, false); });
+    btn.addEventListener('focus', function () { showStop(i, false); });
+  });
+
+  notePrev.addEventListener('click', function () {
+    var i = current < 0 ? STOPS.length - 1 : (current - 1 + STOPS.length) % STOPS.length;
+    showStop(i, false);
+    hotspots[i].focus({ preventScroll: true });
+  });
+  noteNext.addEventListener('click', function () {
+    var i = current < 0 ? 0 : (current + 1) % STOPS.length;
+    showStop(i, false);
+    hotspots[i].focus({ preventScroll: true });
+  });
+
+  /* ---------- 3. Trail draws itself ---------- */
+  var trail = document.getElementById('trailPath');
+  if (trail && typeof trail.getTotalLength === 'function' && !reduceMotion && 'IntersectionObserver' in window) {
+    try {
+      var NS = 'http://www.w3.org/2000/svg';
+      var L = trail.getTotalLength();
+      var DASH = 12, GAP = 9, pos = 0, n = 0;
+      var g = document.createElementNS(NS, 'g');
+      g.setAttribute('class', 'trail-dashes');
+      g.setAttribute('aria-hidden', 'true');
+      while (pos < L) {
+        var a = trail.getPointAtLength(pos);
+        var b = trail.getPointAtLength(Math.min(pos + DASH, L));
+        var ln = document.createElementNS(NS, 'line');
+        ln.setAttribute('x1', a.x.toFixed(1)); ln.setAttribute('y1', a.y.toFixed(1));
+        ln.setAttribute('x2', b.x.toFixed(1)); ln.setAttribute('y2', b.y.toFixed(1));
+        ln.style.transitionDelay = (n * 40) + 'ms';
+        g.appendChild(ln);
+        pos += DASH + GAP; n++;
+      }
+      trail.parentNode.insertBefore(g, trail.nextSibling);
+      trail.style.display = 'none';
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            /* next frame so the first transition actually runs */
+            requestAnimationFrame(function () { g.classList.add('is-drawn'); });
+            io.disconnect();
+          }
+        });
+      }, { threshold: 0.25 });
+      io.observe(trail.ownerSVGElement);
+    } catch (err) {
+      /* fall back to the static dashed path */
+      trail.style.display = '';
+    }
+  }
+
+  /* ---------- 4. Countdown ---------- */
+  var target = new Date('2026-10-09T19:30:00-05:00');
+  var seasonEnd = new Date('2026-10-17T22:00:00-05:00');
+  var cdD = document.getElementById('cdD'), cdH = document.getElementById('cdH'),
+      cdM = document.getElementById('cdM'), cdS = document.getElementById('cdS'),
+      cdLabel = document.getElementById('cdLabel');
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function tick() {
+    var now = Date.now();
+    var diff = target.getTime() - now;
+    if (diff <= 0) {
+      cdLabel.textContent = now < seasonEnd.getTime() ? 'The trail is open' : 'Season closed — see you in 2027';
+      diff = 0;
+    }
+    var s = Math.floor(diff / 1000);
+    cdD.textContent = Math.floor(s / 86400);
+    cdH.textContent = pad(Math.floor((s % 86400) / 3600));
+    cdM.textContent = pad(Math.floor((s % 3600) / 60));
+    cdS.textContent = pad(s % 60);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  var yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>

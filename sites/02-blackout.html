@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nightmare on the Crow — Haunted Trail, Greenfield MN</title>
+<meta name="description" content="Nightmare on the Crow is a neighbor-built haunted trail in Greenfield, Minnesota. Four nights only: Oct 9, 10, 16 and 17, 2026. $20 — or $15 with a food-shelf donation. Kids Day Oct 10.">
+<meta name="theme-color" content="#000000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Decide "lights on / off" before first paint so there's no flash of the wrong mode.
+     Lights are ON by default when the visitor prefers reduced motion, or if they chose it earlier this session. -->
+<script>
+(function(){
+  var lit = false;
+  try { lit = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
+  try { var s = sessionStorage.getItem('notc-lights'); if (s === 'on') lit = true; if (s === 'off') lit = false; } catch(e){}
+  if (lit) document.documentElement.classList.add('lit');
+})();
+</script>
+
+<style>
+/* =============================================================
+   CONCEPT #2 — BLACKOUT
+   Pitch-black page. The pointer is a flashlight (a radial-gradient
+   mask on a fixed overlay). "Lights On" removes the overlay.
+   Palette: near-black, off-white, one orange (#ff6a00).
+   ============================================================= */
+
+:root{
+  --bg:#070707;
+  --ink:#f2f2f2;
+  --body:#c9c9c9;
+  --mute:#8f8f8f;
+  --orange:#ff6a00;
+  --line:#1f1f1f;
+  --sil:#1e1e1e;              /* silhouette fill in the dark */
+  --display:'Bebas Neue','Anton',Impact,'Arial Narrow Bold','Arial Narrow',sans-serif;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --nav-h:64px;
+  --beam:260px;                /* flashlight radius */
+  --gutter:clamp(1.25rem,5vw,4.5rem);
+}
+@media (max-width:640px){ :root{ --beam:170px; } }
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ background:var(--bg); color:var(--ink); scroll-padding-top:calc(var(--nav-h) + 1rem); -webkit-text-size-adjust:100%; }
+@media (prefers-reduced-motion: no-preference){ html{ scroll-behavior:smooth; } }
+body{
+  margin:0; font-family:var(--sans); font-size:1.0625rem; line-height:1.6; color:var(--body);
+  background:var(--bg); overflow-x:hidden; min-height:100vh;
+}
+h1,h2,h3,.display{ font-family:var(--display); font-weight:400; color:var(--ink); line-height:.92; letter-spacing:.01em; margin:0; text-transform:uppercase; }
+p{ margin:0 0 1rem; max-width:62ch; }
+a{ color:var(--orange); text-decoration-thickness:1px; text-underline-offset:.2em; }
+a:hover{ text-decoration-thickness:2px; }
+button{ font:inherit; }
+:focus-visible{ outline:3px solid var(--orange); outline-offset:4px; }
+::selection{ background:var(--orange); color:#000; }
+
+.skip{ position:fixed; top:-100px; left:1rem; z-index:100; background:var(--orange); color:#000; padding:.6rem 1rem; font-weight:600; border-radius:4px; }
+.skip:focus{ top:.75rem; }
+
+/* ---------- layout helpers ---------- */
+.wrap{ width:100%; max-width:1280px; margin:0 auto; padding-left:var(--gutter); padding-right:var(--gutter); }
+section{ position:relative; overflow:hidden; padding:clamp(5rem,14vh,10rem) 0; border-top:1px solid var(--line); }
+.eyebrow{ font-family:var(--sans); font-size:.75rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--orange); margin:0 0 1.25rem; }
+.h2{ font-size:clamp(3rem,9vw,7.5rem); margin-bottom:1.5rem; }
+.lead{ font-size:clamp(1.125rem,1.5vw,1.375rem); color:var(--ink); max-width:48ch; }
+.mute{ color:var(--mute); }
+.orange{ color:var(--orange); }
+.nowrap{ white-space:nowrap; }
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:.6rem;
+  font-family:var(--display); font-size:1.5rem; letter-spacing:.06em; line-height:1; text-transform:uppercase; text-decoration:none;
+  padding:1rem 1.75rem .85rem; border-radius:4px; border:2px solid var(--orange); cursor:pointer; user-select:none;
+  transition:transform .15s ease, background .15s ease, color .15s ease;
+}
+.btn-solid{ background:var(--orange); color:#000; }
+.btn-solid:hover{ background:#ff8b3a; }
+.btn-ghost{ background:transparent; color:var(--ink); border-color:#3a3a3a; }
+.btn-ghost:hover{ border-color:var(--orange); color:var(--orange); }
+.btn:active{ transform:translateY(1px); }
+.btn-row{ display:flex; flex-wrap:wrap; gap:.85rem; margin-top:2.25rem; }
+
+/* ---------- placeholders for real media ---------- */
+.ph{
+  position:relative; display:flex; align-items:flex-end; min-height:240px; border:1px dashed #3a3a3a; border-radius:6px;
+  background:repeating-linear-gradient(135deg,#0d0d0d 0 14px,#090909 14px 28px);
+  color:var(--mute); font-size:.75rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; padding:1rem 1.25rem;
+}
+.ph::before{ content:""; position:absolute; top:1rem; left:1.25rem; width:10px; height:10px; border-radius:50%; background:var(--orange); }
+
+/* ============================================================
+   NAV — sits ABOVE the darkness so the visitor can always find
+   "Lights On" and "Get Tickets".
+   ============================================================ */
+.nav{
+  position:fixed; inset:0 0 auto 0; z-index:80; height:var(--nav-h);
+  background:rgba(7,7,7,.82); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.nav .wrap{ height:100%; display:flex; align-items:center; gap:1.25rem; }
+.brand{ display:flex; align-items:center; gap:.6rem; color:var(--ink); text-decoration:none; font-family:var(--display); font-size:1.35rem; letter-spacing:.08em; line-height:1; white-space:nowrap; }
+.brand svg{ width:30px; height:20px; color:var(--orange); }
+.links{ display:flex; flex-wrap:nowrap; gap:1.5rem; margin-left:auto; list-style:none; padding:0; margin-top:0; margin-bottom:0; }
+.links a{ color:var(--body); text-decoration:none; font-size:.8125rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; white-space:nowrap; }
+.links a:hover{ color:var(--orange); }
+.nav-actions{ display:flex; align-items:center; gap:.6rem; margin-left:auto; }
+.links + .nav-actions{ margin-left:0; }
+.lights{
+  display:inline-flex; align-items:center; gap:.5rem; background:transparent; color:var(--ink); border:1px solid #3a3a3a; border-radius:999px;
+  padding:.45rem .9rem .45rem .7rem; font-size:.8125rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; white-space:nowrap;
+}
+.lights svg{ width:16px; height:16px; }
+.lights:hover{ border-color:var(--orange); }
+.lights[aria-pressed="true"]{ background:var(--orange); color:#000; border-color:var(--orange); }
+.nav .btn{ font-size:1.15rem; padding:.7rem 1.1rem .55rem; white-space:nowrap; }
+.menu-btn{ display:none; background:none; border:1px solid #3a3a3a; color:var(--ink); border-radius:4px; width:42px; height:42px; cursor:pointer; align-items:center; justify-content:center; }
+.menu-btn svg{ width:20px; height:20px; }
+
+@media (max-width:1060px){
+  .links{ display:none; position:absolute; top:var(--nav-h); left:0; right:0; flex-direction:column; gap:0; background:#0b0b0b; border-bottom:1px solid var(--line); padding:.5rem 0 1rem; }
+  .links li{ padding:0 var(--gutter); }
+  .links a{ display:block; padding:.9rem 0; border-bottom:1px solid var(--line); font-size:1rem; }
+  .nav.open .links{ display:flex; }
+  .menu-btn{ display:inline-flex; }
+  .lights span{ display:none; }
+  .lights{ padding:.5rem .6rem; }
+  .brand span{ display:none; }
+  .brand svg{ width:34px; height:24px; }
+}
+@media (max-width:400px){ .nav .btn{ font-size:1.05rem; padding:.65rem .8rem .5rem; } }
+
+/* ============================================================
+   THE DARK — full-page overlay, masked by the flashlight beam.
+   In the mask, black = overlay visible (dark), transparent = hole.
+   ============================================================ */
+#dark{
+  position:fixed; inset:0; z-index:50; pointer-events:none; background:#000;
+  --x:50vw; --y:45vh;
+  -webkit-mask-image:radial-gradient(circle var(--beam) at var(--x) var(--y), transparent 0%, rgba(0,0,0,.18) 38%, rgba(0,0,0,.72) 68%, #000 100%);
+          mask-image:radial-gradient(circle var(--beam) at var(--x) var(--y), transparent 0%, rgba(0,0,0,.18) 38%, rgba(0,0,0,.72) 68%, #000 100%);
+  transition:opacity .4s ease;
+}
+html.lit #dark{ opacity:0; visibility:hidden; }
+
+/* ---------- on-load hint ---------- */
+#hint{
+  position:fixed; left:50%; bottom:1.25rem; transform:translateX(-50%); z-index:90; width:max-content; max-width:calc(100vw - 2rem);
+  display:flex; align-items:center; gap:.75rem; padding:.6rem .6rem .6rem 1.1rem; border-radius:999px;
+  background:#101010; border:1px solid #2a2a2a; color:var(--ink); font-size:.9rem; box-shadow:0 10px 40px rgba(0,0,0,.6);
+  transition:opacity .35s ease, transform .35s ease;
+}
+#hint .hint-t{ white-space:nowrap; }
+#hint .hint-btn{ background:var(--orange); color:#000; border:0; border-radius:999px; padding:.45rem .85rem; font-weight:600; font-size:.8rem; letter-spacing:.06em; text-transform:uppercase; cursor:pointer; white-space:nowrap; }
+#hint .hint-x{ background:none; border:0; color:var(--mute); width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:1.1rem; line-height:1; }
+#hint .hint-x:hover{ color:var(--ink); }
+#hint.gone{ opacity:0; transform:translate(-50%,10px); pointer-events:none; }
+@media (max-width:640px){
+  #hint{ bottom:4.1rem; font-size:.8rem; gap:.5rem; padding-left:.9rem; }
+  #hint .hint-t{ white-space:normal; }
+}
+
+/* ---------- concept badge ---------- */
+.badge{
+  position:fixed; right:.75rem; bottom:.75rem; z-index:90; font-size:.65rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+  color:#000; background:var(--orange); padding:.4rem .6rem; border-radius:3px; pointer-events:none;
+}
+
+/* ============================================================
+   SILHOUETTES — things in the dark. Same colour as the shadows
+   so they only read when the beam passes over them.
+   ============================================================ */
+.sil{ position:absolute; color:var(--sil); pointer-events:none; user-select:none; }
+.sil.trees{ left:0; right:0; bottom:-2px; width:100%; height:clamp(90px,14vw,190px); }
+.sil.crow{ width:clamp(56px,7vw,100px); height:auto; }
+.sil.perch{ width:clamp(260px,40vw,560px); height:auto; }
+.sil.scarecrow{ width:clamp(120px,16vw,220px); height:auto; }
+.sil.corn{ left:0; right:0; bottom:0; width:100%; height:clamp(140px,20vw,260px); }
+.sil.watcher{ width:clamp(56px,7vw,96px); height:auto; bottom:2px; left:62%; }
+.watcher .eye{ fill:var(--orange); opacity:.85; }
+.sil.hidden-crow{ opacity:0; transition:none; }
+.kids .sil{ color:#d95400; }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{ min-height:100svh; display:flex; align-items:center; padding-top:calc(var(--nav-h) + 3rem); padding-bottom:clamp(8rem,20vh,12rem); border-top:0; }
+.hero h1{ font-size:clamp(4.25rem,14vw,13rem); max-width:12ch; }
+.hero h1 .good{ color:var(--orange); }
+.hero .sub{ font-family:var(--display); font-size:clamp(1.35rem,2.6vw,2rem); color:var(--ink); letter-spacing:.05em; text-transform:uppercase; line-height:1.15; margin:1.75rem 0 1rem; }
+.hero .sub .sep{ color:var(--orange); padding:0 .35em; }
+.hero .perch{ top:calc(var(--nav-h) + 1.5rem); right:-3%; }
+.hero .lone{ bottom:22%; left:4%; transform:scaleX(-1); }
+@media (max-width:640px){ .hero .lone{ display:none; } }
+
+/* ============================================================
+   INTRO / MANIFESTO
+   ============================================================ */
+.intro .grid{ display:grid; gap:3rem; grid-template-columns:1.2fr 1fr; align-items:end; }
+.intro blockquote{ margin:0 0 2rem; font-family:var(--display); font-size:clamp(2.25rem,5.2vw,4.75rem); line-height:.98; color:var(--ink); text-transform:uppercase; max-width:16ch; }
+.intro blockquote em{ font-style:normal; color:var(--orange); }
+.intro .scarecrow{ right:3%; top:2rem; }
+@media (max-width:820px){ .intro .grid{ grid-template-columns:1fr; } .intro .scarecrow{ top:auto; bottom:-20px; right:-10px; opacity:.9; } }
+
+/* ============================================================
+   ATTRACTIONS — numbered list of huge words
+   ============================================================ */
+.attractions{ padding-bottom:clamp(14rem,26vw,20rem); }
+.att-list{ list-style:none; margin:0; padding:0; border-top:1px solid var(--line); }
+.att-list li{ display:grid; grid-template-columns:5rem 1fr minmax(0,26ch); align-items:end; gap:1.5rem 2.5rem; padding:2.25rem 0; border-bottom:1px solid var(--line); }
+.att-list .num{ font-family:var(--display); font-size:1.75rem; color:var(--orange); letter-spacing:.06em; line-height:1; padding-bottom:.35rem; }
+.att-list h3{ font-size:clamp(3.25rem,10.5vw,7rem); line-height:.9; }
+.att-list p{ margin:0; color:var(--body); padding-bottom:.45rem; }
+.att-list li:hover h3{ color:var(--orange); }
+@media (max-width:820px){
+  .att-list li{ grid-template-columns:3rem 1fr; }
+  .att-list p{ grid-column:2; }
+}
+.att-note{ margin-top:2.5rem; font-size:.95rem; color:var(--mute); max-width:60ch; }
+
+/* ============================================================
+   DATES
+   ============================================================ */
+.dates-list{ list-style:none; margin:0; padding:0; border-top:1px solid var(--line); }
+.dates-list li{ display:grid; grid-template-columns:5rem auto 1fr auto; align-items:baseline; gap:1rem 1.5rem; padding:1rem 0; border-bottom:1px solid var(--line); }
+.dates-list .dow{ font-family:var(--display); font-size:clamp(1.5rem,3vw,2.5rem); color:var(--orange); letter-spacing:.06em; }
+.dates-list .day{ font-family:var(--display); font-size:clamp(4rem,11vw,9.5rem); color:var(--ink); line-height:.9; letter-spacing:.01em; }
+.dates-list .mon{ font-family:var(--display); font-size:clamp(1.5rem,3vw,2.5rem); color:var(--mute); letter-spacing:.06em; }
+.dates-list .time{ font-size:.9rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--body); text-align:right; }
+@media (max-width:640px){
+  .dates-list li{ grid-template-columns:3.5rem auto 1fr; }
+  .dates-list .time{ grid-column:1 / -1; text-align:left; margin-top:-.5rem; padding-bottom:.25rem; }
+}
+.dates .lone{ right:6%; top:4rem; }
+
+/* ============================================================
+   COUNTDOWN — giant digits
+   ============================================================ */
+.countdown{ padding-bottom:clamp(9rem,18vw,14rem); }
+.cd{ display:flex; flex-wrap:wrap; align-items:flex-start; gap:0 clamp(.5rem,2vw,1.5rem); margin-top:1rem; }
+.cd .u{ display:flex; flex-direction:column; align-items:center; min-width:2ch; }
+.cd .n{ font-family:var(--display); font-size:clamp(4.5rem,15vw,13rem); line-height:.9; color:var(--ink); font-variant-numeric:tabular-nums; letter-spacing:.02em; }
+.cd .l{ font-size:.75rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--mute); margin-top:.6rem; }
+.cd .c{ font-family:var(--display); font-size:clamp(4.5rem,15vw,13rem); line-height:.9; color:var(--orange); align-self:flex-start; }
+.cd-done{ display:none; font-family:var(--display); font-size:clamp(3rem,9vw,7.5rem); color:var(--orange); line-height:.95; }
+.cd.over .u,.cd.over .c{ display:none; }
+.cd.over .cd-done{ display:block; }
+
+/* ============================================================
+   PRICING — giant $20
+   ============================================================ */
+.pricing .grid{ display:grid; grid-template-columns:auto 1fr; gap:2rem clamp(2rem,6vw,6rem); align-items:end; }
+.price{ font-family:var(--display); font-size:clamp(9rem,30vw,24rem); line-height:.82; color:var(--ink); letter-spacing:-.01em; margin:0; }
+.price .cur{ font-size:.5em; vertical-align:top; color:var(--orange); line-height:1; }
+.price-sub{ font-family:var(--display); font-size:clamp(2rem,4.6vw,4.25rem); line-height:.95; color:var(--orange); text-transform:uppercase; margin:0 0 .75rem; max-width:14ch; }
+.price-note{ color:var(--body); max-width:38ch; }
+.pricing .lone{ right:8%; bottom:12%; }
+@media (max-width:820px){ .pricing .grid{ grid-template-columns:1fr; } }
+
+/* ============================================================
+   KIDS DAY — palette flip
+   ============================================================ */
+.kids{ background:var(--orange); color:#0a0a0a; border-top:0; }
+.kids h2,.kids h3,.kids .eyebrow,.kids .lead,.kids .display{ color:#0a0a0a; }
+.kids .eyebrow{ color:#0a0a0a; }
+.kids p{ color:#1a1a1a; }
+.kids .stat{ font-family:var(--display); font-size:clamp(2.25rem,6vw,5rem); line-height:.95; text-transform:uppercase; letter-spacing:.02em; margin:0 0 1.5rem; }
+.kids .stat span{ white-space:nowrap; }
+.kids .stat .dot{ padding:0 .3em; opacity:.5; }
+@media (max-width:640px){ .kids .stat span{ display:block; } .kids .stat .dot{ display:none; } }
+.kids .btn-solid{ background:#0a0a0a; color:var(--orange); border-color:#0a0a0a; }
+.kids .btn-solid:hover{ background:#222; }
+.kids .btn-ghost{ color:#0a0a0a; border-color:#0a0a0a; }
+.kids .btn-ghost:hover{ background:rgba(0,0,0,.08); }
+.kids .grid{ display:grid; grid-template-columns:1.1fr .9fr; gap:3rem; align-items:center; }
+.kids .ph{ border-color:#0a0a0a; color:#0a0a0a; background:repeating-linear-gradient(135deg,#f06400 0 14px,#ff6a00 14px 28px); }
+.kids .ph::before{ background:#0a0a0a; }
+.kids ::selection{ background:#0a0a0a; color:var(--orange); }
+.kids :focus-visible{ outline-color:#0a0a0a; }
+.kids .perch{ right:-4%; top:1rem; }
+@media (max-width:820px){ .kids .grid{ grid-template-columns:1fr; } }
+
+/* ============================================================
+   GIVE BACK / CREW / QUOTES
+   ============================================================ */
+.three{ display:grid; grid-template-columns:repeat(3,1fr); gap:2rem; margin-top:2.5rem; }
+.three h3{ font-size:clamp(2.5rem,5vw,4.25rem); margin-bottom:.75rem; }
+.three h3 .k{ color:var(--orange); }
+.three p{ font-size:.98rem; }
+@media (max-width:820px){ .three{ grid-template-columns:1fr; gap:1.5rem; } .three > div{ padding-top:1.5rem; border-top:1px solid var(--line); } }
+.crew .grid{ display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:center; }
+.crew .lone{ left:5%; top:3.5rem; transform:scaleX(-1); }
+@media (max-width:820px){ .crew .grid{ grid-template-columns:1fr; } .crew .lone{ left:auto; right:5%; top:2rem; } }
+.quotes{ display:grid; grid-template-columns:repeat(3,1fr); gap:2rem; margin-top:2.5rem; }
+.quotes blockquote{ margin:0; font-family:var(--display); font-size:clamp(1.6rem,2.6vw,2.25rem); line-height:1.05; color:var(--ink); text-transform:uppercase; border-left:3px solid var(--orange); padding-left:1rem; }
+.quotes blockquote small{ display:block; margin-top:.75rem; font-family:var(--sans); font-size:.72rem; letter-spacing:.14em; color:var(--mute); text-transform:uppercase; }
+@media (max-width:820px){ .quotes{ grid-template-columns:1fr; } }
+.sample{ margin-top:1.5rem; font-size:.75rem; letter-spacing:.14em; text-transform:uppercase; color:var(--mute); }
+
+/* ============================================================
+   FAQ — native accordion
+   ============================================================ */
+.faq-list{ border-top:1px solid var(--line); margin-top:1rem; }
+.q{ border-bottom:1px solid var(--line); }
+.q summary{ list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:1.5rem; padding:1.4rem 0; font-family:var(--display); font-size:clamp(1.6rem,3.4vw,2.75rem); line-height:1; color:var(--ink); text-transform:uppercase; letter-spacing:.02em; }
+.q summary::-webkit-details-marker{ display:none; }
+.q summary:hover{ color:var(--orange); }
+.q summary .plus{ flex:0 0 auto; width:28px; height:28px; position:relative; }
+.q summary .plus::before,.q summary .plus::after{ content:""; position:absolute; background:var(--orange); left:50%; top:50%; transform:translate(-50%,-50%); }
+.q summary .plus::before{ width:100%; height:3px; }
+.q summary .plus::after{ width:3px; height:100%; transition:transform .2s ease; }
+.q[open] summary .plus::after{ transform:translate(-50%,-50%) scaleY(0); }
+.q .a{ padding:0 0 1.75rem; max-width:62ch; }
+.q .a p:last-child{ margin-bottom:0; }
+.faq .lone{ right:4%; top:5rem; }
+
+/* ============================================================
+   DIRECTIONS / FOOTER
+   ============================================================ */
+.where .grid{ display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start; }
+.address{ font-family:var(--display); font-size:clamp(2.75rem,7vw,6rem); line-height:.95; text-transform:uppercase; color:var(--ink); margin:0 0 1rem; }
+.address .orange{ display:block; }
+.trucks{ display:flex; flex-wrap:wrap; gap:.6rem; margin-top:1.5rem; }
+.trucks span{ border:1px solid #333; border-radius:999px; padding:.4rem .9rem; font-size:.8rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--body); }
+.where{ padding-bottom:clamp(10rem,20vw,16rem); }
+@media (max-width:820px){ .where .grid{ grid-template-columns:1fr; } }
+
+footer{ border-top:1px solid var(--line); padding:3rem 0 4.5rem; font-size:.875rem; color:var(--mute); }
+footer .grid{ display:flex; flex-wrap:wrap; gap:2rem 3rem; align-items:flex-start; justify-content:space-between; }
+footer .brand{ font-size:1.6rem; }
+footer .tag{ font-family:var(--display); font-size:1.4rem; letter-spacing:.06em; color:var(--orange); margin:.5rem 0 0; }
+footer ul{ list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:.4rem 1.5rem; }
+footer ul a{ color:var(--body); text-decoration:none; font-weight:600; letter-spacing:.1em; text-transform:uppercase; font-size:.78rem; }
+footer ul a:hover{ color:var(--orange); }
+footer .fine{ margin-top:2.5rem; border-top:1px solid var(--line); padding-top:1.25rem; font-size:.75rem; display:flex; flex-wrap:wrap; gap:.5rem 2rem; justify-content:space-between; }
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{ transition:none !important; animation:none !important; }
+}
+@media print{ #dark,#hint,.badge,.nav{ display:none !important; } }
+</style>
+</head>
+
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ============ SVG symbol library (silhouettes) ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- crow, side profile, facing right -->
+    <symbol id="s-crow" viewBox="0 0 120 80">
+      <path fill="currentColor" d="M2 54 L24 44 C34 28 56 20 76 22 C84 22 90 25 94 29 L112 27 L97 35 C93 43 85 47 74 49 C64 57 46 61 30 59 L12 68 L21 57 Z"/>
+      <path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" d="M56 58 l-3 13 M50 71 l7 0 M66 58 l1 13 M63 71 l7 0"/>
+    </symbol>
+    <!-- jagged pine treeline; stretched with preserveAspectRatio=none -->
+    <symbol id="s-trees" viewBox="0 0 1200 200" preserveAspectRatio="none">
+      <path fill="currentColor" d="M0 200 L0 150 L20 95 L40 150 L55 120 L70 70 L85 120 L100 150 L118 105 L136 150 L150 130 L165 60 L180 130 L195 150 L212 88 L230 150 L246 115 L262 40 L278 115 L294 150 L312 100 L330 150 L345 128 L360 75 L375 128 L390 150 L408 95 L426 150 L442 120 L458 55 L474 120 L490 150 L505 110 L520 150 L538 132 L556 66 L574 132 L590 150 L608 90 L626 150 L642 118 L658 48 L674 118 L690 150 L706 104 L722 150 L738 126 L754 72 L770 126 L786 150 L803 98 L820 150 L836 122 L852 58 L868 122 L884 150 L900 108 L916 150 L932 130 L948 80 L964 130 L980 150 L997 96 L1014 150 L1030 118 L1046 44 L1062 118 L1078 150 L1096 102 L1114 150 L1130 126 L1146 70 L1162 126 L1178 150 L1200 110 L1200 200 Z"/>
+    </symbol>
+    <!-- scarecrow on a post -->
+    <symbol id="s-scarecrow" viewBox="0 0 200 330">
+      <g fill="currentColor">
+        <rect x="96" y="120" width="8" height="210"/>
+        <rect x="22" y="118" width="156" height="7"/>
+        <polygon points="26,108 66,104 70,134 30,138"/>
+        <polygon points="134,104 174,108 170,138 130,134"/>
+        <circle cx="100" cy="74" r="26"/>
+        <polygon points="58,54 142,54 120,20 82,16"/>
+        <rect x="50" y="52" width="100" height="6"/>
+        <polygon points="62,126 138,126 152,242 138,228 126,246 110,230 96,248 82,232 68,246 48,242"/>
+        <polygon points="86,244 98,244 94,300 84,300"/>
+        <polygon points="104,244 116,244 118,300 108,300"/>
+      </g>
+    </symbol>
+    <!-- corn stalks -->
+    <symbol id="s-corn" viewBox="0 0 1600 260" preserveAspectRatio="xMidYMax slice">
+      <use href="#corn-tile" x="400"/><use href="#corn-tile" x="800"/><use href="#corn-tile" x="1200"/>
+      <g id="corn-tile" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round">
+        <path d="M30 260 V40 M30 30 l-8 -22 M30 30 l8 -22 M30 150 q-30 -14 -40 -52 M30 120 q30 -8 44 -44 M30 200 q-26 -10 -36 -40"/>
+        <path d="M110 260 V22 M110 12 l-8 -22 M110 12 l8 -22 M110 130 q-30 -14 -42 -50 M110 100 q32 -10 44 -46 M110 190 q-28 -10 -40 -44 M110 170 q30 -8 46 -40"/>
+        <path d="M190 260 V50 M190 40 l-8 -22 M190 40 l8 -22 M190 160 q-30 -14 -40 -52 M190 130 q30 -8 44 -44 M190 210 q28 -10 40 -40"/>
+        <path d="M270 260 V30 M270 20 l-8 -22 M270 20 l8 -22 M270 140 q-30 -14 -42 -50 M270 110 q32 -10 44 -46 M270 200 q-28 -10 -40 -44"/>
+        <path d="M350 260 V44 M350 34 l-8 -22 M350 34 l8 -22 M350 154 q-30 -14 -40 -52 M350 124 q30 -8 44 -44 M350 214 q28 -10 40 -40"/>
+        <path d="M70 260 V90 M70 80 l-6 -18 M70 80 l6 -18 M70 180 q-24 -10 -34 -40 M70 150 q24 -8 36 -36"/>
+        <path d="M230 260 V96 M230 86 l-6 -18 M230 86 l6 -18 M230 186 q-24 -10 -34 -40 M230 156 q24 -8 36 -36"/>
+        <path d="M310 260 V84 M310 74 l-6 -18 M310 74 l6 -18 M310 174 q-24 -10 -34 -40 M310 144 q24 -8 36 -36"/>
+      </g>
+    </symbol>
+    <!-- the figure in the corn -->
+    <symbol id="s-watcher" viewBox="0 0 120 260">
+      <g fill="currentColor">
+        <circle cx="60" cy="34" r="22"/>
+        <rect x="50" y="52" width="20" height="18"/>
+        <path d="M18 88 Q60 62 102 88 L110 260 L10 260 Z"/>
+      </g>
+      <circle class="eye" cx="52" cy="32" r="2.6"/>
+      <circle class="eye" cx="68" cy="32" r="2.6"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Nightmare on the Crow — home">
+      <svg viewBox="0 0 120 80" aria-hidden="true"><use href="#s-crow"/></svg>
+      <span>Nightmare on the Crow</span>
+    </a>
+    <ul class="links" id="links">
+      <li><a href="#attractions">Attractions</a></li>
+      <li><a href="#dates">Dates</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#kids">Kids Day</a></li>
+      <li><a href="#crew">Join the Crew</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#where">Directions</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="lights" id="lights" type="button" aria-pressed="false" title="Toggle the flashlight effect">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>
+        <span class="lights-label">Lights On</span>
+      </button>
+      <a class="btn btn-solid" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
+      <button class="menu-btn" id="menu" type="button" aria-expanded="false" aria-controls="links" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<span id="top"></span>
+
+<!-- ============ HERO ============ -->
+<section class="hero" aria-labelledby="hero-h">
+  <!-- crows on a branch, top right -->
+  <svg class="sil perch" viewBox="0 0 600 160" aria-label="Three crows perched on a bare branch" role="img">
+    <path fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" d="M0 120 C110 96 190 104 300 84 C400 66 500 74 600 44"/>
+    <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" d="M150 102 l-18 -26 M330 80 l12 -30 M470 74 l-10 -24 M520 66 l22 -12"/>
+    <use href="#s-crow" x="78" y="42" width="84" height="56"/>
+    <use href="#s-crow" x="262" y="22" width="84" height="56" id="shy-crow"/>
+    <use href="#s-crow" x="418" y="12" width="84" height="56"/>
+  </svg>
+  <svg class="sil crow lone" viewBox="0 0 120 80" aria-label="A lone crow" role="img"><use href="#s-crow"/></svg>
+  <svg class="sil trees" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-label="Treeline at the edge of the woods" role="img"><use href="#s-trees"/></svg>
+
+  <div class="wrap">
+    <p class="eyebrow">Greenfield, MN &nbsp;·&nbsp; Oct 9 · 10 · 16 · 17 &nbsp;·&nbsp; 7:30–10 PM</p>
+    <h1 id="hero-h">You brought a flashlight. <span class="good">Good.</span></h1>
+    <p class="sub">Nightmare on the Crow <span class="sep">—</span> Greenfield, MN <span class="sep">—</span> <span class="nowrap">4 nights only</span></p>
+    <p class="lead">A haunted trail through the forest off Harff Road, built by three neighbors who love Halloween a little too much. It all begins with a hayride.</p>
+    <div class="btn-row">
+      <a class="btn btn-solid" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets — $20</a>
+      <button class="btn btn-ghost js-lights" type="button">Turn the lights on</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INTRO ============ -->
+<section class="intro" aria-labelledby="intro-h">
+  <svg class="sil scarecrow" viewBox="0 0 200 330" aria-label="A scarecrow on a post" role="img"><use href="#s-scarecrow"/></svg>
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <p class="eyebrow">What this is</p>
+        <h2 id="intro-h" class="h2" style="font-size:clamp(2rem,3.4vw,3rem);color:var(--mute)">In their words</h2>
+        <blockquote>“This isn’t just a haunt. It’s an experience designed to <em>crawl under your skin.</em>”</blockquote>
+        <p>Three neighbors. One forest by the Crow River. A hayride in, and then a trail of tunnels, buildings and corn full of live actors who know exactly where you are.</p>
+        <p>Every ticket helps stock the food shelf and keeps somebody warm this winter. Cheap scares, real good.</p>
+      </div>
+      <div class="ph" aria-label="Placeholder for a photo of the trail entrance at dusk">Photo: trail entrance at dusk</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ATTRACTIONS ============ -->
+<section class="attractions" id="attractions" aria-labelledby="att-h">
+  <svg class="sil corn" viewBox="0 0 1600 260" preserveAspectRatio="xMidYMax slice" aria-label="Rows of corn stalks" role="img"><use href="#s-corn"/></svg>
+  <!-- this one is not always where you left it -->
+  <svg class="sil watcher" id="watcher" viewBox="0 0 120 260" aria-label="A figure standing in the corn" role="img"><use href="#s-watcher"/></svg>
+
+  <div class="wrap">
+    <p class="eyebrow">What’s out there</p>
+    <h2 id="att-h" class="h2">Four ways in.<br>One way out.</h2>
+    <ol class="att-list">
+      <li>
+        <span class="num" aria-hidden="true">01</span>
+        <h3>The Trail</h3>
+        <p>A winding path through the forest where the dark is the least of your problems.</p>
+      </li>
+      <li>
+        <span class="num" aria-hidden="true">02</span>
+        <h3>The Tunnels</h3>
+        <p>Low, tight, and longer than they look. Something in there is breathing with you.</p>
+      </li>
+      <li>
+        <span class="num" aria-hidden="true">03</span>
+        <h3>The Buildings</h3>
+        <p>Rooms full of live actors and things Ben built that you’ll be seeing again at 3 a.m.</p>
+      </li>
+      <li>
+        <span class="num" aria-hidden="true">04</span>
+        <h3>The Corn</h3>
+        <p>An eerie maze. Every stalk looks the same. Not everything in it is a stalk.</p>
+      </li>
+    </ol>
+    <p class="att-note">Live actors the whole way. Interactive scares. Displays that move when you don’t. And yes — it all begins with a hayride.</p>
+  </div>
+</section>
+
+<!-- ============ DATES ============ -->
+<section class="dates" id="dates" aria-labelledby="dates-h">
+  <svg class="sil crow lone" viewBox="0 0 120 80" aria-label="A crow" role="img"><use href="#s-crow"/></svg>
+  <div class="wrap">
+    <p class="eyebrow">2026 season</p>
+    <h2 id="dates-h" class="h2">Four nights.<br>Then it’s gone.</h2>
+    <ul class="dates-list">
+      <li><span class="dow">Fri</span><span class="day">09</span><span class="mon">Oct</span><span class="time">7:30 – 10:00 PM · Last entry 10</span></li>
+      <li><span class="dow">Sat</span><span class="day">10</span><span class="mon">Oct</span><span class="time">7:30 – 10:00 PM · Last entry 10 · <a href="#kids">Kids Day noon–3</a></span></li>
+      <li><span class="dow">Fri</span><span class="day">16</span><span class="mon">Oct</span><span class="time">7:30 – 10:00 PM · Last entry 10</span></li>
+      <li><span class="dow">Sat</span><span class="day">17</span><span class="mon">Oct</span><span class="time">7:30 – 10:00 PM · Last entry 10</span></li>
+    </ul>
+    <div class="btn-row">
+      <a class="btn btn-solid" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COUNTDOWN ============ -->
+<section class="countdown" aria-labelledby="cd-h">
+  <svg class="sil trees" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-label="Treeline" role="img"><use href="#s-trees"/></svg>
+  <div class="wrap">
+    <p class="eyebrow">Opening night · Fri Oct 9 · 7:30 PM</p>
+    <h2 id="cd-h" class="h2" style="font-size:clamp(2rem,3.4vw,3rem);color:var(--mute)">The trail opens in</h2>
+    <div class="cd" id="cd" role="timer" aria-live="off" aria-label="Countdown to opening night">
+      <div class="u"><span class="n" id="cd-d">--</span><span class="l">Days</span></div>
+      <span class="c" aria-hidden="true">:</span>
+      <div class="u"><span class="n" id="cd-h2">--</span><span class="l">Hours</span></div>
+      <span class="c" aria-hidden="true">:</span>
+      <div class="u"><span class="n" id="cd-m">--</span><span class="l">Min</span></div>
+      <span class="c" aria-hidden="true">:</span>
+      <div class="u"><span class="n" id="cd-s">--</span><span class="l">Sec</span></div>
+      <p class="cd-done">The trail is open.<br>See you in the dark.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section class="pricing" id="pricing" aria-labelledby="price-h">
+  <svg class="sil crow lone" viewBox="0 0 120 80" aria-label="A crow" role="img"><use href="#s-crow"/></svg>
+  <div class="wrap">
+    <p class="eyebrow">Pricing, out loud</p>
+    <h2 id="price-h" class="h2" style="font-size:clamp(2rem,3.4vw,3rem);color:var(--mute)">Haunted trail</h2>
+    <div class="grid">
+      <p class="price"><span class="cur">$</span>20</p>
+      <div>
+        <p class="price-sub">$15 with a food-shelf donation</p>
+        <p class="price-note">…or a winter clothing item — hats, gloves, coats. Bring one, save five, help a neighbor. Kids Day ticket holders get $5 off an evening ticket too.</p>
+        <p class="price-note mute">Most metro haunts run $30–50 and make you dig for the number. Here’s ours.</p>
+        <div class="btn-row">
+          <a class="btn btn-solid" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KIDS DAY (palette flip) ============ -->
+<section class="kids" id="kids" aria-labelledby="kids-h">
+  <svg class="sil perch" viewBox="0 0 600 160" aria-label="Crows on a branch" role="img">
+    <path fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" d="M0 120 C110 96 190 104 300 84 C400 66 500 74 600 44"/>
+    <use href="#s-crow" x="120" y="36" width="84" height="56"/>
+    <use href="#s-crow" x="400" y="14" width="84" height="56"/>
+  </svg>
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <p class="eyebrow">Lights on. Literally.</p>
+        <h2 id="kids-h" class="h2">Kids Day</h2>
+        <p class="stat"><span>Sat Oct 10</span> <span class="dot">·</span> <span>Noon–3 PM</span> <span class="dot">·</span> <span>$5</span></p>
+        <p class="lead">Lights-on trail. Trick-or-treating. Family activities. The same woods, none of the nightmares.</p>
+        <p>Your Kids Day ticket is good for <strong>$5 off</strong> an evening haunt ticket — for the grown-ups who want to come back after dark.</p>
+        <div class="btn-row">
+          <a class="btn btn-solid" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Kids Day Tickets — $5</a>
+          <a class="btn btn-ghost" href="#faq">Is it too scary?</a>
+        </div>
+      </div>
+      <div class="ph" aria-label="Placeholder for a photo of kids trick-or-treating on the daytime trail">Photo: trick-or-treating on the lights-on trail</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GIVE BACK ============ -->
+<section class="give" id="give" aria-labelledby="give-h">
+  <div class="wrap">
+    <p class="eyebrow">Why we do this</p>
+    <h2 id="give-h" class="h2">Scare for good.</h2>
+    <p class="lead">Nightmare on the Crow started with three neighbors who loved Halloween and giving back. The giving-back part still runs the show.</p>
+    <div class="three">
+      <div>
+        <h3>Food <span class="k">shelf</span></h3>
+        <p>Bring a non-perishable item to the gate. You save $5. Somebody in town eats. Everybody wins.</p>
+      </div>
+      <div>
+        <h3>Winter <span class="k">clothing</span></h3>
+        <p>Hats, gloves, coats — new or gently used. Same $5 off. Minnesota winters aren’t a game.</p>
+      </div>
+      <div>
+        <h3>Hanover <span class="k">Fire Dept.</span></h3>
+        <p>We’re proud to partner with the Hanover Fire Department. Local haunt, local heroes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ JOIN THE CREW ============ -->
+<section class="crew" id="crew" aria-labelledby="crew-h">
+  <svg class="sil crow lone" viewBox="0 0 120 80" aria-label="A crow" role="img"><use href="#s-crow"/></svg>
+  <div class="wrap">
+    <div class="grid">
+      <div class="ph" aria-label="Placeholder for a photo of the crew in costume">Photo: the crew in costume, backstage</div>
+      <div>
+        <p class="eyebrow">Join the crew</p>
+        <h2 id="crew-h" class="h2">Be the thing in the dark.</h2>
+        <p>We run on volunteer actors. Evan plays Beetlejuice and runs our socials and tech. Ben designs the sets — the skeleton trapped in the cage and the zombie graveyard are his. There’s room in the woods for you.</p>
+        <div class="btn-row">
+          <a class="btn btn-solid" href="#">Join the Crew</a>
+          <a class="btn btn-ghost" href="#">Actor login</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="quotes" aria-label="What guests say (sample quotes)">
+      <blockquote>“I did not know I could run that fast.”<small>Guest · sample</small></blockquote>
+      <blockquote>“The tunnels. I’m not talking about the tunnels.”<small>Guest · sample</small></blockquote>
+      <blockquote>“Twenty bucks and a can of beans. Best night of October.”<small>Guest · sample</small></blockquote>
+    </div>
+    <p class="sample">Sample quotes for layout only — replace with real guest comments.</p>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="faq" id="faq" aria-labelledby="faq-h">
+  <svg class="sil crow lone" viewBox="0 0 120 80" aria-label="A crow" role="img"><use href="#s-crow"/></svg>
+  <div class="wrap">
+    <p class="eyebrow">Questions in the dark</p>
+    <h2 id="faq-h" class="h2">FAQ</h2>
+    <div class="faq-list">
+      <details class="q">
+        <summary>How scary is it? <span class="plus" aria-hidden="true"></span></summary>
+        <div class="a"><p>Scary. Live actors, tight tunnels, dark woods, jump scares — it’s designed to crawl under your skin. If you want the gentle version, Kids Day on Oct 10 is a lights-on walk with trick-or-treating.</p></div>
+      </details>
+      <details class="q">
+        <summary>What age is it for? <span class="plus" aria-hidden="true"></span></summary>
+        <div class="a"><p>The evening trail is built for teens and adults. Parents know their kids best — if they’re young or easily spooked, bring them to Kids Day instead. It’s $5, the lights are on, and nobody chases anyone.</p></div>
+      </details>
+      <details class="q">
+        <summary>What if it rains? <span class="plus" aria-hidden="true"></span></summary>
+        <div class="a"><p>It’s an outdoor trail through real woods, so dress for Minnesota in October: layers, closed-toe shoes you don’t mind muddying. For any weather-related updates on show nights, check our Facebook and Instagram before you head out.</p></div>
+      </details>
+      <details class="q">
+        <summary>Where do I park? <span class="plus" aria-hidden="true"></span></summary>
+        <div class="a"><p>Head to 6470 Harff Road, Greenfield, and follow the signs — our crew will point you where to go. Come a few minutes early on Saturdays; they fill up.</p></div>
+      </details>
+      <details class="q">
+        <summary>How long does it take? <span class="plus" aria-hidden="true"></span></summary>
+        <div class="a"><p>Plan on a good chunk of your evening from the hayride to the far side of the corn — how long depends on how fast you walk, and how fast you run. Gates are open 7:30 to 10 PM; last entry is 10.</p></div>
+      </details>
+      <details class="q">
+        <summary>Will the actors touch me? <span class="plus" aria-hidden="true"></span></summary>
+        <div class="a"><p>Our actors don’t touch guests. Please return the favor — hands off the actors, the sets and the props. They took a long time to build, and some of them bite back.</p></div>
+      </details>
+      <details class="q">
+        <summary>Is it wheelchair accessible? <span class="plus" aria-hidden="true"></span></summary>
+        <div class="a"><p>The trail crosses uneven forest ground, tunnels and corn, which makes the evening haunt tough for wheelchairs and strollers. Kids Day is easier going. Message us before you visit and we’ll do everything we can to make it work.</p></div>
+      </details>
+      <details class="q">
+        <summary>Is there food? <span class="plus" aria-hidden="true"></span></summary>
+        <div class="a"><p>Yes. Just in Time Concessions and Burger Box are on site. Eat before the trail or after — your stomach, your call.</p></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DIRECTIONS ============ -->
+<section class="where" id="where" aria-labelledby="where-h">
+  <svg class="sil trees" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-label="Treeline" role="img"><use href="#s-trees"/></svg>
+  <div class="wrap">
+    <p class="eyebrow">Find us</p>
+    <h2 id="where-h" class="h2" style="font-size:clamp(2rem,3.4vw,3rem);color:var(--mute)">Directions</h2>
+    <div class="grid">
+      <div>
+        <p class="address">6470 Harff Road<span class="orange">Greenfield, MN 55373</span></p>
+        <p>West metro, about 35 minutes from Minneapolis, out by the Crow River. Bring a friend to hold onto. Bring a can of food to save five bucks.</p>
+        <div class="btn-row">
+          <a class="btn btn-ghost" href="https://maps.google.com/?q=6470+Harff+Road,+Greenfield,+MN+55373" target="_blank" rel="noopener">Open in Maps</a>
+          <a class="btn btn-solid" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
+        </div>
+        <p class="eyebrow" style="margin-top:2.5rem">Food trucks on site</p>
+        <div class="trucks"><span>Just in Time Concessions</span><span>Burger Box</span></div>
+      </div>
+      <div class="ph" style="min-height:320px" aria-label="Placeholder for an embedded map of 6470 Harff Road, Greenfield MN">Map: 6470 Harff Road, Greenfield MN</div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <a class="brand" href="#top"><svg viewBox="0 0 120 80" aria-hidden="true"><use href="#s-crow"/></svg><span>Nightmare on the Crow</span></a>
+        <p class="tag">It All Begins with a Hayride!</p>
+        <p style="margin-top:.75rem">6470 Harff Road, Greenfield, MN 55373<br>Oct 9 · 10 · 16 · 17, 2026 · 7:30–10 PM</p>
+      </div>
+      <nav aria-label="Social links">
+        <ul>
+          <li><a href="#">Facebook</a></li>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">TikTok</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Footer links">
+        <ul>
+          <li><a href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a></li>
+          <li><a href="#crew">Join the Crew</a></li>
+          <li><a href="#">Actor login</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="fine">
+      <span>© 2026 Nightmare on the Crow. Built by three neighbors in Greenfield, MN.</span>
+      <span>Website concept mockup — not the live site.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ THE DARK + HINT + BADGE (above everything) ============ -->
+<div id="dark" aria-hidden="true"></div>
+
+<div id="hint" role="status">
+  <span class="hint-t" id="hint-t">Move your light. Or turn the lights on.</span>
+  <button class="hint-btn js-lights" type="button" id="hint-btn">Lights on</button>
+  <button class="hint-x" type="button" id="hint-x" aria-label="Dismiss hint">×</button>
+</div>
+
+<div class="badge" aria-hidden="true">Concept #2 — Blackout</div>
+
+<noscript><style>#dark,#hint{display:none}</style></noscript>
+
+<script>
+(function(){
+  'use strict';
+  var root = document.documentElement;
+  var dark = document.getElementById('dark');
+  var hint = document.getElementById('hint');
+  var hintT = document.getElementById('hint-t');
+  var hintBtn = document.getElementById('hint-btn');
+  var lightsBtn = document.getElementById('lights');
+  var lightsLabel = lightsBtn.querySelector('.lights-label');
+  var reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
+
+  /* ---------------- Lights on / off ---------------- */
+  var lit = root.classList.contains('lit');
+  var hintDismissed = false;
+
+  function renderLights(){
+    lightsBtn.setAttribute('aria-pressed', lit ? 'true' : 'false');
+    lightsLabel.textContent = lit ? 'Lights Off' : 'Lights On';
+    lightsBtn.setAttribute('title', lit ? 'Turn the lights off and use your flashlight' : 'Turn the lights on and see everything');
+    var ghosts = document.querySelectorAll('.btn.js-lights');
+    for (var i = 0; i < ghosts.length; i++) ghosts[i].textContent = lit ? 'Turn the lights off' : 'Turn the lights on';
+    hintT.textContent = lit ? 'Lights are on. Prefer the dark? Turn them off.' : 'Move your light. Or turn the lights on.';
+    hintBtn.textContent = lit ? 'Lights off' : 'Lights on';
+  }
+  function setLights(on){
+    lit = !!on;
+    root.classList.toggle('lit', lit);
+    try { sessionStorage.setItem('notc-lights', lit ? 'on' : 'off'); } catch(e){}
+    renderLights();
+    if (lit) dismissHint();
+  }
+  function dismissHint(){
+    if (hintDismissed) return;
+    hintDismissed = true;
+    hint.classList.add('gone');
+    setTimeout(function(){ hint.hidden = true; }, 400);
+  }
+  renderLights();
+
+  var toggles = document.querySelectorAll('.js-lights, #lights');
+  for (var t = 0; t < toggles.length; t++) {
+    toggles[t].addEventListener('click', function(){ setLights(!lit); });
+  }
+  document.getElementById('hint-x').addEventListener('click', dismissHint);
+
+  /* ---------------- Flashlight beam (rAF-throttled) ---------------- */
+  var px = window.innerWidth / 2, py = window.innerHeight * 0.45;
+  var pending = false, travel = 0, lastX = px, lastY = py;
+
+  function paint(){
+    pending = false;
+    dark.style.setProperty('--x', px + 'px');
+    dark.style.setProperty('--y', py + 'px');
+  }
+  function moveBeam(x, y){
+    px = x; py = y;
+    if (!pending) { pending = true; window.requestAnimationFrame(paint); }
+    if (!hintDismissed && !lit) {
+      travel += Math.abs(x - lastX) + Math.abs(y - lastY);
+      if (travel > 900) dismissHint();
+    }
+    lastX = x; lastY = y;
+  }
+  paint();
+
+  window.addEventListener('pointermove', function(e){
+    if (e.pointerType === 'touch') return;   /* touch handled below so scrolling still works */
+    moveBeam(e.clientX, e.clientY);
+  }, { passive:true });
+
+  function onTouch(e){
+    var tch = e.touches && e.touches[0];
+    if (tch) moveBeam(tch.clientX, tch.clientY);
+  }
+  window.addEventListener('touchstart', onTouch, { passive:true });
+  window.addEventListener('touchmove', onTouch, { passive:true });
+
+  /* Keyboard users: the beam follows focus so links are never invisible. */
+  document.addEventListener('focusin', function(e){
+    if (lit || !e.target || !e.target.getBoundingClientRect) return;
+    var r = e.target.getBoundingClientRect();
+    var cx = Math.min(Math.max(r.left + r.width / 2, 0), window.innerWidth);
+    var cy = Math.min(Math.max(r.top + r.height / 2, 0), window.innerHeight);
+    moveBeam(cx, cy);
+  });
+
+  /* ---------------- Mobile menu ---------------- */
+  var nav = document.getElementById('nav');
+  var menuBtn = document.getElementById('menu');
+  menuBtn.addEventListener('click', function(){
+    var open = nav.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+  var navLinks = document.querySelectorAll('#links a');
+  for (var n = 0; n < navLinks.length; n++) {
+    navLinks[n].addEventListener('click', function(){
+      nav.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  /* ---------------- Things that move when you aren't looking ---------------- */
+  var watcher = document.getElementById('watcher');
+  var shyCrow = document.getElementById('shy-crow');
+  var slots = ['5%', '18%', '33%', '47%', '62%', '76%', '88%'];
+  var slot = 4;
+
+  function pointerNear(el, radius){
+    var r = el.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > window.innerHeight) return false; /* offscreen: safe to move */
+    var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    var dx = cx - px, dy = cy - py;
+    return (dx * dx + dy * dy) < radius * radius;
+  }
+  function relocateWatcher(){
+    if (!reduce && !pointerNear(watcher, 420)) {
+      var next = slot;
+      while (next === slot) next = Math.floor(Math.random() * slots.length);
+      slot = next;
+      watcher.style.left = slots[slot];
+      watcher.style.transform = Math.random() < 0.5 ? 'scaleX(-1)' : 'none';
+    }
+    setTimeout(relocateWatcher, 7000 + Math.random() * 9000);
+  }
+  function crowFlicker(){
+    if (!reduce && !pointerNear(shyCrow, 360)) {
+      shyCrow.classList.toggle('hidden-crow');
+    }
+    setTimeout(crowFlicker, 11000 + Math.random() * 12000);
+  }
+  setTimeout(relocateWatcher, 9000);
+  setTimeout(crowFlicker, 14000);
+
+  /* ---------------- Countdown to opening night ---------------- */
+  var target = new Date('2026-10-09T19:30:00-05:00'); /* Fri Oct 9, 2026, 7:30 PM Central (CDT) */
+  var cd = document.getElementById('cd');
+  var elD = document.getElementById('cd-d'), elH = document.getElementById('cd-h2'),
+      elM = document.getElementById('cd-m'), elS = document.getElementById('cd-s');
+  var lastMinute = -1;
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+  function tick(){
+    var diff = target.getTime() - Date.now();
+    if (isNaN(diff) || diff <= 0) {
+      cd.classList.add('over');
+      cd.setAttribute('aria-label', 'The trail is open.');
+      return;
+    }
+    var s = Math.floor(diff / 1000);
+    var d = Math.floor(s / 86400); s -= d * 86400;
+    var h = Math.floor(s / 3600);  s -= h * 3600;
+    var m = Math.floor(s / 60);    s -= m * 60;
+    elD.textContent = pad(d); elH.textContent = pad(h); elM.textContent = pad(m); elS.textContent = pad(s);
+    if (m !== lastMinute) {
+      lastMinute = m;
+      cd.setAttribute('aria-label', 'Opening night in ' + d + ' days, ' + h + ' hours and ' + m + ' minutes');
+    }
+    setTimeout(tick, 1000 - (Date.now() % 1000));
+  }
+  tick();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nightmare on the Crow — Haunted Trail &amp; Kids Day · Greenfield, MN</title>
+<meta name="description" content="Nightmare on the Crow: a neighbor-built haunted trail through the forest in Greenfield, MN. Oct 9, 10, 16, 17 · 7:30–10 PM · $20 ($15 with a food-shelf or winter-clothing donation). Kids Day Sat Oct 10, noon–3, $5. Flip the switch for the family version.">
+
+<!--
+  CONCEPT #8 — LIGHTS ON / LIGHTS OFF
+  One page, two audiences. A physical light switch in the header flips
+  <html data-mode="night|day">. Every color, font and mode-specific line of
+  copy hangs off that attribute via CSS custom properties and
+  [data-night] / [data-day] spans. The hero SVG is a single scene whose
+  parts (moon/sun, bats/butterflies, hats on crows, fog, stars, clouds,
+  tree color) are styled per mode, so it morphs instead of swapping.
+-->
+
+<!-- Restore the saved mode BEFORE first paint so there's no flash. -->
+<script>
+(function(){try{var m=localStorage.getItem('notc-mode');if(m==='day'||m==='night'){document.documentElement.setAttribute('data-mode',m);}}catch(e){}})();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=Fredoka:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   1. TOKENS — night is the default; day overrides.
+   ============================================================ */
+:root{
+  /* palette */
+  --bg:#0a0708;
+  --bg-2:#120c0e;
+  --bg-3:#1a1114;
+  --surface:#181013;
+  --surface-2:#211519;
+  --text:#f3ebe4;
+  --muted:#b9a79d;
+  --accent:#ff7a1a;
+  --accent-2:#ffb347;
+  --accent-ink:#1a0d05;
+  --accent-text:#ff8a35;   /* accent used for small text (contrast-safe) */
+  --link:#ffb347;
+  --border:rgba(255,255,255,.09);
+  --glow:rgba(255,122,26,.35);
+  --shadow:0 20px 50px rgba(0,0,0,.55);
+  --radius:8px;
+
+  /* type */
+  --font-logo:'Creepster','Oswald',Impact,sans-serif;
+  --font-head:'Oswald','Arial Narrow',sans-serif;
+  --font-body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --head-case:uppercase;
+  --head-track:.04em;
+  --logo-track:.04em;
+  --head-weight:600;
+
+  /* switch */
+  --plate:linear-gradient(160deg,#2c2327,#161013);
+  --plate-edge:rgba(255,255,255,.12);
+  --plate-glow:rgba(255,122,26,.28);
+  --knob:linear-gradient(180deg,#5b4a50,#2a2024 60%,#1a1316);
+  --knob-edge:rgba(255,255,255,.18);
+  --knob-y:13px;
+  --led:#ff7a1a;
+  --led-glow:0 0 8px #ff7a1a,0 0 14px rgba(255,122,26,.6);
+  --slot:#050304;
+
+  /* hero scene */
+  --sky-a:#06040f;
+  --sky-b:#3a1911;
+  --orb:#efe7d2;
+  --orb-halo:rgba(239,231,210,.35);
+  --crater-op:1;
+  --rays-op:0;
+  --star-op:1;
+  --cloud-op:0;
+  --hill-1:#171120;
+  --hill-2:#100b14;
+  --hill-3:#0a070b;
+  --tree:#0b080b;
+  --trunk:#0b080b;
+  --canopy-op:0;
+  --corn:#140e0c;
+  --fence:#0d0a0b;
+  --fog-op:.55;
+  --bat-op:1;
+  --bfly-op:0;
+  --crow:#050405;
+  --crow-eye:#ff7a1a;
+  --hat-op:0;
+  --hat:#1a1316;
+  --hat-band:#ff7a1a;
+  --scrim:linear-gradient(90deg,rgba(10,7,8,.92) 0%,rgba(10,7,8,.75) 45%,rgba(10,7,8,0) 80%);
+  --scrim-m:linear-gradient(180deg,rgba(10,7,8,.15) 0%,rgba(10,7,8,.85) 55%,rgba(10,7,8,.97) 100%);
+}
+
+:root[data-mode="day"]{
+  --bg:#fff6e6;
+  --bg-2:#ffedd0;
+  --bg-3:#ffe3ba;
+  --surface:#ffffff;
+  --surface-2:#fff9ef;
+  --text:#2b1d12;
+  --muted:#6f5947;
+  --accent:#f2711c;
+  --accent-2:#5fb9f0;
+  --accent-ink:#ffffff;
+  --accent-text:#b04a0c;
+  --link:#1568a8;
+  --border:rgba(43,29,18,.12);
+  --glow:rgba(242,113,28,.25);
+  --shadow:0 16px 40px rgba(120,70,20,.16);
+  --radius:18px;
+
+  --font-logo:'Fredoka','Baloo 2',sans-serif;
+  --font-head:'Fredoka','Baloo 2',sans-serif;
+  --font-body:'Fredoka','Baloo 2',-apple-system,'Segoe UI',sans-serif;
+  --head-case:none;
+  --head-track:0;
+  --logo-track:-.01em;
+  --head-weight:700;
+
+  --plate:linear-gradient(160deg,#fffdf7,#efe6d6);
+  --plate-edge:rgba(43,29,18,.18);
+  --plate-glow:rgba(255,210,63,.55);
+  --knob:linear-gradient(180deg,#ffffff,#e9dfcf 60%,#d3c6b2);
+  --knob-edge:rgba(43,29,18,.22);
+  --knob-y:-13px;
+  --led:#6fcf5a;
+  --led-glow:0 0 6px rgba(111,207,90,.8);
+  --slot:#b9ab98;
+
+  --sky-a:#4fb2ee;
+  --sky-b:#dbf1ff;
+  --orb:#ffd23f;
+  --orb-halo:rgba(255,210,63,.55);
+  --crater-op:0;
+  --rays-op:1;
+  --star-op:0;
+  --cloud-op:1;
+  --hill-1:#9ad274;
+  --hill-2:#72b656;
+  --hill-3:#4f9a3c;
+  --tree:#2e7d3b;
+  --trunk:#6b4a2b;
+  --canopy-op:1;
+  --corn:#e6b93d;
+  --fence:#8a6238;
+  --fog-op:0;
+  --bat-op:0;
+  --bfly-op:1;
+  --crow:#221d24;
+  --crow-eye:#ffffff;
+  --hat-op:1;
+  --hat:#2b1d12;
+  --hat-band:#f2711c;
+  --scrim:linear-gradient(90deg,rgba(255,246,230,.9) 0%,rgba(255,246,230,.7) 45%,rgba(255,246,230,0) 80%);
+  --scrim-m:linear-gradient(180deg,rgba(255,246,230,.1) 0%,rgba(255,246,230,.85) 55%,rgba(255,246,230,.98) 100%);
+}
+
+/* ============================================================
+   2. BASE
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:var(--font-body);font-size:17px;line-height:1.6;
+  overflow-x:hidden;
+}
+/* 600ms crossfade for every color-ish property once the page is ready.
+   :where() keeps specificity at zero so components can override. */
+html.ready :where(body,body *){
+  transition:background-color .6s ease,color .6s ease,border-color .6s ease,
+             fill .6s ease,stroke .6s ease,box-shadow .6s ease,opacity .6s ease;
+}
+/* Mode-specific copy. Both versions live in the DOM; CSS shows one. */
+[data-mode="night"] [data-day],
+[data-mode="day"] [data-night]{display:none !important}
+
+/* While flipping, page content dips to black-out between the two voices. */
+html.switching .swap{animation:blink .6s ease both}
+@keyframes blink{0%{opacity:1}42%{opacity:0}58%{opacity:0}100%{opacity:1}}
+
+h1,h2,h3,h4{
+  font-family:var(--font-head);font-weight:var(--head-weight);
+  text-transform:var(--head-case);letter-spacing:var(--head-track);
+  line-height:1.1;margin:0 0 .4em;
+}
+h2{font-size:clamp(1.9rem,4vw,3rem)}
+h3{font-size:1.3rem}
+p{margin:0 0 1em}
+a{color:var(--link)}
+a:hover{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:4px}
+img{max-width:100%}
+svg{display:block}
+.wrap{width:min(1180px,100% - 2rem);margin-inline:auto}
+section{padding:clamp(3.5rem,8vw,6.5rem) 0;scroll-margin-top:84px}
+.eyebrow{
+  display:inline-block;font-family:var(--font-head);font-weight:600;
+  text-transform:uppercase;letter-spacing:.14em;font-size:.78rem;
+  color:var(--accent-text);margin-bottom:.8rem;
+}
+.lead{font-size:1.15rem;color:var(--muted);max-width:60ch}
+.sec-head{max-width:70ch;margin-bottom:2.5rem}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.skip{position:absolute;left:1rem;top:-3rem;background:var(--accent);color:var(--accent-ink);padding:.5rem 1rem;z-index:200;font-weight:700}
+.skip:focus{top:1rem}
+
+/* Buttons */
+.btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.85rem 1.5rem;border-radius:calc(var(--radius) + 2px);
+  font-family:var(--font-head);font-weight:600;font-size:1rem;
+  text-transform:var(--head-case);letter-spacing:var(--head-track);
+  text-decoration:none;border:2px solid transparent;cursor:pointer;line-height:1.1;
+  transition:transform .15s ease,box-shadow .3s ease,background-color .6s ease,color .6s ease,border-color .6s ease;
+}
+.btn-primary{background:var(--accent);color:var(--accent-ink);box-shadow:0 8px 24px var(--glow)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 30px var(--glow);color:var(--accent-ink)}
+.btn-ghost{border-color:var(--border);color:var(--text);background:transparent}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+[data-mode="day"] .btn-ghost:not(:hover){border-color:var(--text)}
+.btn-sm{padding:.55rem 1rem;font-size:.9rem}
+
+/* Photo / map placeholders (production: real media goes here) */
+.ph{
+  position:relative;display:grid;place-items:center;text-align:center;
+  border:2px dashed var(--border);border-radius:var(--radius);
+  background:repeating-linear-gradient(135deg,var(--surface) 0 14px,var(--surface-2) 14px 28px);
+  color:var(--muted);font-family:var(--font-head);font-size:.85rem;letter-spacing:.08em;
+  text-transform:uppercase;padding:1rem;min-height:220px;
+}
+.ph::before{content:"";position:absolute;inset:8px;border:1px solid var(--border);border-radius:calc(var(--radius) - 4px);pointer-events:none}
+[data-mode="day"] .ph{border-color:rgba(43,29,18,.25)}
+
+/* ============================================================
+   3. HEADER + THE SWITCH
+   ============================================================ */
+.site-header{
+  position:sticky;top:0;z-index:100;
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+@supports not (background:color-mix(in srgb,red 50%,transparent)){
+  .site-header{background:var(--bg)}
+}
+.header-inner{
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:1.2rem;
+  min-height:76px;
+}
+.logo{
+  display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--text);
+  font-family:var(--font-logo);font-size:1.55rem;letter-spacing:var(--logo-track);line-height:1;
+}
+[data-mode="night"] .logo{text-shadow:0 0 18px var(--glow);font-weight:400}
+[data-mode="day"] .logo{font-weight:700;font-size:1.35rem}
+.logo svg{width:38px;height:38px;flex:none}
+.logo .kids-pill{
+  display:none;font-family:var(--font-head);font-size:.7rem;font-weight:700;letter-spacing:.06em;
+  background:var(--accent-2);color:#0b3550;border-radius:99px;padding:.2rem .55rem;
+}
+[data-mode="day"] .logo .kids-pill{display:inline-block}
+
+.main-nav ul{list-style:none;margin:0;padding:0;display:flex;justify-content:center;gap:clamp(.6rem,1.5vw,1.4rem);flex-wrap:wrap}
+.main-nav a{
+  color:var(--text);text-decoration:none;font-family:var(--font-head);font-weight:500;
+  text-transform:var(--head-case);letter-spacing:var(--head-track);font-size:.95rem;
+  padding:.4rem .2rem;border-bottom:2px solid transparent;
+}
+.main-nav a:hover{color:var(--accent);border-bottom-color:var(--accent)}
+
+.header-actions{display:flex;align-items:center;gap:1rem}
+.header-actions .btn{white-space:nowrap}
+
+.burger{
+  display:none;width:44px;height:44px;border:1px solid var(--border);background:transparent;
+  border-radius:8px;cursor:pointer;padding:0;place-items:center;
+}
+.burger span{display:block;width:20px;height:2px;background:var(--text);margin:4px auto;transition:transform .3s,opacity .3s}
+.nav-open .burger span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.nav-open .burger span:nth-child(2){opacity:0}
+.nav-open .burger span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+
+/* --- The light switch --------------------------------------- */
+.switch-wrap{position:relative}
+.switch{
+  appearance:none;background:none;border:0;padding:0;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:.3rem;color:var(--muted);
+  font-family:var(--font-head);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+}
+.switch:focus-visible{outline:none}
+.switch:focus-visible .switch-plate{outline:3px solid var(--accent);outline-offset:4px}
+.switch-plate{
+  position:relative;width:46px;height:72px;border-radius:7px;
+  background:var(--plate);
+  box-shadow:0 0 0 1px var(--plate-edge),inset 0 1px 0 rgba(255,255,255,.12),
+             0 8px 18px rgba(0,0,0,.45),0 0 26px var(--plate-glow);
+  transition:box-shadow .6s ease,transform .2s ease;
+}
+.switch.clicked .switch-plate{animation:plate-click .22s ease}
+@keyframes plate-click{0%{transform:scale(1)}45%{transform:scale(.95)}100%{transform:scale(1)}}
+.screw{
+  position:absolute;width:6px;height:6px;border-radius:50%;
+  background:linear-gradient(135deg,#9a8d86,#4b4043);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.4);
+}
+.screw::after{content:"";position:absolute;left:1px;right:1px;top:2.3px;height:1.2px;background:rgba(0,0,0,.6);transform:rotate(30deg)}
+.screw.tl{top:5px;left:5px}.screw.tr{top:5px;right:5px}.screw.bl{bottom:5px;left:5px}.screw.br{bottom:5px;right:5px}
+.switch-slot{
+  position:absolute;left:50%;top:50%;width:18px;height:46px;margin:-23px 0 0 -9px;border-radius:4px;
+  background:var(--slot);box-shadow:inset 0 2px 6px rgba(0,0,0,.7),inset 0 0 0 1px rgba(0,0,0,.4);
+}
+.switch-knob{
+  position:absolute;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:5px;
+  background:var(--knob);
+  box-shadow:0 0 0 1px var(--knob-edge),0 3px 6px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.35);
+  transform:translateY(var(--knob-y));
+  /* overshoot curve = the mechanical "click" */
+  transition:transform .22s cubic-bezier(.3,1.7,.5,1),background .6s ease,box-shadow .6s ease;
+}
+.switch-knob::before{
+  content:"";position:absolute;left:6px;right:6px;top:50%;height:2px;margin-top:-1px;border-radius:2px;
+  background:rgba(0,0,0,.35);box-shadow:0 1px 0 rgba(255,255,255,.2);
+}
+.switch:active .switch-knob{transform:translateY(var(--knob-y)) scale(.94)}
+.led{
+  position:absolute;left:50%;bottom:-2px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;
+  background:var(--led);box-shadow:var(--led-glow);
+}
+.switch-label{display:block;line-height:1}
+
+/* First-visit hint */
+.hint{
+  position:absolute;top:calc(100% + 14px);right:-10px;width:max-content;max-width:min(280px,80vw);
+  background:var(--accent);color:var(--accent-ink);padding:.7rem .9rem .7rem 1rem;border-radius:10px;
+  font-family:var(--font-head);font-weight:600;font-size:.95rem;letter-spacing:.02em;line-height:1.3;
+  display:flex;align-items:center;gap:.6rem;box-shadow:0 10px 30px var(--glow);
+  opacity:0;transform:translateY(-6px);pointer-events:none;
+  transition:opacity .35s ease,transform .35s ease;z-index:5;
+}
+.hint::before{
+  content:"";position:absolute;top:-7px;right:26px;width:14px;height:14px;background:var(--accent);
+  transform:rotate(45deg);border-radius:2px;
+}
+.hint.show{opacity:1;transform:translateY(0);pointer-events:auto;animation:nudge 1.6s ease-in-out 3}
+@keyframes nudge{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+.hint button{
+  appearance:none;border:0;background:rgba(0,0,0,.18);color:inherit;width:24px;height:24px;border-radius:50%;
+  cursor:pointer;font-size:1rem;line-height:1;flex:none;
+}
+.hint button:hover{background:rgba(0,0,0,.32)}
+
+/* ============================================================
+   4. HERO
+   ============================================================ */
+.hero{
+  position:relative;min-height:min(92vh,860px);display:grid;align-items:center;padding:0;
+  overflow:hidden;isolation:isolate;
+}
+.scene{position:absolute;inset:0;width:100%;height:100%;z-index:-2}
+.hero::before{content:"";position:absolute;inset:0;background:var(--scrim);z-index:-1;pointer-events:none}
+.hero-inner{padding:6rem 0 5rem;max-width:640px}
+.hero h1{
+  font-size:clamp(2.6rem,7vw,5.2rem);line-height:.98;margin:0 0 1rem;
+}
+[data-mode="night"] .hero h1{text-shadow:0 4px 30px rgba(0,0,0,.6)}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero .lead{color:var(--text);opacity:.92;font-size:clamp(1.05rem,1.6vw,1.25rem);margin-bottom:1.6rem}
+.hero-cta{display:flex;flex-wrap:wrap;gap:.8rem;align-items:center}
+.hero-note{margin-top:1.2rem;font-size:.95rem;color:var(--muted)}
+.hero-note strong{color:var(--text)}
+
+/* --- Scene styling (the morph) --- */
+.scene .sky-a{stop-color:var(--sky-a)}
+.scene .sky-b{stop-color:var(--sky-b)}
+.scene .stars{opacity:var(--star-op);fill:#fff}
+.scene .clouds{opacity:var(--cloud-op);fill:#fff}
+.scene .orb{fill:var(--orb)}
+.scene .orb-halo{opacity:1}
+.scene .craters{opacity:var(--crater-op);fill:rgba(0,0,0,.13)}
+.scene .rays{opacity:var(--rays-op);stroke:var(--orb);stroke-width:8;stroke-linecap:round;transform-box:fill-box;transform-origin:center}
+.scene .hill-1{fill:var(--hill-1)}
+.scene .hill-2{fill:var(--hill-2)}
+.scene .hill-3{fill:var(--hill-3)}
+.scene .pine{fill:var(--tree)}
+.scene .trunk{fill:var(--trunk)}
+.scene .bare{stroke:var(--trunk);fill:none;stroke-linecap:round;stroke-linejoin:round}
+.scene .canopy{opacity:var(--canopy-op);fill:#3f9a48}
+.scene .corn{fill:var(--corn)}
+.scene .fence{fill:var(--fence)}
+.scene .fog{opacity:var(--fog-op);fill:#c9b7c4}
+.scene .bats{opacity:var(--bat-op);fill:#000}
+.scene .bflies{opacity:var(--bfly-op)}
+.scene .crow-body{fill:var(--crow)}
+.scene .crow-eye{fill:var(--crow-eye)}
+.scene .hat{opacity:var(--hat-op)}
+.scene .hat-top{fill:var(--hat)}
+.scene .hat-band{fill:var(--hat-band)}
+.scene .hat,.scene .rays,.scene .craters,.scene .stars,.scene .clouds,.scene .canopy,.scene .fog,.scene .bats,.scene .bflies{transition:opacity .6s ease}
+
+/* subtle life */
+.scene .fog-a{animation:drift 9s ease-in-out infinite alternate}
+.scene .fog-b{animation:drift 13s ease-in-out infinite alternate-reverse}
+@keyframes drift{from{transform:translateX(-30px)}to{transform:translateX(30px)}}
+.scene .rays{animation:spin 90s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.scene .bat{transform-box:fill-box;transform-origin:center;animation:flap .5s ease-in-out infinite alternate}
+.scene .bat:nth-child(2){animation-delay:.12s}.scene .bat:nth-child(3){animation-delay:.25s}.scene .bat:nth-child(4){animation-delay:.4s}
+@keyframes flap{from{transform:scaleY(1) translateY(0)}to{transform:scaleY(.55) translateY(-4px)}}
+.scene .bfly{transform-box:fill-box;transform-origin:center;animation:flutter 3.4s ease-in-out infinite alternate}
+.scene .bfly:nth-child(2){animation-delay:.6s}.scene .bfly:nth-child(3){animation-delay:1.3s}.scene .bfly:nth-child(4){animation-delay:2s}
+@keyframes flutter{0%{transform:translate(0,0) scaleX(1)}50%{transform:translate(8px,-14px) scaleX(.35)}100%{transform:translate(18px,-4px) scaleX(1)}}
+.scene .stars circle:nth-child(odd){animation:twinkle 3s ease-in-out infinite alternate}
+.scene .stars circle:nth-child(3n){animation-delay:1s}
+@keyframes twinkle{from{opacity:.35}to{opacity:1}}
+.scene .cloud-a{animation:drift 20s ease-in-out infinite alternate}
+.scene .cloud-b{animation:drift 26s ease-in-out infinite alternate-reverse}
+
+/* ============================================================
+   5. COUNTDOWN
+   ============================================================ */
+.countdown{background:var(--bg-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:2rem 0}
+.countdown .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1.5rem}
+.cd-title{margin:0;font-size:clamp(1.2rem,2.4vw,1.7rem)}
+.cd-title small{display:block;font-family:var(--font-body);font-weight:400;text-transform:none;letter-spacing:0;color:var(--muted);font-size:.95rem;margin-top:.25rem}
+.cd-grid{display:flex;gap:.6rem}
+.cd-cell{
+  min-width:74px;text-align:center;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:.6rem .5rem;
+}
+.cd-cell b{display:block;font-family:var(--font-head);font-size:clamp(1.7rem,3.5vw,2.6rem);line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+.cd-cell span{font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.cd-live{display:none;font-family:var(--font-head);font-size:1.4rem;color:var(--accent)}
+.countdown.is-live .cd-grid{display:none}
+.countdown.is-live .cd-live{display:block}
+
+/* ============================================================
+   6. SECTIONS
+   ============================================================ */
+.alt{background:var(--bg-2)}
+.grid{display:grid;gap:1.4rem}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:1.6rem;box-shadow:var(--shadow);
+}
+.card h3{margin-top:.6rem}
+.card p:last-child{margin-bottom:0}
+.icon{width:48px;height:48px;color:var(--accent)}
+.icon svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.attr-photo{margin-top:2rem}
+
+/* Dates */
+.dates{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.date-card{text-align:center;position:relative}
+.date-card .dow{font-family:var(--font-head);text-transform:uppercase;letter-spacing:.12em;font-size:.75rem;color:var(--muted)}
+.date-card .day{font-family:var(--font-head);font-size:3.2rem;line-height:1;color:var(--accent);font-weight:700}
+.date-card .mon{font-family:var(--font-head);font-size:1.1rem;text-transform:uppercase;letter-spacing:.1em}
+.date-card .hrs{margin-top:.6rem;color:var(--muted);font-size:.95rem}
+.date-card.kids{border-color:var(--accent-2);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent-2) 30%,transparent),var(--shadow)}
+.tag{
+  position:absolute;top:-12px;left:50%;transform:translateX(-50%);white-space:nowrap;
+  font-family:var(--font-head);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--accent-2);color:#0b3550;padding:.25rem .6rem;border-radius:99px;
+}
+[data-mode="night"] .tag{background:var(--accent);color:var(--accent-ink)}
+.hours-note{margin-top:1.4rem;color:var(--muted)}
+
+/* Pricing */
+.price-grid{display:grid;gap:1.4rem;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));align-items:stretch}
+.price{
+  position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:2rem 1.8rem;box-shadow:var(--shadow);display:flex;flex-direction:column;
+}
+.price.hot{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow),var(--shadow)}
+.price .amt{font-family:var(--font-head);font-size:clamp(3.4rem,7vw,5rem);line-height:1;color:var(--accent);font-weight:700}
+.price .amt sup{font-size:.4em;vertical-align:top;margin-top:.35em;display:inline-block}
+.price h3{font-size:1.25rem;margin:.3rem 0 .6rem}
+.price ul{margin:.4rem 0 1.2rem;padding-left:1.2rem;color:var(--muted)}
+.price li{margin:.25rem 0}
+.price .btn{margin-top:auto;align-self:flex-start}
+.price .tag{left:1.8rem;transform:none}
+.price-foot{margin-top:1.6rem;color:var(--muted);font-size:.98rem}
+
+/* Kids Day */
+.kids-hero{display:grid;grid-template-columns:1.1fr .9fr;gap:2.5rem;align-items:center}
+.mascot{width:min(300px,70%);margin-inline:auto}
+.mascot svg{width:100%;height:auto}
+.mascot .m-body{fill:var(--crow)}
+.mascot .m-eye{fill:#fff}
+.mascot .m-pupil{fill:#17121a}
+[data-mode="night"] .mascot .m-eye{fill:var(--crow-eye)}
+[data-mode="night"] .mascot .m-pupil{fill:#3a1400}
+.mascot .m-beak,.mascot .m-feet{fill:var(--accent)}
+.mascot .hat{opacity:var(--hat-op);transition:opacity .6s ease}
+.mascot .hat-top{fill:var(--hat)}
+.mascot .hat-band{fill:var(--hat-band)}
+.mascot .m-blush{fill:#ff9aa6;opacity:var(--hat-op);transition:opacity .6s ease}
+.mascot .m-badge{opacity:var(--hat-op);transition:opacity .6s ease}
+.fact-list{list-style:none;padding:0;margin:1.2rem 0 1.6rem;display:grid;gap:.6rem}
+.fact-list li{display:flex;gap:.8rem;align-items:flex-start}
+.fact-list li::before{content:"";flex:none;width:10px;height:10px;border-radius:50%;background:var(--accent);margin-top:.55em}
+.perk{
+  margin-top:1.5rem;padding:1.2rem 1.4rem;border-radius:var(--radius);
+  background:var(--surface);
+  background:color-mix(in srgb,var(--accent-2) 22%,var(--surface));border:1px solid var(--accent-2);
+}
+.perk strong{font-family:var(--font-head);font-size:1.1rem}
+
+/* Community */
+.give{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.4rem}
+.give .card{border-left:4px solid var(--accent)}
+
+/* Crew */
+.crew-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.4rem}
+.crew-card .ph{min-height:200px;margin-bottom:1rem}
+.crew-cta{margin-top:2.5rem;padding:2rem;border-radius:var(--radius);background:var(--surface);border:1px dashed var(--accent);display:flex;flex-wrap:wrap;gap:1.2rem;align-items:center;justify-content:space-between}
+.crew-cta p{margin:0;max-width:60ch}
+
+/* Quotes */
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.2rem}
+.quote{font-size:1.1rem;font-style:italic;padding:1.4rem;border-left:3px solid var(--accent);background:var(--surface);border-radius:0 var(--radius) var(--radius) 0}
+.quote small{display:block;margin-top:.6rem;color:var(--muted);font-style:normal;font-size:.8rem;text-transform:uppercase;letter-spacing:.1em}
+
+/* FAQ */
+.faq{max-width:820px}
+.faq details{border-bottom:1px solid var(--border)}
+.faq summary{
+  cursor:pointer;list-style:none;padding:1.1rem 2.4rem 1.1rem 0;position:relative;
+  font-family:var(--font-head);font-weight:var(--head-weight);font-size:1.15rem;
+  text-transform:var(--head-case);letter-spacing:var(--head-track);
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{
+  content:"+";position:absolute;right:.2rem;top:50%;transform:translateY(-50%);
+  width:28px;height:28px;border-radius:50%;border:2px solid var(--accent);color:var(--accent);
+  display:grid;place-items:center;font-size:1.2rem;font-weight:700;line-height:1;transition:transform .3s;
+}
+.faq details[open] summary::after{transform:translateY(-50%) rotate(45deg)}
+.faq details p{color:var(--muted);padding-bottom:1.1rem;max-width:68ch}
+
+/* Directions */
+.dir-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:2.5rem;align-items:start}
+.addr{font-family:var(--font-head);font-size:1.5rem;line-height:1.2;margin:.5rem 0 1rem}
+.trucks{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
+.truck{background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:.4rem .9rem;font-size:.9rem;font-family:var(--font-head)}
+.map{min-height:360px}
+
+/* Footer */
+.site-footer{background:var(--bg-3);border-top:1px solid var(--border);padding:3.5rem 0 5.5rem;color:var(--muted);font-size:.95rem}
+.foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:2rem;align-items:start}
+.site-footer h4{color:var(--text);font-size:.9rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.8rem}
+.site-footer ul{list-style:none;margin:0;padding:0}
+.site-footer li{margin:.35rem 0}
+.site-footer a{color:var(--text);text-decoration:none}
+.site-footer a:hover{color:var(--accent)}
+.socials{display:flex;gap:.7rem;margin-top:1rem}
+.socials a{
+  width:42px;height:42px;border-radius:50%;border:1px solid var(--border);display:grid;place-items:center;
+  color:var(--text);background:var(--surface);
+}
+.socials a:hover{border-color:var(--accent);color:var(--accent)}
+.socials svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.foot-bottom{margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;font-size:.85rem}
+.foot-flip{background:none;border:0;color:var(--accent);cursor:pointer;font:inherit;text-decoration:underline;padding:0}
+
+/* Concept badge */
+.concept-badge{
+  position:fixed;left:12px;bottom:12px;z-index:150;
+  background:#111;color:#fff;font:600 11px/1.2 'Oswald',sans-serif;letter-spacing:.1em;text-transform:uppercase;
+  padding:.45rem .7rem;border-radius:6px;border:1px solid rgba(255,255,255,.25);box-shadow:0 4px 14px rgba(0,0,0,.4);
+}
+
+/* ============================================================
+   7. RESPONSIVE
+   ============================================================ */
+@media (max-width:960px){
+  .header-inner{grid-template-columns:auto 1fr auto;gap:.8rem}
+  .main-nav{
+    position:absolute;left:0;right:0;top:100%;background:var(--bg);border-bottom:1px solid var(--border);
+    display:none;padding:1rem;box-shadow:var(--shadow);
+  }
+  .nav-open .main-nav{display:block}
+  .main-nav ul{flex-direction:column;gap:.2rem;align-items:stretch}
+  .main-nav a{display:block;padding:.7rem .4rem;font-size:1.1rem;border-bottom:1px solid var(--border)}
+  .header-actions{justify-self:end}
+  .header-actions .btn{display:none}
+  .burger{display:grid}
+  .kids-hero,.dir-grid{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .hero::before{background:var(--scrim-m)}
+  .hero{min-height:auto}
+  .hero-inner{padding:52vw 0 3.5rem}
+}
+@media (max-width:560px){
+  body{font-size:16px}
+  .logo{font-size:1.05rem;gap:.4rem}
+  .logo svg{width:30px;height:30px}
+  [data-mode="day"] .logo{font-size:1rem}
+  .header-actions{gap:.5rem}
+  .logo .kids-pill{display:none !important}
+  .foot-grid{grid-template-columns:1fr}
+  .cd-grid{width:100%;justify-content:space-between}
+  .cd-cell{min-width:0;flex:1}
+  .hint{right:-56px}
+  .hint::before{right:70px}
+  .hero-inner{padding-top:62vw}
+  .price .amt{font-size:3.4rem}
+}
+
+/* ============================================================
+   8. REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none !important;transition-duration:.01ms !important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- Shared SVG symbols (crow icon for the logo) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="sym-crow" viewBox="0 0 64 64">
+    <path fill="currentColor" d="M50 24c-2-7-8-11-15-11-4 0-7 1-10 3-6 4-9 10-9 17 0 2 0 4 1 6l-9 9 3 1 7-6c3 4 7 6 12 6l-2 6h3l3-6h2l2 6h3l-2-6c8-1 13-8 13-16v-1l7-3-8-2-1-3z"/>
+    <circle cx="44" cy="22" r="2.2" fill="var(--crow-eye)"/>
+  </symbol>
+</svg>
+
+<!-- ===================== HEADER ===================== -->
+<header class="site-header" id="top">
+  <div class="wrap header-inner">
+    <a class="logo" href="#top" aria-label="Nightmare on the Crow — home">
+      <svg aria-hidden="true" focusable="false"><use href="#sym-crow"/></svg>
+      <span>Nightmare on the Crow</span>
+      <span class="kids-pill">Kids Day</span>
+    </a>
+
+    <nav class="main-nav" id="nav" aria-label="Main">
+      <ul>
+        <li><a href="#trail"><span data-night>The Trail</span><span data-day>The Fun</span></a></li>
+        <li><a href="#dates">Dates</a></li>
+        <li><a href="#tickets">Tickets</a></li>
+        <li><a href="#kids">Kids Day</a></li>
+        <li><a href="#give">Give Back</a></li>
+        <li><a href="#crew">Crew</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#directions">Directions</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <div class="switch-wrap">
+        <button class="switch" id="lightswitch" type="button" role="switch" aria-checked="false"
+                aria-describedby="switch-help" title="Flip between the night haunt and the Kids Day site">
+          <span class="switch-plate" aria-hidden="true">
+            <span class="screw tl"></span><span class="screw tr"></span>
+            <span class="screw bl"></span><span class="screw br"></span>
+            <span class="switch-slot"><span class="switch-knob"></span></span>
+            <span class="led"></span>
+          </span>
+          <span class="switch-label"><span data-night>Lights off</span><span data-day>Lights on</span></span>
+        </button>
+        <span id="switch-help" class="sr-only">Lights off shows the haunted trail site. Lights on shows the Kids Day family site.</span>
+        <div class="hint" id="switch-hint" role="status">
+          <span>Bringing kids? Flip the switch.</span>
+          <button type="button" id="hint-close" aria-label="Dismiss hint">&times;</button>
+        </div>
+      </div>
+      <a class="btn btn-primary btn-sm" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Get Tickets</a>
+      <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="nav" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" aria-labelledby="hero-title">
+  <!-- One scene, two skins. Every mode-specific part is driven by CSS vars. -->
+  <svg class="scene" viewBox="0 0 1440 700" preserveAspectRatio="xMidYMax slice" role="img"
+       aria-label="Illustration of the trail: a moonlit forest with crows, fog and bats at night; a sunny green field with crows in tiny hats and butterflies by day.">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" class="sky-a"/><stop offset="1" class="sky-b"/>
+      </linearGradient>
+      <radialGradient id="halo">
+        <stop offset="0" stop-color="var(--orb-halo)"/>
+        <stop offset="1" stop-color="var(--orb-halo)" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="blur" x="-30%" y="-60%" width="160%" height="220%"><feGaussianBlur stdDeviation="16"/></filter>
+      <!-- pine tree, base at 0,0 -->
+      <g id="pine">
+        <rect class="trunk" x="-4" y="-8" width="8" height="14"/>
+        <path class="pine" d="M0-130 L18-88 L8-88 L28-52 L14-52 L38-10 L-38-10 L-14-52 L-28-52 L-8-88 L-18-88Z"/>
+      </g>
+      <!-- bare tree, base at 0,0 -->
+      <g id="bare">
+        <path class="bare" stroke-width="9" d="M0 0 V-60"/>
+        <path class="bare" stroke-width="6" d="M0-60 C-6-80-18-88-30-100 M0-60 C4-82 16-90 26-104 M0-90 C-2-104-10-110-16-122 M0-90 C4-106 10-112 20-120 M-14-80 C-22-86-26-94-34-96 M12-82 C22-84 26-92 34-92"/>
+        <path class="bare" stroke-width="3" d="M-30-100 C-34-108-40-110-44-116 M26-104 C30-112 36-114 42-118 M-16-122 C-18-128-22-132-28-134 M20-120 C24-126 30-128 34-134"/>
+        <g class="canopy">
+          <circle cx="-22" cy="-108" r="26"/><circle cx="18" cy="-114" r="28"/><circle cx="0" cy="-128" r="22"/>
+          <circle cx="-8" cy="-96" r="22"/><circle cx="12" cy="-92" r="20"/>
+        </g>
+      </g>
+      <!-- perched crow, feet at 0,0, facing right -->
+      <g id="crow">
+        <path class="crow-body" d="M-34-2 L-46-14 L-36-12 L-28-22 C-24-36-10-44 6-42 L26-52 L12-40 C22-36 26-28 24-18 L12-4 L0-1 Z"/>
+        <path class="crow-body" d="M2-46 C-4-54 2-64 12-64 C22-64 28-56 24-48 L40-50 L24-42 C20-38 10-36 4-40 Z"/>
+        <path class="crow-body" d="M-4 0 L-6 8 M4 0 L6 8" stroke="var(--crow)" stroke-width="3" stroke-linecap="round"/>
+        <circle class="crow-eye" cx="15" cy="-55" r="2.6"/>
+        <g class="hat">
+          <rect class="hat-top" x="-2" y="-68" width="30" height="5" rx="2"/>
+          <rect class="hat-top" x="4" y="-88" width="18" height="22" rx="2"/>
+          <rect class="hat-band" x="4" y="-72" width="18" height="5"/>
+        </g>
+      </g>
+      <g id="bat"><path d="M0 3 C-5-4-12-7-20-2 C-15-9-7-13 0-6 C7-13 15-9 20-2 C12-7 5-4 0 3 Z"/></g>
+      <g id="bfly">
+        <ellipse cx="-7" cy="-2" rx="7" ry="6"/><ellipse cx="7" cy="-2" rx="7" ry="6"/>
+        <ellipse cx="-5" cy="5" rx="4.5" ry="3.5"/><ellipse cx="5" cy="5" rx="4.5" ry="3.5"/>
+        <rect x="-1.2" y="-6" width="2.4" height="14" rx="1.2" fill="#2b1d12"/>
+      </g>
+    </defs>
+
+    <rect width="1440" height="700" fill="url(#sky)"/>
+
+    <g class="stars">
+      <circle cx="120" cy="80" r="1.6"/><circle cx="260" cy="140" r="1.2"/><circle cx="380" cy="60" r="1.8"/>
+      <circle cx="520" cy="120" r="1.1"/><circle cx="640" cy="40" r="1.5"/><circle cx="760" cy="150" r="1.3"/>
+      <circle cx="880" cy="70" r="1.7"/><circle cx="960" cy="200" r="1"/><circle cx="1240" cy="90" r="1.5"/>
+      <circle cx="1340" cy="160" r="1.2"/><circle cx="1400" cy="50" r="1.7"/><circle cx="200" cy="230" r="1"/>
+      <circle cx="440" cy="210" r="1.3"/><circle cx="700" cy="250" r="1.1"/><circle cx="1180" cy="260" r="1.4"/>
+      <circle cx="60" cy="180" r="1.3"/><circle cx="330" cy="290" r="1"/><circle cx="820" cy="300" r="1.2"/>
+    </g>
+
+    <g class="clouds">
+      <g class="cloud-a" opacity=".9">
+        <ellipse cx="300" cy="150" rx="90" ry="28"/><ellipse cx="260" cy="132" rx="50" ry="30"/><ellipse cx="340" cy="128" rx="60" ry="34"/>
+      </g>
+      <g class="cloud-b" opacity=".8">
+        <ellipse cx="760" cy="90" rx="110" ry="26"/><ellipse cx="720" cy="72" rx="52" ry="28"/><ellipse cx="800" cy="66" rx="66" ry="34"/>
+      </g>
+      <g class="cloud-a" opacity=".7">
+        <ellipse cx="1300" cy="260" rx="80" ry="22"/><ellipse cx="1270" cy="244" rx="40" ry="24"/><ellipse cx="1330" cy="240" rx="50" ry="28"/>
+      </g>
+    </g>
+
+    <!-- moon / sun -->
+    <circle class="orb-halo" cx="1080" cy="170" r="190" fill="url(#halo)"/>
+    <g class="rays">
+      <path d="M1080 60 V22 M1080 280 V318 M970 170 H932 M1190 170 H1228 M1002 92 L975 65 M1158 248 L1185 275 M1158 92 L1185 65 M1002 248 L975 275"/>
+    </g>
+    <circle class="orb" cx="1080" cy="170" r="66"/>
+    <g class="craters">
+      <circle cx="1060" cy="150" r="12"/><circle cx="1098" cy="188" r="16"/><circle cx="1104" cy="146" r="6"/><circle cx="1058" cy="196" r="7"/>
+    </g>
+
+    <!-- far hills + back trees -->
+    <path class="hill-1" d="M0 470 C160 420 300 440 460 400 C620 360 760 420 900 400 C1060 378 1200 430 1440 380 V700 H0 Z"/>
+    <g>
+      <use href="#pine" transform="translate(70 450) scale(.75)"/>
+      <use href="#pine" transform="translate(130 440) scale(.9)"/>
+      <use href="#pine" transform="translate(190 445) scale(.7)"/>
+      <use href="#pine" transform="translate(1180 420) scale(.8)"/>
+      <use href="#pine" transform="translate(1250 410) scale(1)"/>
+      <use href="#pine" transform="translate(1320 425) scale(.85)"/>
+      <use href="#pine" transform="translate(1400 415) scale(.95)"/>
+      <use href="#pine" transform="translate(980 410) scale(.7)"/>
+    </g>
+
+    <!-- mid hill + bare trees -->
+    <path class="hill-2" d="M0 540 C200 500 340 520 520 490 C700 460 880 510 1040 480 C1200 450 1320 500 1440 470 V700 H0 Z"/>
+    <use href="#bare" transform="translate(1100 500) scale(1.15)"/>
+    <use href="#bare" transform="translate(240 520) scale(.9)"/>
+    <use href="#pine" transform="translate(1380 500) scale(1.2)"/>
+    <use href="#pine" transform="translate(40 530) scale(1.1)"/>
+
+    <!-- corn rows -->
+    <g class="corn">
+      <path d="M560 560 l6-50 4 50z M574 556 l6-62 4 62z M588 560 l6-48 4 48z M604 558 l6-58 4 58z M620 560 l6-44 4 44z M636 556 l6-60 4 60z M652 560 l6-50 4 50z M668 558 l6-56 4 56z M684 560 l6-46 4 46z M700 556 l6-62 4 62z M716 560 l6-52 4 52z M732 558 l6-58 4 58z M748 560 l6-48 4 48z M764 556 l6-60 4 60z M780 560 l6-50 4 50z M796 558 l6-56 4 56z M812 560 l6-46 4 46z M828 556 l6-62 4 62z M844 560 l6-52 4 52z M860 558 l6-58 4 58z M876 560 l6-48 4 48z M892 556 l6-60 4 60z M908 560 l6-50 4 50z"/>
+    </g>
+
+    <!-- front ground -->
+    <path class="hill-3" d="M0 600 C240 570 420 600 640 570 C860 540 1080 590 1260 560 C1340 548 1400 555 1440 550 V700 H0 Z"/>
+
+    <!-- fence + perched crows -->
+    <g class="fence">
+      <rect x="1000" y="500" width="14" height="90" rx="2"/>
+      <rect x="1130" y="492" width="14" height="96" rx="2"/>
+      <rect x="1260" y="486" width="14" height="100" rx="2"/>
+      <path d="M1000 522 L1274 508 V518 L1000 532 Z M1000 560 L1274 546 V556 L1000 570 Z"/>
+    </g>
+    <use href="#crow" transform="translate(1007 500) scale(.62)"/>
+    <use href="#crow" transform="translate(1137 492) scale(.72) "/>
+    <use href="#crow" transform="translate(1267 486) scale(.62) scale(-1 1)"/>
+    <use href="#crow" transform="translate(120 592) scale(.9)"/>
+
+    <!-- fog -->
+    <g class="fog" filter="url(#blur)">
+      <ellipse class="fog-a" cx="400" cy="600" rx="380" ry="34"/>
+      <ellipse class="fog-b" cx="1000" cy="620" rx="420" ry="40"/>
+      <ellipse class="fog-a" cx="700" cy="660" rx="600" ry="42"/>
+    </g>
+
+    <!-- bats (night) -->
+    <g class="bats">
+      <g class="bat"><use href="#bat" transform="translate(920 120) scale(1.1)"/></g>
+      <g class="bat"><use href="#bat" transform="translate(980 90) scale(.8)"/></g>
+      <g class="bat"><use href="#bat" transform="translate(1190 250) scale(1.3)"/></g>
+      <g class="bat"><use href="#bat" transform="translate(860 210) scale(.9)"/></g>
+    </g>
+    <!-- butterflies (day) -->
+    <g class="bflies">
+      <g class="bfly" fill="#ff9f43"><use href="#bfly" transform="translate(900 380) scale(1.2)"/></g>
+      <g class="bfly" fill="#ffd23f"><use href="#bfly" transform="translate(1180 330) scale(1)"/></g>
+      <g class="bfly" fill="#ff7aa2"><use href="#bfly" transform="translate(760 440) scale(.9)"/></g>
+      <g class="bfly" fill="#8fd3ff"><use href="#bfly" transform="translate(1320 400) scale(1.1)"/></g>
+    </g>
+  </svg>
+
+  <div class="wrap">
+    <div class="hero-inner swap">
+      <span class="eyebrow">
+        <span data-night>Greenfield, MN &middot; Oct 9 &middot; 10 &middot; 16 &middot; 17 &middot; 7:30&ndash;10 PM</span>
+        <span data-day>Kids Day &middot; Saturday, Oct 10 &middot; Noon&ndash;3 PM</span>
+      </span>
+      <h1 id="hero-title">
+        <span data-night>Something is waiting <em>in the corn.</em></span>
+        <span data-day>No scares. Real trick-or-treating. <em>Five bucks.</em></span>
+      </h1>
+      <p class="lead">
+        <span data-night>It all begins with a hayride. Then the woods along the Crow River close in: tunnels, haunted buildings full of live actors, a corn maze that doesn't want you to leave. This isn't just a haunt. It's an experience designed to crawl under your skin.</span>
+        <span data-day>Walk the very same forest trail the big kids scream on &mdash; with the lights on and the monsters on their best behavior. Trick-or-treating, family activities and food trucks, all for $5 a ticket. Then keep that ticket: it's worth $5 off an evening haunt.</span>
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">
+          <span data-night>Get Tickets &middot; $20</span>
+          <span data-day>Get Kids Day Tickets &middot; $5</span>
+        </a>
+        <a class="btn btn-ghost" href="#tickets">
+          <span data-night>$15 with a donation</span>
+          <span data-day>See the details</span>
+        </a>
+      </div>
+      <p class="hero-note">
+        <span data-night>Bringing little ones? <button type="button" class="foot-flip" data-flip>Flip the light switch</button> for Kids Day &mdash; Sat Oct 10, noon&ndash;3, $5.</span>
+        <span data-day>Here for the real thing after dark? <button type="button" class="foot-flip" data-flip>Turn the lights off</button> for the haunt.</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COUNTDOWN ===================== -->
+<div class="countdown swap" id="countdown" aria-live="off">
+  <div class="wrap">
+    <h2 class="cd-title">
+      <span data-night>The gates open in</span>
+      <span data-day>Kids Day starts in</span>
+      <small>
+        <span data-night>Friday, October 9, 2026 &middot; 7:30 PM Central &middot; 6470 Harff Road, Greenfield</span>
+        <span data-day>Saturday, October 10, 2026 &middot; Noon Central &middot; 6470 Harff Road, Greenfield</span>
+      </small>
+    </h2>
+    <div class="cd-grid" role="timer" aria-label="Countdown">
+      <div class="cd-cell"><b id="cd-d">00</b><span>Days</span></div>
+      <div class="cd-cell"><b id="cd-h">00</b><span>Hours</span></div>
+      <div class="cd-cell"><b id="cd-m">00</b><span>Min</span></div>
+      <div class="cd-cell"><b id="cd-s">00</b><span>Sec</span></div>
+    </div>
+    <p class="cd-live">
+      <span data-night>The lights are out. The gates are open.</span>
+      <span data-day>Kids Day is happening right now!</span>
+    </p>
+  </div>
+</div>
+
+<!-- ===================== ATTRACTIONS ===================== -->
+<section id="trail" aria-labelledby="trail-title">
+  <div class="wrap swap">
+    <div class="sec-head">
+      <span class="eyebrow"><span data-night>What's out there</span><span data-day>What's out there (with the lights on)</span></span>
+      <h2 id="trail-title">
+        <span data-night>It all begins with a hayride.</span>
+        <span data-day>It all begins with a hayride!</span>
+      </h2>
+      <p class="lead">
+        <span data-night>The wagon carries you to the edge of the forest. From there, you walk. Every path winds, every building is occupied, and the corn is taller than you are.</span>
+        <span data-day>The tractor takes everyone to the trailhead, and from there it's a walk through the same sets, tunnels and corn the grown-ups see at night &mdash; bright, friendly, and full of candy stops.</span>
+      </p>
+    </div>
+
+    <div class="grid grid-3">
+      <article class="card">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="14" cy="34" r="6"/><circle cx="36" cy="36" r="4"/><path d="M8 34 6 20h20l4 8h10l2 8M14 20V12h8"/></svg></div>
+        <h3>The Hayride</h3>
+        <p><span data-night>Bundle up on the wagon. It's the last comfortable seat you'll have for a while.</span><span data-day>Kids love the wagon. Wave at the driver, count the pumpkins, hop off at the trail.</span></p>
+      </article>
+      <article class="card">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M6 42c8-6 8-16 16-20s10-12 20-16M14 42c4-4 4-8 8-10M30 12c-2 6 0 10 4 12"/></svg></div>
+        <h3><span data-night>The Haunted Trail</span><span data-day>The Lights-On Trail</span></h3>
+        <p><span data-night>Winding paths through the dark forest. Every turn is a decision. Every decision is wrong.</span><span data-day>The same winding forest path, lit up so everyone can see where they're going &mdash; and who's handing out candy.</span></p>
+      </article>
+      <article class="card">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M6 42V22a18 18 0 0 1 36 0v20M14 42V24a10 10 0 0 1 20 0v18"/></svg></div>
+        <h3>The Tunnels</h3>
+        <p><span data-night>Low, tight and pitch black. Keep a hand on the shoulder in front of you. Hope it's still the same shoulder.</span><span data-day>Still tunnels &mdash; but bright ones. The echo is the best part. Go ahead, yell.</span></p>
+      </article>
+      <article class="card">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M8 42V20l16-12 16 12v22zM20 42V30h8v12M4 42h40"/><path d="M24 8V4"/></svg></div>
+        <h3>Haunted Buildings</h3>
+        <p><span data-night>Rooms full of live actors and displays. The skeleton in the cage lives here. So does the zombie graveyard. So does whatever you just heard.</span><span data-day>Peek at the sets up close. Ben's skeleton in the cage is a lot less scary in daylight. (He's kind of a sweetheart.)</span></p>
+      </article>
+      <article class="card">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M12 44V14c0-6 4-10 6-10s6 4 6 10v30M30 44V20c0-5 3-8 5-8s5 3 5 8v24M8 44h34M18 22l-6 4M18 30l-6 4M24 24l6 4M24 32l6 4"/></svg></div>
+        <h3>The Corn Maze</h3>
+        <p><span data-night>An eerie corn maze at night. The stalks are taller than you. The things between them are quieter.</span><span data-day>Find your way through the corn in the sunshine. Rows, rustles, and zero reasons to run.</span></p>
+      </article>
+      <article class="card">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="16" r="8"/><path d="M8 44c0-9 7-16 16-16s16 7 16 16M18 16h4M26 16h4M20 20c2 2 6 2 8 0"/></svg></div>
+        <h3><span data-night>Live Actors</span><span data-day>The Friendly Crew</span></h3>
+        <p><span data-night>Interactive scares from a volunteer crew of neighbors who've been waiting all year for this. They know exactly where you are.</span><span data-day>Our volunteer crew, out of scare mode and into candy mode. High-fives encouraged.</span></p>
+      </article>
+    </div>
+
+    <div class="ph attr-photo">
+      <span data-night>PHOTO: trail entrance at dusk &mdash; wagon unloading, fog, torches</span>
+      <span data-day>PHOTO: kids trick-or-treating on the lit trail, costumes and candy buckets</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DATES ===================== -->
+<section id="dates" class="alt" aria-labelledby="dates-title">
+  <div class="wrap swap">
+    <div class="sec-head">
+      <span class="eyebrow">2026 Season</span>
+      <h2 id="dates-title">
+        <span data-night>Four nights. That's it.</span>
+        <span data-day>One Kids Day. Four nights after dark.</span>
+      </h2>
+      <p class="lead">
+        <span data-night>Two weekends in October, 7:30 to 10:00 PM. Last entry at 10. When the lights go off, they go off.</span>
+        <span data-day>Kids Day is Saturday the 10th from noon to 3. The haunt runs four evenings, 7:30 to 10 PM, for the brave and the tall.</span>
+      </p>
+    </div>
+
+    <div class="grid dates">
+      <div class="card date-card">
+        <div class="dow">Friday</div><div class="day">9</div><div class="mon">October</div>
+        <div class="hrs">7:30 &ndash; 10:00 PM<br><span data-night>Opening night</span><span data-day>Haunted trail</span></div>
+      </div>
+      <div class="card date-card kids">
+        <span class="tag"><span data-night>Kids Day &middot; Noon&ndash;3</span><span data-day>Kids Day!</span></span>
+        <div class="dow">Saturday</div><div class="day">10</div><div class="mon">October</div>
+        <div class="hrs">
+          <span data-night>Kids Day Noon &ndash; 3 PM &middot; $5<br>Haunt 7:30 &ndash; 10:00 PM</span>
+          <span data-day><strong>Noon &ndash; 3 PM &middot; $5</strong><br>Haunt 7:30 &ndash; 10:00 PM</span>
+        </div>
+      </div>
+      <div class="card date-card">
+        <div class="dow">Friday</div><div class="day">16</div><div class="mon">October</div>
+        <div class="hrs">7:30 &ndash; 10:00 PM<br><span data-night>Haunted trail</span><span data-day>Haunted trail</span></div>
+      </div>
+      <div class="card date-card">
+        <div class="dow">Saturday</div><div class="day">17</div><div class="mon">October</div>
+        <div class="hrs">7:30 &ndash; 10:00 PM<br><span data-night>Closing night</span><span data-day>Last night of the season</span></div>
+      </div>
+    </div>
+    <p class="hours-note">
+      <span data-night>Last entry 10:00 PM. Dress for a Minnesota October night in the woods &mdash; it gets cold, and running is optional but likely.</span>
+      <span data-day>It's mid-October in Minnesota: bring a jacket, wear shoes for a forest trail, and pack the costume. Evening entries close at 10 PM.</span>
+    </p>
+  </div>
+</section>
+
+<!-- ===================== PRICING ===================== -->
+<section id="tickets" aria-labelledby="tickets-title">
+  <div class="wrap swap">
+    <div class="sec-head">
+      <span class="eyebrow"><span data-night>No hidden fees. No secrets. (About prices.)</span><span data-day>Simple, honest pricing</span></span>
+      <h2 id="tickets-title">
+        <span data-night>$20. Or $15 if you bring something.</span>
+        <span data-day>Five dollars. Seriously.</span>
+      </h2>
+      <p class="lead">
+        <span data-night>Big-box haunts in the metro charge $30 to $50 and make you dig for the number. Ours is right here, and it drops when you help a neighbor.</span>
+        <span data-day>Kids Day costs less than the parking at most places. And your ticket keeps working after dark.</span>
+      </p>
+    </div>
+
+    <!-- NIGHT pricing -->
+    <div class="price-grid" data-night>
+      <div class="price">
+        <div class="amt"><sup>$</sup>20</div>
+        <h3>Haunted Trail</h3>
+        <ul>
+          <li>Hayride, trail, tunnels, buildings, corn maze</li>
+          <li>Any of the four nights, 7:30 &ndash; 10 PM</li>
+          <li>Food trucks on site</li>
+        </ul>
+        <a class="btn btn-primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Get Tickets</a>
+      </div>
+      <div class="price hot">
+        <span class="tag">Bring something, save $5</span>
+        <div class="amt"><sup>$</sup>15</div>
+        <h3>With a donation</h3>
+        <ul>
+          <li>Bring a <strong>food-shelf item</strong>, or</li>
+          <li>a <strong>winter clothing item</strong> &mdash; hats, gloves, coats</li>
+          <li>Same full haunt. Someone in Hanover stays warm.</li>
+        </ul>
+        <a class="btn btn-primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Get Tickets &middot; Bring a Donation</a>
+      </div>
+      <div class="price">
+        <div class="amt"><sup>$</sup>5</div>
+        <h3>Kids Day</h3>
+        <ul>
+          <li>Sat Oct 10, Noon &ndash; 3 PM</li>
+          <li>Lights-on trail, trick-or-treating, family activities</li>
+          <li>Ticket is good for <strong>$5 off</strong> an evening haunt</li>
+        </ul>
+        <button type="button" class="btn btn-ghost" data-flip>Flip to Kids Day</button>
+      </div>
+    </div>
+
+    <!-- DAY pricing -->
+    <div class="price-grid" data-day>
+      <div class="price hot">
+        <span class="tag">Saturday Oct 10 &middot; Noon &ndash; 3</span>
+        <div class="amt"><sup>$</sup>5</div>
+        <h3>Kids Day ticket</h3>
+        <ul>
+          <li>Hayride and the lights-on trail</li>
+          <li>Trick-or-treating and family activities</li>
+          <li>Food trucks on site</li>
+        </ul>
+        <a class="btn btn-primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Get Kids Day Tickets</a>
+      </div>
+      <div class="price">
+        <div class="amt"><sup>&minus;$</sup>5</div>
+        <h3>Off an evening haunt</h3>
+        <ul>
+          <li>Keep your Kids Day ticket</li>
+          <li>It's worth <strong>$5 off</strong> a $20 haunted trail ticket</li>
+          <li>Perfect for the grown-ups (or brave teens) coming back after dark</li>
+        </ul>
+        <a class="btn btn-ghost" href="#dates">See evening dates</a>
+      </div>
+      <div class="price">
+        <div class="amt"><sup>$</sup>20</div>
+        <h3>Grown-ups, after dark</h3>
+        <ul>
+          <li>Full haunted trail, 7:30 &ndash; 10 PM</li>
+          <li><strong>$15</strong> with a food-shelf or winter-clothing donation</li>
+          <li>Genuinely scary. Not for the little ones.</li>
+        </ul>
+        <button type="button" class="btn btn-ghost" data-flip>Turn the lights off</button>
+      </div>
+    </div>
+
+    <p class="price-foot">
+      <span data-night>Tickets are sold through HauntPay. Donations are collected at the gate on the night you visit.</span>
+      <span data-day>Tickets are sold through HauntPay. Evening guests can bring a food-shelf or winter-clothing donation for the $15 rate.</span>
+    </p>
+  </div>
+</section>
+
+<!-- ===================== KIDS DAY ===================== -->
+<section id="kids" class="alt" aria-labelledby="kids-title">
+  <div class="wrap swap kids-hero">
+    <div>
+      <span class="eyebrow">Kids Day &middot; Saturday, October 10 &middot; Noon &ndash; 3 PM</span>
+      <h2 id="kids-title">
+        <span data-night>Bringing the little ones?</span>
+        <span data-day>Halloween, with the lights on.</span>
+      </h2>
+      <p class="lead">
+        <span data-night>One afternoon a season, we turn the lights on and the scares off. Same trail, same sets, no jump scares &mdash; just trick-or-treating, family activities and a $5 ticket.</span>
+        <span data-day>The haunted trail, minus the haunted. Kids walk the forest path, meet the crew, collect candy and see the sets that make the grown-ups scream &mdash; none of which are scary at 1 PM.</span>
+      </p>
+      <ul class="fact-list">
+        <li><span><strong>When:</strong> Saturday, October 10, noon to 3 PM</span></li>
+        <li><span><strong>Where:</strong> 6470 Harff Road, Greenfield &mdash; same place as the haunt</span></li>
+        <li><span><strong>Cost:</strong> $5 per ticket</span></li>
+        <li><span><strong>What:</strong> lights-on trail, trick-or-treating, family activities, food trucks</span></li>
+      </ul>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Get Kids Day Tickets &middot; $5</a>
+        <button type="button" class="btn btn-ghost" data-flip data-night>See the family site</button>
+      </div>
+      <div class="perk">
+        <strong>The $5-off perk:</strong> every Kids Day ticket is redeemable for <strong>$5 off an evening haunt ticket</strong>. Parents, that one's for you.
+      </div>
+    </div>
+    <div class="mascot" role="img" aria-label="Friendly crow mascot; in day mode it wears a tiny top hat and a Kids Day badge.">
+      <svg viewBox="0 0 240 260" aria-hidden="true" focusable="false">
+        <ellipse cx="120" cy="246" rx="70" ry="8" fill="rgba(0,0,0,.15)"/>
+        <!-- tail -->
+        <path class="m-body" d="M62 190 L28 214 L44 186 L30 172 Z"/>
+        <!-- body -->
+        <ellipse class="m-body" cx="120" cy="170" rx="66" ry="58"/>
+        <!-- wing -->
+        <path d="M84 168 C96 150 130 152 150 176 C132 174 108 182 92 198 Z" fill="rgba(255,255,255,.08)"/>
+        <!-- head -->
+        <circle class="m-body" cx="128" cy="96" r="50"/>
+        <!-- eye -->
+        <circle class="m-eye" cx="146" cy="88" r="18"/>
+        <circle class="m-pupil" cx="150" cy="90" r="9"/>
+        <circle cx="154" cy="86" r="3" fill="#fff"/>
+        <circle class="m-blush" cx="160" cy="112" r="8"/>
+        <!-- beak -->
+        <path class="m-beak" d="M172 96 L214 104 L172 116 Z"/>
+        <path d="M172 106 L206 105" stroke="rgba(0,0,0,.25)" stroke-width="2"/>
+        <!-- feet -->
+        <path class="m-feet" d="M100 226 L96 244 M100 226 L106 244 M100 226 L92 240 M140 226 L136 244 M140 226 L146 244 M140 226 L132 240" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/>
+        <!-- tiny top hat -->
+        <g class="hat" transform="rotate(-8 128 46)">
+          <rect class="hat-top" x="92" y="46" width="72" height="9" rx="4"/>
+          <rect class="hat-top" x="104" y="6" width="48" height="44" rx="4"/>
+          <rect class="hat-band" x="104" y="36" width="48" height="10"/>
+        </g>
+        <!-- badge -->
+        <g class="m-badge">
+          <circle cx="76" cy="190" r="20" fill="#5fb9f0"/>
+          <circle cx="76" cy="190" r="16" fill="#fff"/>
+          <text x="76" y="187" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="8" font-weight="700" fill="#0b3550">KIDS</text>
+          <text x="76" y="197" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="8" font-weight="700" fill="#f2711c">DAY</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COMMUNITY ===================== -->
+<section id="give" aria-labelledby="give-title">
+  <div class="wrap swap">
+    <div class="sec-head">
+      <span class="eyebrow">Why we do this</span>
+      <h2 id="give-title">
+        <span data-night>Three neighbors. One haunted forest. A whole lot of coats.</span>
+        <span data-day>Built by three neighbors who love Halloween and giving back.</span>
+      </h2>
+      <p class="lead">
+        <span data-night>Nightmare on the Crow started with three neighbors who loved Halloween and wanted to give something back. Every scream on the trail helps stock a food shelf and put a coat on someone's back.</span>
+        <span data-day>This whole thing started with three neighbors who love Halloween. The goal was always simple: scare some people, feed some families, keep some kids warm.</span>
+      </p>
+    </div>
+    <div class="give">
+      <article class="card">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M6 20h36l-4 22H10zM12 20V10a12 12 0 0 1 24 0v10"/></svg></div>
+        <h3>Food Shelf Drive</h3>
+        <p><span data-night>Bring a non-perishable food item to the gate and your ticket is $15 instead of $20. Feed a family, get scared, everyone wins.</span><span data-day>Evening guests who bring a non-perishable food item pay $15 instead of $20. Kids Day families are welcome to bring one too.</span></p>
+      </article>
+      <article class="card">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M16 8h16l8 6-4 8-4-2v22H16V20l-4 2-4-8zM20 8c0 4 8 4 8 0"/></svg></div>
+        <h3>Winter Clothing Drive</h3>
+        <p><span data-night>Hats, gloves, coats &mdash; new or gently used. Same $5 off your ticket. Minnesota winters don't scare anyone who's prepared.</span><span data-day>Hats, gloves and coats, new or gently used, collected all season. A great thing to pack alongside the candy bucket.</span></p>
+      </article>
+      <article class="card">
+        <div class="icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 6c6 8 12 12 12 22a12 12 0 0 1-24 0c0-4 2-8 4-10 0 4 2 6 4 6 0-8 2-14 4-18z"/></svg></div>
+        <h3>Hanover Fire Department</h3>
+        <p><span data-night>We partner with the Hanover Fire Department. The people who run toward the fire deserve a community that runs toward them.</span><span data-day>We're proud partners of the Hanover Fire Department &mdash; real heroes, no costumes required.</span></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CREW ===================== -->
+<section id="crew" class="alt" aria-labelledby="crew-title">
+  <div class="wrap swap">
+    <div class="sec-head">
+      <span class="eyebrow">The people behind the masks</span>
+      <h2 id="crew-title">
+        <span data-night>Meet the crew. Or don't. They'll find you.</span>
+        <span data-day>Meet the crew (they're nice, promise).</span>
+      </h2>
+    </div>
+    <div class="crew-grid">
+      <article class="card crew-card">
+        <div class="ph"><span data-night>PHOTO: Evan in full Beetlejuice makeup, striped suit, trail at night</span><span data-day>PHOTO: Evan out of makeup, waving from the wagon</span></div>
+        <h3>Evan</h3>
+        <p><span data-night>Plays Beetlejuice on the trail. Say his name three times and he'll also fix the Wi-Fi &mdash; Evan runs our social media and tech.</span><span data-day>You'll know Evan as Beetlejuice at night. By day he runs our social media and all the tech that keeps the lights on (literally, today).</span></p>
+      </article>
+      <article class="card crew-card">
+        <div class="ph"><span data-night>PHOTO: Ben beside the caged skeleton, zombie graveyard behind</span><span data-day>PHOTO: Ben giving kids a tour of the graveyard set</span></div>
+        <h3>Ben</h3>
+        <p><span data-night>Set designer. The skeleton trapped in the cage? Ben. The zombie graveyard? Ben. The thing you can't quite see at the end of the tunnel? Also Ben.</span><span data-day>Ben builds the sets &mdash; the skeleton in the cage and the zombie graveyard are his. Ask him how he made them; he loves that question.</span></p>
+      </article>
+      <article class="card crew-card">
+        <div class="ph"><span data-night>PHOTO: group shot of volunteer actors, masks up, opening night</span><span data-day>PHOTO: volunteer crew in costume handing out candy</span></div>
+        <h3>The Volunteers</h3>
+        <p><span data-night>Neighbors, friends and friends-of-friends who spend October in the woods scaring strangers for charity. Legends, all of them.</span><span data-day>Neighbors and friends who volunteer their Octobers. On Kids Day they trade the scares for candy and high-fives.</span></p>
+      </article>
+    </div>
+    <div class="crew-cta">
+      <div>
+        <h3>Join the Crew</h3>
+        <p><span data-night>We're always looking for volunteer actors, builders and helpers. No experience required. A strong stomach and a free October weekend help.</span><span data-day>Teens and grown-ups who want to volunteer as actors, builders or helpers &mdash; we'd love to have you. Kids Day is a great first shift.</span></p>
+      </div>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#">Join the Crew</a>
+        <a class="btn btn-ghost btn-sm" href="#">Actor login</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GUESTS SAY (sample) ===================== -->
+<section aria-labelledby="quotes-title">
+  <div class="wrap swap">
+    <div class="sec-head">
+      <span class="eyebrow">What guests say</span>
+      <h2 id="quotes-title"><span data-night>Reports from the trail</span><span data-day>Notes from the parents</span></h2>
+    </div>
+    <div class="quotes">
+      <blockquote class="quote">
+        <span data-night>&ldquo;I've done the big Chaska haunts. This one got me twice in the tunnels.&rdquo;</span>
+        <span data-day>&ldquo;My six-year-old asked if we could come back the next day. For $5, sure.&rdquo;</span>
+        <small>Sample quote &mdash; placeholder for real guest feedback</small>
+      </blockquote>
+      <blockquote class="quote">
+        <span data-night>&ldquo;$15 and a bag of canned goods. Best deal in the metro.&rdquo;</span>
+        <span data-day>&ldquo;Trick-or-treating in the woods with the lights on. Genius.&rdquo;</span>
+        <small>Sample quote &mdash; placeholder for real guest feedback</small>
+      </blockquote>
+      <blockquote class="quote">
+        <span data-night>&ldquo;The corn maze at night. That's all I'm going to say.&rdquo;</span>
+        <span data-day>&ldquo;The crew was so sweet with the little ones. We used the $5-off ticket that same night.&rdquo;</span>
+        <small>Sample quote &mdash; placeholder for real guest feedback</small>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FAQ ===================== -->
+<section id="faq" class="alt" aria-labelledby="faq-title">
+  <div class="wrap swap">
+    <div class="sec-head">
+      <span class="eyebrow">Questions</span>
+      <h2 id="faq-title"><span data-night>Before you come out to the woods</span><span data-day>Things parents ask us</span></h2>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>How scary is it?</summary>
+        <p><span data-night>Scary. Dark tunnels, tight spaces, live actors who get close, and things that jump. It's designed to crawl under your skin. If you want the sets without the scares, come to Kids Day.</span><span data-day>Kids Day: not scary at all. Lights on, no jump scares, and the actors are in friendly mode. The evening haunt is a different animal &mdash; genuinely intense and meant for older kids and adults.</span></p>
+      </details>
+      <details>
+        <summary>What age is it for?</summary>
+        <p><span data-night>There's no hard age limit, but the night trail is dark, loud and in your face. Parents know their kids best; if you're on the fence, Kids Day on Saturday the 10th is the safe bet.</span><span data-day>Kids Day is built for families with young children. The evening haunt is for older kids and adults who like being scared &mdash; you know your kid best.</span></p>
+      </details>
+      <details>
+        <summary>What if it rains?</summary>
+        <p><span data-night>We're outdoors in the forest, and a little rain only makes it better. If weather makes the trail unsafe, we'll post updates on Facebook and Instagram before doors. Dress for the conditions either way.</span><span data-day>We're outdoors, so dress for the weather &mdash; boots and a jacket are a good idea in October. If conditions make the trail unsafe, we'll post updates on Facebook and Instagram beforehand.</span></p>
+      </details>
+      <details>
+        <summary>Where do I park?</summary>
+        <p>Parking is on site at 6470 Harff Road. Follow the signs and the crew directing traffic once you turn in. <span data-night>Wear shoes you can walk on grass and dirt in &mdash; and run in.</span><span data-day>Wear shoes for grass, dirt and a forest trail; a wagon for tired little legs isn't a bad idea.</span></p>
+      </details>
+      <details>
+        <summary>How long does it take?</summary>
+        <p><span data-night>Depends how fast you walk. Between the hayride, the trail, the tunnels, the buildings and the maze, plan on a solid chunk of your evening &mdash; and leave time for the food trucks.</span><span data-day>Kids Day runs noon to 3. Plan for the hayride, the trail and the maze, plus time for food trucks and activities. Come when it works for your nap schedule.</span></p>
+      </details>
+      <details>
+        <summary>Will the actors touch me?</summary>
+        <p><span data-night>Our actors don't touch guests, and we ask the same of you: no touching actors, props or sets. They'll get close. That's the point.</span><span data-day>No. On Kids Day the crew keeps a friendly distance and there are no jump scares. We just ask that kids don't climb on the sets or props.</span></p>
+      </details>
+      <details>
+        <summary>Is the trail wheelchair or stroller accessible?</summary>
+        <p>The trail is natural forest ground &mdash; roots, slopes, tunnels and corn rows &mdash; which makes it tough terrain for wheels. Reach out before you visit and we'll be honest with you about what we can do to help.</p>
+      </details>
+      <details>
+        <summary>Is there food?</summary>
+        <p>Yes. <strong>Just in Time Concessions</strong> and <strong>Burger Box</strong> are on site. <span data-night>Eat before the trail or after. Your call.</span><span data-day>Lunch on site is very much an option.</span></p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DIRECTIONS ===================== -->
+<section id="directions" aria-labelledby="dir-title">
+  <div class="wrap swap dir-grid">
+    <div>
+      <span class="eyebrow">Find us</span>
+      <h2 id="dir-title"><span data-night>Out past the last streetlight.</span><span data-day>Easy to find, easy to park.</span></h2>
+      <p class="addr">6470 Harff Road<br>Greenfield, MN 55373</p>
+      <p><span data-night>West metro, about 35 minutes from Minneapolis, down by the Crow River. When the road gets dark and the trees close in, you're almost there.</span><span data-day>West metro, about 35 minutes from Minneapolis, near the Crow River. Parking is on site &mdash; follow the signs.</span></p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://maps.google.com/?q=6470+Harff+Road+Greenfield+MN+55373">Get Directions</a>
+      </div>
+      <h3 style="margin-top:2rem">Food trucks on site</h3>
+      <div class="trucks">
+        <span class="truck">Just in Time Concessions</span>
+        <span class="truck">Burger Box</span>
+      </div>
+    </div>
+    <div class="ph map">MAP: embedded map &mdash; 6470 Harff Road, Greenfield, MN 55373</div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer">
+  <div class="wrap swap">
+    <div class="foot-grid">
+      <div>
+        <a class="logo" href="#top"><svg aria-hidden="true" focusable="false"><use href="#sym-crow"/></svg><span>Nightmare on the Crow</span></a>
+        <p style="margin-top:1rem;max-width:44ch"><span data-night>A haunted trail in the forest along the Crow River. Built by three neighbors. Powered by volunteers. Giving back to Hanover and beyond.</span><span data-day>A neighbor-built haunted trail with one very friendly afternoon a year. Built by three neighbors, powered by volunteers, giving back to the community.</span></p>
+        <div class="socials">
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M14 3v11a4 4 0 1 1-4-4M14 3c0 3 2 5 5 5"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <ul>
+          <li><a href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Get Tickets</a></li>
+          <li><a href="#dates">Dates &amp; Hours</a></li>
+          <li><a href="#tickets">Pricing</a></li>
+          <li><a href="#kids">Kids Day</a></li>
+          <li><a href="#directions">Directions</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Crew</h4>
+        <ul>
+          <li><a href="#crew">Join the Crew</a></li>
+          <li><a href="#">Actor Login</a></li>
+          <li><a href="#give">Give Back</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; 2026 Nightmare on the Crow &middot; 6470 Harff Road, Greenfield, MN 55373</span>
+      <span>
+        <span data-night>Bringing kids? <button type="button" class="foot-flip" data-flip>Turn the lights on.</button></span>
+        <span data-day>Ready to be scared? <button type="button" class="foot-flip" data-flip>Turn the lights off.</button></span>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<div class="concept-badge" aria-label="Concept 8: Lights On / Lights Off">Concept #8 &mdash; Lights On / Lights Off</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var html = document.documentElement;
+  var MODE_KEY = 'notc-mode';
+  var HINT_KEY = 'notc-hint-seen';
+  var sw = document.getElementById('lightswitch');
+  var hint = document.getElementById('switch-hint');
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var switching = false;
+
+  /* ---------- mode ---------- */
+  function getMode() {
+    return html.getAttribute('data-mode') === 'day' ? 'day' : 'night';
+  }
+  function applyMode(mode) {
+    html.setAttribute('data-mode', mode);
+    sw.setAttribute('aria-checked', mode === 'day' ? 'true' : 'false');
+    document.title = mode === 'day'
+      ? 'Kids Day at Nightmare on the Crow — Sat Oct 10, Noon–3, $5 · Greenfield, MN'
+      : 'Nightmare on the Crow — Haunted Trail & Kids Day · Greenfield, MN';
+    try { localStorage.setItem(MODE_KEY, mode); } catch (e) { /* private mode etc. */ }
+    tick();
+  }
+  function toggle() {
+    if (switching) { return; }
+    var next = getMode() === 'day' ? 'night' : 'day';
+    dismissHint();
+
+    /* restart the plate "click" animation */
+    sw.classList.remove('clicked');
+    void sw.offsetWidth;
+    sw.classList.add('clicked');
+
+    if (reduced) { applyMode(next); return; }
+
+    /* 600ms crossfade: content dips out, mode flips at the midpoint,
+       colors transition over the following 600ms, content comes back. */
+    switching = true;
+    html.classList.add('switching');
+    setTimeout(function () { applyMode(next); }, 300);
+    setTimeout(function () {
+      html.classList.remove('switching');
+      switching = false;
+    }, 620);
+  }
+
+  sw.setAttribute('aria-checked', getMode() === 'day' ? 'true' : 'false');
+  sw.addEventListener('click', toggle);
+
+  /* any [data-flip] control also flips the switch */
+  var flips = document.querySelectorAll('[data-flip]');
+  for (var i = 0; i < flips.length; i++) {
+    flips[i].addEventListener('click', function (e) {
+      e.preventDefault();
+      toggle();
+    });
+  }
+
+  /* ---------- first-visit hint ---------- */
+  function dismissHint() {
+    if (!hint.classList.contains('show')) { return; }
+    hint.classList.remove('show');
+    try { localStorage.setItem(HINT_KEY, '1'); } catch (e) {}
+  }
+  var showHint = true;
+  try {
+    if (localStorage.getItem(MODE_KEY) || localStorage.getItem(HINT_KEY)) { showHint = false; }
+  } catch (e) {}
+  if (showHint && getMode() === 'night') {
+    setTimeout(function () { hint.classList.add('show'); }, 1400);
+    setTimeout(dismissHint, 14000);
+  }
+  document.getElementById('hint-close').addEventListener('click', dismissHint);
+
+  /* ---------- countdown ---------- */
+  var TARGETS = {
+    night: new Date('2026-10-09T19:30:00-05:00'), /* Oct 9, 7:30 PM CDT */
+    day:   new Date('2026-10-10T12:00:00-05:00')  /* Kids Day, Oct 10, noon CDT */
+  };
+  var cdWrap = document.getElementById('countdown');
+  var cdD = document.getElementById('cd-d'),
+      cdH = document.getElementById('cd-h'),
+      cdM = document.getElementById('cd-m'),
+      cdS = document.getElementById('cd-s');
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function tick() {
+    var target = TARGETS[getMode()];
+    var diff = target.getTime() - Date.now();
+    if (isNaN(diff) || diff <= 0) {
+      cdWrap.classList.add('is-live');
+      cdD.textContent = cdH.textContent = cdM.textContent = cdS.textContent = '00';
+      return;
+    }
+    cdWrap.classList.remove('is-live');
+    var s = Math.floor(diff / 1000);
+    cdD.textContent = pad(Math.floor(s / 86400));
+    cdH.textContent = pad(Math.floor((s % 86400) / 3600));
+    cdM.textContent = pad(Math.floor((s % 3600) / 60));
+    cdS.textContent = pad(s % 60);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  /* ---------- mobile nav ---------- */
+  var header = document.querySelector('.site-header');
+  var burger = document.getElementById('burger');
+  function closeNav() {
+    header.classList.remove('nav-open');
+    burger.setAttribute('aria-expanded', 'false');
+  }
+  burger.addEventListener('click', function () {
+    var open = header.classList.toggle('nav-open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  var navLinks = document.querySelectorAll('.main-nav a');
+  for (var j = 0; j < navLinks.length; j++) {
+    navLinks[j].addEventListener('click', closeNav);
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { closeNav(); dismissHint(); }
+  });
+
+  /* ---------- hero scene framing ----------
+     On narrow screens crop the scene to its right half so the moon/sun,
+     fence crows and pines stay in frame above the copy. */
+  var scene = document.querySelector('.scene');
+  function fitScene() {
+    scene.setAttribute('viewBox', window.innerWidth <= 960 ? '640 0 800 700' : '0 0 1440 700');
+  }
+  fitScene();
+  window.addEventListener('resize', fitScene);
+
+  /* enable color transitions only after first paint (no load-time fade) */
+  window.requestAnimationFrame(function () {
+    window.requestAnimationFrame(function () { html.classList.add('ready'); });
+  });
+})();
+</script>
+</body>
+</html>

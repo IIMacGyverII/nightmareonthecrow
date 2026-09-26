@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nightmare on the Crow — Haunted Trail, Greenfield MN</title>
+<meta name="description" content="Walk the trail before you walk the trail. Nightmare on the Crow is a neighbor-built haunted trail at 6470 Harff Road, Greenfield, MN. Four nights in October, $20 — or $15 with a food-shelf or winter-clothing donation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>document.documentElement.className = 'js';</script>
+<style>
+/* =====================================================================
+   CONCEPT #7 — "WALK IT"
+   Scrolling the page IS walking the trail. Eight full-viewport chapters
+   built from layered inline SVG + CSS parallax, then the practical info
+   at "The Exit". Palette shifts per chapter via custom properties.
+   ===================================================================== */
+
+:root{
+  --serif:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --sans:'Work Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --orange:#f2711c;
+  --orange-hi:#ff8f45;
+  --paper:#f3efe6;
+  --paper-2:#e9e3d6;
+  --ink:#151515;
+  --ink-2:#4a4740;
+  --rail-w:64px;
+  --nav-h:60px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;font-family:var(--sans);font-size:16px;line-height:1.55;
+  background:#05070c;color:#ece8df;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+}
+h1,h2,h3,h4{margin:0;font-weight:600}
+p{margin:0 0 1em}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--orange);outline-offset:3px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip{position:fixed;top:-100px;left:1rem;z-index:100;background:var(--orange);color:#111;padding:.6rem 1rem;border-radius:6px;font-weight:600;text-decoration:none}
+.skip:focus{top:1rem}
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:.5rem;padding:.9rem 1.5rem;border-radius:999px;
+  font:600 .95rem/1 var(--sans);letter-spacing:.02em;text-decoration:none;cursor:pointer;border:1.5px solid transparent;
+  transition:transform .2s ease,background .2s ease,color .2s ease,border-color .2s ease;
+}
+.btn-primary{background:var(--orange);color:#160b03;border-color:var(--orange)}
+.btn-primary:hover{background:var(--orange-hi);border-color:var(--orange-hi);transform:translateY(-1px)}
+.btn-ghost{border-color:currentColor;color:inherit;background:transparent}
+.btn-ghost:hover{background:rgba(255,255,255,.08);transform:translateY(-1px)}
+.day .btn-ghost:hover{background:rgba(0,0,0,.06)}
+
+/* ---------- Fixed chrome: nav, rail, badge ---------- */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:60;height:var(--nav-h);
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:0 clamp(1rem,3vw,2rem);
+  background:rgba(5,7,12,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  transition:background .4s ease,color .4s ease;
+}
+.brand{display:inline-flex;align-items:center;gap:.6rem;text-decoration:none;font:600 .82rem/1.1 var(--sans);letter-spacing:.16em;text-transform:uppercase}
+.brand svg{width:30px;height:30px;color:var(--orange)}
+.brand b{display:block;font-weight:700}
+.brand small{display:block;font-size:.62rem;letter-spacing:.2em;opacity:.7;font-weight:500}
+.nav-links{display:flex;align-items:center;gap:1rem}
+.nav-links a:not(.btn){font:500 .85rem/1 var(--sans);letter-spacing:.06em;text-decoration:none;opacity:.85;text-transform:uppercase}
+.nav-links a:not(.btn):hover{opacity:1}
+.nav .btn{padding:.65rem 1.1rem;font-size:.82rem}
+body.day .nav{background:rgba(243,239,230,.85);color:var(--ink);border-bottom-color:rgba(0,0,0,.08)}
+
+/* Progress rail — 8 chapter dots. Left on desktop, top on mobile. */
+.rail{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:55;display:flex;flex-direction:column;gap:16px;padding:12px 0 12px 24px;margin:0;list-style:none}
+.rail li{margin:0}
+.rail a{
+  position:relative;display:block;width:12px;height:12px;border-radius:50%;
+  border:1.5px solid rgba(255,255,255,.55);background:transparent;
+  transition:background .3s,border-color .3s,box-shadow .3s,transform .3s;
+}
+.rail a:hover{transform:scale(1.25)}
+.rail a.on{background:var(--orange);border-color:var(--orange);box-shadow:0 0 14px rgba(242,113,28,.8)}
+.rail span{
+  position:absolute;left:26px;top:50%;transform:translateY(-50%) translateX(-6px);
+  white-space:nowrap;font:600 .68rem/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;
+  color:#fff;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;
+  text-shadow:0 1px 6px rgba(0,0,0,.7);
+}
+.rail a:hover span,.rail a:focus-visible span,.rail a.on span{opacity:1;transform:translateY(-50%) translateX(0)}
+body.day .rail a{border-color:rgba(20,20,20,.5)}
+body.day .rail span{color:var(--ink);text-shadow:none}
+
+.badge{
+  position:fixed;right:12px;bottom:12px;z-index:70;
+  font:600 .66rem/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;
+  background:#111;color:#fff;border:1px solid rgba(255,255,255,.25);padding:.55rem .75rem;border-radius:4px;
+  pointer-events:none;
+}
+
+/* =====================================================================
+   CHAPTERS
+   ===================================================================== */
+.chapter{
+  --sky1:#0b1630;--sky2:#1a2a52;--text:#ece8df;--accent:#ffb347;
+  --moon:#e8e4d3;--fog:200,210,225;--stars:.7;--scrim:0,0,0;--scrim-a:.55;
+  position:relative;min-height:100vh;min-height:100svh;overflow:hidden;
+  display:flex;align-items:flex-end;
+  background:linear-gradient(180deg,var(--sky1) 0%,var(--sky2) 100%);
+  color:var(--text);
+  padding-left:var(--rail-w);
+}
+.chapter + .chapter{min-height:90vh;min-height:90svh}
+.chapter::after{ /* text scrim */
+  content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(180deg,transparent 35%,rgba(var(--scrim),var(--scrim-a)) 100%);
+}
+.scene{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.layer{
+  position:absolute;left:0;width:100%;top:-90px;height:calc(100% + 180px);
+  display:block;will-change:transform;
+}
+.stars{
+  position:absolute;inset:0;opacity:var(--stars);
+  background-image:
+    radial-gradient(1.4px 1.4px at 30px 40px,rgba(255,255,255,.9),transparent 60%),
+    radial-gradient(1px 1px at 120px 90px,rgba(255,255,255,.8),transparent 60%),
+    radial-gradient(1.2px 1.2px at 200px 20px,rgba(255,255,255,.7),transparent 60%),
+    radial-gradient(1px 1px at 80px 160px,rgba(255,255,255,.6),transparent 60%),
+    radial-gradient(1.6px 1.6px at 240px 130px,rgba(255,255,255,.85),transparent 60%),
+    radial-gradient(1px 1px at 170px 190px,rgba(255,255,255,.5),transparent 60%);
+  background-size:280px 220px;
+  mask-image:linear-gradient(180deg,#000 0%,#000 45%,transparent 75%);
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 45%,transparent 75%);
+}
+.moon{ /* fixed depth — no data-depth, never parallaxes */
+  position:absolute;top:11%;right:12%;width:clamp(60px,7vw,96px);aspect-ratio:1;border-radius:50%;
+  background:var(--moon);
+  box-shadow:0 0 40px 12px color-mix(in srgb,var(--moon) 35%,transparent),0 0 140px 50px color-mix(in srgb,var(--moon) 14%,transparent);
+}
+.fog{
+  position:absolute;left:-50%;width:200%;height:46%;bottom:-6%;z-index:1;
+  background:
+    radial-gradient(ellipse 30% 60% at 30% 100%,rgba(var(--fog),.28),transparent 70%),
+    radial-gradient(ellipse 40% 55% at 65% 100%,rgba(var(--fog),.22),transparent 70%),
+    radial-gradient(ellipse 25% 50% at 85% 100%,rgba(var(--fog),.18),transparent 70%);
+  filter:blur(18px);
+  animation:drift 42s ease-in-out infinite alternate;
+}
+.fog-b{height:34%;opacity:.7;animation-duration:31s;animation-direction:alternate-reverse}
+@keyframes drift{from{transform:translateX(-5%)}to{transform:translateX(5%)}}
+
+/* Chapter copy */
+.copy{
+  position:relative;z-index:3;width:100%;max-width:760px;
+  padding:calc(var(--nav-h) + 3rem) clamp(1.25rem,5vw,4rem) clamp(4rem,11vh,7rem);
+}
+.copy.center{margin:0 auto;text-align:center;padding-bottom:clamp(4rem,14vh,9rem)}
+.copy.center .ch-text{margin-left:auto;margin-right:auto}
+.ch-kicker{font:600 .72rem/1 var(--sans);letter-spacing:.24em;text-transform:uppercase;color:var(--accent);margin:0 0 1rem}
+.ch-title{font:italic 600 clamp(2.7rem,7.2vw,5.6rem)/.98 var(--serif);letter-spacing:-.01em;margin:0 0 1.1rem;text-wrap:balance}
+.ch-text{font-size:clamp(1rem,1.3vw,1.18rem);max-width:56ch;color:color-mix(in srgb,var(--text) 86%,transparent);margin:0 0 1.6rem}
+.ch-actions{display:flex;flex-wrap:wrap;gap:.75rem}
+.ch-note{font:500 .78rem/1.4 var(--sans);letter-spacing:.06em;text-transform:uppercase;opacity:.7;margin-top:1.4rem}
+
+/* Fade-ups, triggered by IntersectionObserver adding .in */
+.js .fade{opacity:0;transform:translateY(22px);transition:opacity .9s ease,transform .9s ease;transition-delay:calc(var(--i,0)*.13s)}
+.js .in .fade{opacity:1;transform:none}
+
+.scroll-cue{position:absolute;left:50%;bottom:1.4rem;z-index:4;transform:translateX(-50%);opacity:.7;color:#fff;font:500 .66rem/1 var(--sans);letter-spacing:.24em;text-transform:uppercase;text-align:center}
+.scroll-cue svg{display:block;margin:.5rem auto 0;width:18px;height:18px;animation:bob 1.8s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+
+/* ---------- Per-chapter palettes ---------- */
+#ch-0{--sky1:#081026;--sky2:#22345f;--accent:#ffb347;--moon:#efe9d2}
+#ch-1{--sky1:#0a1030;--sky2:#2a1d45;--accent:#ffc46b;--moon:#e9dfc5;--fog:190,180,220}
+#ch-2{--sky1:#050c17;--sky2:#0c1f22;--accent:#9fd3c7;--moon:#d9dccd;--stars:.35;--fog:170,200,200}
+#ch-3{--sky1:#020203;--sky2:#050507;--accent:#ffcf7a;--stars:0;--scrim-a:0}
+#ch-4{--sky1:#07080f;--sky2:#1a1420;--accent:#ffb347;--moon:#d8d0bd;--stars:.5;--fog:150,140,160}
+#ch-5{--sky1:#0a1a10;--sky2:#2a4a1e;--accent:#c8f078;--moon:#dbe6a8;--stars:.3;--fog:150,200,110}
+#ch-6{--sky1:#090a12;--sky2:#1c1a24;--accent:#b8c2d6;--moon:#e5e3dc;--stars:.55;--fog:180,190,200}
+#ch-7{--sky1:#5b6273;--sky2:#f2c9a0;--text:#1f2430;--accent:#8a4a1f;--stars:0;--scrim:255,235,215;--scrim-a:.35;--fog:255,240,225}
+
+/* ---------- Chapter-specific scene bits ---------- */
+/* Ch 3: the lamp */
+#ch-3 .lamp{position:absolute;left:50%;top:0;transform:translateX(-50%);width:4px;height:22%;background:#3a3a3a;z-index:1}
+#ch-3 .lamp::after{
+  content:'';position:absolute;left:50%;bottom:-16px;width:34px;height:22px;transform:translateX(-50%);
+  background:#ffcf7a;border-radius:0 0 17px 17px;box-shadow:0 0 30px 10px rgba(255,207,122,.7),0 0 120px 40px rgba(255,207,122,.25);
+}
+#ch-3 .lamp-pool{
+  position:absolute;left:50%;top:22%;width:min(140vw,1400px);height:110%;transform:translateX(-50%);
+  background:radial-gradient(ellipse 34% 50% at 50% 0%,rgba(255,207,122,.20),rgba(255,207,122,.05) 55%,transparent 75%);
+  animation:flicker 7s linear infinite;
+}
+#ch-3 .lamp{animation:flicker 7s linear infinite}
+@keyframes flicker{0%,93%,100%{opacity:1}94%{opacity:.55}95%{opacity:1}97%{opacity:.7}98%{opacity:1}}
+#ch-3 .copy{padding-top:calc(var(--nav-h) + 14vh)}
+#ch-3 .ch-text{color:#cfc7b6}
+
+/* Ch 4: the lurker in the window */
+.lurker{transition:transform 3.4s cubic-bezier(.45,0,.2,1) .9s}
+.in .lurker{transform:translateX(72px)}
+.win-glow{transition:opacity 1.2s ease}
+
+/* Ch 5: scarecrow head turn */
+.s-head{transform-box:view-box;transform-origin:720px 626px;transition:transform 1.7s cubic-bezier(.2,.9,.2,1) .8s}
+.in .s-head{transform:rotate(-13deg) scaleX(.86)}
+.s-eye{opacity:.35;transition:opacity 1.2s ease 1.8s}
+.in .s-eye{opacity:1}
+
+/* Ch 7: crow leaving */
+.flyer{animation:fly 16s linear infinite}
+@keyframes fly{from{transform:translate(-160px,60px)}to{transform:translate(1620px,-140px)}}
+
+/* =====================================================================
+   THE DAY ZONE — practical info after the exit
+   ===================================================================== */
+.day{background:var(--paper);color:var(--ink);padding-left:var(--rail-w)}
+.wrap{max-width:1120px;margin:0 auto;padding:clamp(2.5rem,5.5vw,4.25rem) clamp(1.25rem,5vw,3rem)}
+.sec-kicker{font:600 .72rem/1 var(--sans);letter-spacing:.24em;text-transform:uppercase;color:var(--orange);margin:0 0 .8rem}
+.h2{font:italic 600 clamp(2.1rem,4.6vw,3.5rem)/1.02 var(--serif);letter-spacing:-.01em;margin:0 0 1rem;text-wrap:balance}
+.lead{font-size:clamp(1.02rem,1.3vw,1.18rem);color:var(--ink-2);max-width:60ch;margin-bottom:1.6rem}
+.grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:1.4rem 1.4rem 1.2rem;box-shadow:0 1px 0 rgba(0,0,0,.03)}
+.card h3{font:600 1.05rem/1.2 var(--sans);margin-bottom:.4rem}
+.card p{color:var(--ink-2);font-size:.95rem;margin:0}
+.card .big{font:italic 600 2.4rem/1 var(--serif);display:block;margin:.2rem 0 .3rem}
+.card svg{width:34px;height:34px;color:var(--orange);margin-bottom:.8rem}
+.divider{border:0;height:1px;background:rgba(0,0,0,.09);margin:0}
+
+/* Exit strip */
+#info .keyfacts{display:flex;flex-wrap:wrap;gap:.6rem 1.6rem;font:600 .8rem/1.4 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin-top:1.6rem}
+#info .keyfacts b{color:var(--ink)}
+
+/* Countdown */
+.countdown{
+  background:#0d0c0b;color:#fff;border-radius:18px;padding:clamp(1.5rem,4vw,2.5rem);
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1.5rem;
+  margin-top:2.2rem;position:relative;overflow:hidden;
+}
+.countdown::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 100% at 100% 50%,rgba(242,113,28,.28),transparent 70%);pointer-events:none}
+.countdown > *{position:relative}
+.countdown .cd-label{font:italic 600 clamp(1.4rem,2.6vw,2rem)/1.1 var(--serif);max-width:14ch}
+.countdown .cd-label small{display:block;font:500 .72rem/1.4 var(--sans);letter-spacing:.2em;text-transform:uppercase;opacity:.7;margin-top:.5rem}
+.cd{display:flex;gap:clamp(.6rem,2vw,1.4rem)}
+.cd div{text-align:center;min-width:3.4ch}
+.cd b{display:block;font:600 clamp(2.2rem,5vw,4rem)/1 var(--serif);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.cd span{display:block;font:500 .64rem/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;opacity:.65;margin-top:.4rem}
+.cd-open{font:italic 600 clamp(1.5rem,3vw,2.4rem)/1.1 var(--serif);display:none}
+
+/* Pricing */
+.price-grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));margin-top:1.4rem}
+.price{border-radius:18px;padding:clamp(1.5rem,3.5vw,2.4rem);position:relative;overflow:hidden}
+.price-std{background:#fff;border:1px solid rgba(0,0,0,.1)}
+.price-donate{background:#111;color:#fff;border:1px solid #111}
+.price-donate::after{content:'';position:absolute;inset:auto -20% -40% auto;width:70%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(242,113,28,.5),transparent 65%);pointer-events:none}
+.price .tag{font:600 .7rem/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;margin-bottom:.6rem;display:inline-block}
+.price-donate .tag{background:var(--orange);color:#160b03;padding:.4rem .6rem;border-radius:4px}
+.price .amt{font:italic 600 clamp(3.6rem,7vw,5.6rem)/1 var(--serif);letter-spacing:-.02em;margin:.2rem 0 .4rem}
+.price .amt sup{font-size:.4em;vertical-align:.8em;font-style:normal}
+.price p{margin:0 0 1rem;font-size:.98rem;opacity:.9;position:relative}
+.price ul{margin:0 0 1.3rem;padding-left:1.1rem;font-size:.95rem;opacity:.9;position:relative}
+.price li{margin-bottom:.25rem}
+.price .btn{position:relative}
+.price-note{font-size:.9rem;color:var(--ink-2);margin-top:1.2rem;max-width:70ch}
+
+/* Kids Day — sunlit palette */
+#kids{background:linear-gradient(180deg,#ffd76a 0%,#ffb84d 100%);color:#2b1b06;position:relative;overflow:hidden}
+#kids .sec-kicker{color:#8a3b00}
+#kids .lead{color:#4a2e0c}
+#kids .sun{position:absolute;right:-6%;top:-18%;width:min(46vw,460px);aspect-ratio:1;border-radius:50%;background:#fff3b0;box-shadow:0 0 80px 30px rgba(255,243,176,.7),0 0 220px 80px rgba(255,243,176,.35);pointer-events:none}
+#kids .wrap{position:relative;display:grid;gap:2rem;grid-template-columns:1.1fr .9fr;align-items:center}
+#kids .pill{display:inline-block;background:#2b1b06;color:#ffd76a;border-radius:999px;padding:.45rem .8rem;font:600 .78rem/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;margin:0 .4rem .5rem 0}
+#kids .btn-primary{background:#2b1b06;color:#ffd76a;border-color:#2b1b06}
+#kids .btn-primary:hover{background:#3e2809;border-color:#3e2809}
+#kids ul{padding-left:1.1rem;color:#4a2e0c;margin:0 0 1.4rem}
+
+/* Photo / map placeholders (production would use real media) */
+.ph{
+  position:relative;border:2px dashed rgba(0,0,0,.35);border-radius:16px;min-height:240px;display:grid;place-items:center;text-align:center;
+  padding:1.5rem;font:600 .78rem/1.5 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:rgba(0,0,0,.6);
+  background:repeating-linear-gradient(135deg,rgba(0,0,0,.035) 0 12px,transparent 12px 24px);
+}
+.ph small{display:block;font-weight:500;letter-spacing:.06em;text-transform:none;opacity:.8;margin-top:.4rem}
+
+/* Community */
+#community .grid{margin-top:1.4rem}
+#community .card{border-top:4px solid var(--orange)}
+
+/* Join the crew */
+#crew .wrap{display:grid;gap:2.2rem;grid-template-columns:1fr 1fr;align-items:center}
+#crew .who{display:grid;gap:.8rem;margin:1.2rem 0 1.6rem}
+#crew .who div{display:flex;gap:.9rem;align-items:flex-start;font-size:.95rem;color:var(--ink-2)}
+#crew .who b{color:var(--ink);display:block}
+#crew .who svg{flex:0 0 34px;width:34px;height:34px;color:var(--orange)}
+
+/* Quotes */
+.quotes{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:1.2rem}
+.quotes blockquote{margin:0;background:#fff;border-radius:14px;padding:1.3rem 1.4rem;font:italic 600 1.25rem/1.3 var(--serif);border:1px solid rgba(0,0,0,.08)}
+.quotes cite{display:block;font:500 .72rem/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);margin-top:.9rem;font-style:normal}
+.sample{font-size:.8rem;color:var(--ink-2);margin-top:.9rem}
+
+/* FAQ */
+.faq{margin-top:1rem;border-top:1px solid rgba(0,0,0,.1)}
+.faq details{border-bottom:1px solid rgba(0,0,0,.1)}
+.faq summary{
+  cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:1rem;
+  padding:1.1rem 0;font:600 1.05rem/1.3 var(--sans);
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';font:600 1.5rem/1 var(--serif);color:var(--orange);flex:0 0 auto;transition:transform .25s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq .a{padding:0 0 1.2rem;color:var(--ink-2);max-width:70ch;font-size:.98rem}
+
+/* Directions */
+#directions .wrap{display:grid;gap:2rem;grid-template-columns:1fr 1fr;align-items:start}
+.addr{font:italic 600 clamp(1.5rem,2.6vw,2rem)/1.2 var(--serif);margin:.6rem 0 1rem}
+.trucks{display:flex;flex-wrap:wrap;gap:.6rem;margin:.6rem 0 1.4rem}
+.trucks span{background:#fff;border:1px solid rgba(0,0,0,.1);border-radius:999px;padding:.45rem .8rem;font:500 .82rem/1 var(--sans)}
+
+/* Footer */
+footer{background:#0d0c0b;color:#e6e1d6;padding-left:var(--rail-w)}
+footer .wrap{display:grid;gap:2rem;grid-template-columns:1.4fr 1fr 1fr;padding-top:3.5rem;padding-bottom:2.5rem}
+footer h4{font:600 .72rem/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;opacity:.6;margin-bottom:.9rem}
+footer ul{list-style:none;margin:0;padding:0}
+footer li{margin-bottom:.5rem;font-size:.95rem}
+footer a{text-decoration:none;opacity:.9}
+footer a:hover{opacity:1;color:var(--orange-hi)}
+footer .brand svg{width:36px;height:36px}
+footer .tag{font:italic 600 1.4rem/1.2 var(--serif);margin:1rem 0 .6rem;max-width:22ch}
+footer .fine{grid-column:1/-1;border-top:1px solid rgba(255,255,255,.1);padding-top:1.2rem;font-size:.78rem;opacity:.6;display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;justify-content:space-between}
+.socials{display:flex;gap:.6rem}
+.socials a{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.2)}
+.socials svg{width:18px;height:18px}
+
+/* =====================================================================
+   RESPONSIVE
+   ===================================================================== */
+@media (max-width:900px){
+  #kids .wrap,#crew .wrap,#directions .wrap{grid-template-columns:1fr}
+  footer .wrap{grid-template-columns:1fr 1fr}
+}
+@media (max-width:760px){
+  :root{--rail-w:0px;--nav-h:56px}
+  .brand small{display:none}
+  .nav-links a:not(.btn){display:none}
+  .rail{top:var(--nav-h);left:0;right:0;transform:none;flex-direction:row;justify-content:center;gap:12px;padding:10px 0}
+  .rail a{width:9px;height:9px}
+  .rail span{display:none}
+  .copy{padding-top:calc(var(--nav-h) + 4rem)}
+  .moon{right:8%;top:13%}
+  footer .wrap{grid-template-columns:1fr}
+  .countdown{justify-content:center;text-align:center}
+  .countdown .cd-label{max-width:none}
+  .badge{font-size:.58rem;right:8px;bottom:8px}
+}
+
+/* =====================================================================
+   REDUCED MOTION — everything static, everything visible
+   ===================================================================== */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .js .fade{opacity:1;transform:none;transition:none}
+  .fog,.fog-b,.scroll-cue svg,.flyer,#ch-3 .lamp,#ch-3 .lamp-pool{animation:none}
+  .flyer{transform:translate(1000px,-60px)}
+  .layer{top:0;height:100%;will-change:auto;transform:none !important}
+  .lurker{transition:none;transform:translateX(72px)}
+  .s-head{transition:none;transform:rotate(-13deg) scaleX(.86)}
+  .s-eye{transition:none;opacity:1}
+  .btn,.rail a,.rail span{transition:none}
+}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#info">Skip to dates &amp; tickets</a>
+
+<!-- =====================================================================
+     SVG SPRITE — reusable silhouettes + repeating "row" patterns.
+     All silhouettes are black and blended via opacity so they pick up
+     each chapter's sky palette automatically.
+     ===================================================================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- conifer -->
+    <symbol id="tree" viewBox="0 0 100 200"><path d="M50 0 L78 62 L64 60 L88 116 L72 113 L98 172 L57 170 L57 200 L43 200 L43 170 L2 172 L28 113 L12 116 L36 60 L22 62 Z"/></symbol>
+    <!-- bare, twisted tree -->
+    <symbol id="bare" viewBox="0 0 100 200"><path d="M45 200 L45 122 C38 102 18 96 10 70 C22 84 36 90 42 98 C36 70 22 60 26 32 C34 56 44 66 48 86 C52 60 62 48 84 42 C66 60 58 78 54 102 C64 94 80 92 94 76 C82 100 62 110 55 124 L55 200 Z"/></symbol>
+    <!-- corn stalk -->
+    <symbol id="corn" viewBox="0 0 60 200"><path d="M27 200 L27 40 L33 40 L33 200Z"/><path d="M30 72 C18 68 8 52 4 30 C16 42 26 54 30 72Z M30 102 C42 98 52 82 58 60 C46 72 36 86 30 102Z M30 134 C16 130 6 114 2 92 C14 102 26 118 30 134Z M30 164 C44 160 54 142 58 120 C46 130 36 148 30 164Z M30 40 C26 20 28 8 30 0 C32 8 34 20 30 40Z"/><path d="M20 100 C16 84 20 68 25 62 C29 74 29 92 25 104Z"/></symbol>
+    <!-- tombstone -->
+    <symbol id="stone" viewBox="0 0 80 100"><path d="M8 100 L8 32 A32 32 0 0 1 72 32 L72 100Z"/></symbol>
+    <!-- flying crow -->
+    <symbol id="crowfly" viewBox="0 0 120 80"><path d="M2 42 C20 26 36 26 50 36 C54 22 62 14 72 12 L68 20 L80 20 L72 26 C90 26 106 34 118 48 C100 42 86 42 78 46 L62 62 L58 48 C42 46 26 48 2 42Z"/></symbol>
+    <!-- perched crow (logo) -->
+    <symbol id="crow" viewBox="0 0 64 64"><ellipse cx="30" cy="38" rx="17" ry="11"/><circle cx="44" cy="26" r="8"/><path d="M50 24 L63 28 L50 31Z"/><path d="M15 40 L0 53 L19 46Z"/><path d="M27 48 L25 60 M33 48 L35 60" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="46" cy="24" r="1.6" fill="#fff"/></symbol>
+    <!-- simple standing figure -->
+    <symbol id="figure" viewBox="0 0 60 200"><circle cx="30" cy="22" r="18"/><path d="M8 200 L10 70 C12 48 48 48 50 70 L52 200Z"/></symbol>
+
+    <!-- repeating rows (period widths chosen so layers don't visibly sync) -->
+    <pattern id="pTrees" width="118" height="900" patternUnits="userSpaceOnUse"><use href="#tree" x="0" y="470" width="86" height="230" fill="#000"/><use href="#tree" x="58" y="520" width="64" height="180" fill="#000"/></pattern>
+    <pattern id="pTreesBig" width="250" height="900" patternUnits="userSpaceOnUse"><use href="#tree" x="0" y="290" width="210" height="540" fill="#000"/><use href="#tree" x="130" y="370" width="150" height="450" fill="#000"/></pattern>
+    <pattern id="pBare" width="300" height="900" patternUnits="userSpaceOnUse"><use href="#bare" x="0" y="360" width="230" height="480" fill="#000"/><use href="#bare" x="160" y="440" width="150" height="400" fill="#000"/></pattern>
+    <pattern id="pCorn" width="62" height="900" patternUnits="userSpaceOnUse"><use href="#corn" x="0" y="540" width="60" height="360" fill="#000"/><use href="#corn" x="28" y="580" width="52" height="320" fill="#000"/></pattern>
+    <pattern id="pCornBig" width="104" height="900" patternUnits="userSpaceOnUse"><use href="#corn" x="0" y="380" width="110" height="540" fill="#000"/><use href="#corn" x="50" y="430" width="90" height="490" fill="#000"/></pattern>
+    <pattern id="pPickets" width="44" height="900" patternUnits="userSpaceOnUse"><path d="M10 900 L10 720 L20 704 L30 720 L30 900Z" fill="#000"/></pattern>
+
+    <radialGradient id="gBeam" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffe6a8" stop-opacity=".55"/><stop offset=".55" stop-color="#ffd27a" stop-opacity=".12"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient>
+    <radialGradient id="gLamp" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffd27a" stop-opacity=".7"/><stop offset=".4" stop-color="#ffd27a" stop-opacity=".18"/><stop offset="1" stop-color="#ffd27a" stop-opacity="0"/></radialGradient>
+    <radialGradient id="gWin" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffb347" stop-opacity=".55"/><stop offset="1" stop-color="#ffb347" stop-opacity="0"/></radialGradient>
+    <radialGradient id="gSun" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff2c4"/><stop offset=".5" stop-color="#ffd58a" stop-opacity=".55"/><stop offset="1" stop-color="#ffc072" stop-opacity="0"/></radialGradient>
+    <clipPath id="winclip"><rect x="652" y="602" width="66" height="76" rx="3"/></clipPath>
+  </defs>
+</svg>
+
+<!-- =====================================================================
+     FIXED CHROME
+     ===================================================================== -->
+<header class="nav">
+  <a class="brand" href="#ch-0" aria-label="Nightmare on the Crow — back to top">
+    <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#crow" fill="currentColor"/></svg>
+    <span><b>Nightmare on the Crow</b><small>Greenfield, MN · Haunted Trail</small></span>
+  </a>
+  <nav class="nav-links" aria-label="Primary">
+    <a href="#info">Dates &amp; Prices</a>
+    <a href="#faq">FAQ</a>
+    <a class="btn btn-primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
+  </nav>
+</header>
+
+<nav aria-label="Trail chapters">
+  <ol class="rail">
+    <li><a href="#ch-0" aria-label="Chapter 0: Harff Road"><span aria-hidden="true">0 · Harff Road</span></a></li>
+    <li><a href="#ch-1" aria-label="Chapter 1: The Wagon"><span aria-hidden="true">1 · The Wagon</span></a></li>
+    <li><a href="#ch-2" aria-label="Chapter 2: The Trail"><span aria-hidden="true">2 · The Trail</span></a></li>
+    <li><a href="#ch-3" aria-label="Chapter 3: The Tunnels"><span aria-hidden="true">3 · The Tunnels</span></a></li>
+    <li><a href="#ch-4" aria-label="Chapter 4: The Buildings"><span aria-hidden="true">4 · The Buildings</span></a></li>
+    <li><a href="#ch-5" aria-label="Chapter 5: The Corn"><span aria-hidden="true">5 · The Corn</span></a></li>
+    <li><a href="#ch-6" aria-label="Chapter 6: The Graveyard"><span aria-hidden="true">6 · The Graveyard</span></a></li>
+    <li><a href="#ch-7" aria-label="Chapter 7: The Exit"><span aria-hidden="true">7 · The Exit</span></a></li>
+  </ol>
+</nav>
+
+<div class="badge" aria-hidden="true">Concept #7 — Walk It</div>
+
+<main>
+
+<!-- =====================================================================
+     CHAPTER 0 — HARFF ROAD (hero)
+     ===================================================================== -->
+<section class="chapter reveal" id="ch-0" aria-labelledby="t0">
+  <div class="scene" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="moon"></div>
+    <!-- far hills -->
+    <svg class="layer" data-depth=".15" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <path d="M0 640 C180 590 360 620 540 600 C740 578 900 540 1100 578 C1260 606 1360 590 1440 606 L1440 900 L0 900Z" fill="#000" opacity=".28"/>
+    </svg>
+    <!-- treeline -->
+    <svg class="layer" data-depth=".4" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <rect width="1440" height="900" fill="url(#pTrees)" opacity=".55"/>
+    </svg>
+    <!-- road, headlight wash, the sign -->
+    <svg class="layer" data-depth=".75" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <rect y="690" width="1440" height="210" fill="#000" opacity=".5"/>
+      <path d="M690 660 L750 660 L1180 900 L260 900Z" fill="#3a3129"/>
+      <path d="M700 660 L740 660 L1120 900 L320 900Z" fill="#4a3f34" opacity=".7"/>
+      <ellipse cx="720" cy="880" rx="520" ry="230" fill="url(#gBeam)"/>
+      <!-- gravel flecks -->
+      <g fill="#8a7a66" opacity=".35"><circle cx="640" cy="820" r="2"/><circle cx="700" cy="770" r="1.6"/><circle cx="790" cy="850" r="2.2"/><circle cx="860" cy="790" r="1.5"/><circle cx="560" cy="870" r="1.8"/><circle cx="740" cy="720" r="1.3"/><circle cx="900" cy="880" r="2"/><circle cx="600" cy="760" r="1.4"/></g>
+      <!-- street sign + wooden arrow sign -->
+      <rect x="912" y="560" width="10" height="290" fill="#1b1611"/>
+      <rect x="862" y="548" width="150" height="34" rx="3" fill="#245a3c"/>
+      <text x="937" y="572" text-anchor="middle" font-family="Work Sans, sans-serif" font-size="19" font-weight="700" letter-spacing="2" fill="#f2efe6">HARFF RD</text>
+      <path d="M850 612 L1020 612 L1046 640 L1020 668 L850 668Z" fill="#3b2a1a"/>
+      <path d="M850 612 L1020 612 L1046 640 L1020 668 L850 668Z" fill="none" stroke="#5a4028" stroke-width="2"/>
+      <text x="940" y="635" text-anchor="middle" font-family="Work Sans, sans-serif" font-size="12" font-weight="700" letter-spacing="2.5" fill="#f2711c">NIGHTMARE ON</text>
+      <text x="940" y="656" text-anchor="middle" font-family="Work Sans, sans-serif" font-size="14" font-weight="700" letter-spacing="3" fill="#f2711c">THE CROW →</text>
+      <use href="#crow" x="925" y="510" width="40" height="40" fill="#000"/>
+    </svg>
+    <!-- foreground trees -->
+    <svg class="layer" data-depth="1.1" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <use href="#tree" x="-80" y="200" width="340" height="760" fill="#000"/>
+      <use href="#tree" x="150" y="430" width="180" height="500" fill="#000"/>
+      <use href="#tree" x="1180" y="240" width="330" height="720" fill="#000"/>
+      <use href="#tree" x="1080" y="470" width="170" height="460" fill="#000"/>
+    </svg>
+    <div class="fog"></div>
+    <div class="fog fog-b"></div>
+  </div>
+
+  <div class="copy">
+    <p class="ch-kicker fade" style="--i:0">Chapter 0 — Harff Road · Greenfield, MN</p>
+    <h1 class="ch-title fade" id="t0" style="--i:1">It all begins with a hayride.</h1>
+    <p class="ch-text fade" style="--i:2">Turn off Harff Road, kill the headlights, and climb on the wagon. Nightmare on the Crow is a haunted trail through real forest, built by three neighbors and run for the neighborhood. Four nights. Twenty dollars. Keep scrolling to walk it.</p>
+    <div class="ch-actions fade" style="--i:3">
+      <a class="btn btn-primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets — $20</a>
+      <a class="btn btn-ghost" href="#ch-1">Walk the trail ↓</a>
+    </div>
+    <p class="ch-note fade" style="--i:4">Oct 9 · 10 · 16 · 17 &nbsp;·&nbsp; 7:30–10 PM &nbsp;·&nbsp; $15 with a donation</p>
+  </div>
+  <div class="scroll-cue" aria-hidden="true">Scroll<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></div>
+</section>
+
+<!-- =====================================================================
+     CHAPTER 1 — THE WAGON
+     ===================================================================== -->
+<section class="chapter reveal" id="ch-1" aria-labelledby="t1">
+  <div class="scene" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="moon"></div>
+    <svg class="layer" data-depth=".15" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <path d="M0 610 C240 560 420 600 620 570 C820 540 1000 560 1200 540 C1320 528 1400 560 1440 570 L1440 900 L0 900Z" fill="#000" opacity=".25"/>
+    </svg>
+    <svg class="layer" data-depth=".35" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <rect width="1440" height="900" fill="url(#pTrees)" opacity=".5"/>
+    </svg>
+    <!-- the wagon, the lantern, three neighbors -->
+    <svg class="layer" data-depth=".7" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <rect y="770" width="1440" height="130" fill="#000" opacity=".55"/>
+      <circle cx="884" cy="565" r="130" fill="url(#gLamp)"/>
+      <!-- hay -->
+      <path d="M600 660 C620 600 680 585 730 606 C780 585 850 596 880 660Z" fill="#000" opacity=".8"/>
+      <path d="M600 660 C620 600 680 585 730 606 C780 585 850 596 880 660Z" fill="#c9a24a" opacity=".22"/>
+      <!-- bed -->
+      <rect x="580" y="656" width="320" height="86" rx="6" fill="#000" opacity=".95"/>
+      <path d="M580 700 L900 700" stroke="#3a2a1a" stroke-width="3"/>
+      <!-- wheels -->
+      <g fill="none" stroke="#000" stroke-width="12"><circle cx="640" cy="758" r="36"/><circle cx="840" cy="758" r="36"/></g>
+      <g stroke="#000" stroke-width="5"><path d="M640 722 V794 M604 758 H676 M615 733 L665 783 M665 733 L615 783"/><path d="M840 722 V794 M804 758 H876 M815 733 L865 783 M865 733 L815 783"/></g>
+      <!-- hitch -->
+      <path d="M580 706 L470 726" stroke="#000" stroke-width="8" stroke-linecap="round"/>
+      <!-- lantern on a pole -->
+      <rect x="880" y="560" width="6" height="100" fill="#000"/>
+      <path d="M870 548 L898 548 L898 580 L870 580Z" fill="#ffd27a"/>
+      <path d="M866 546 L902 546 L900 552 L868 552Z M872 580 L896 580 L894 586 L874 586Z" fill="#000"/>
+      <!-- three neighbors -->
+      <g fill="#000">
+        <use href="#figure" x="452" y="596" width="52" height="176"/>
+        <use href="#figure" x="500" y="586" width="56" height="186"/>
+        <use href="#figure" x="548" y="604" width="48" height="168"/>
+      </g>
+    </svg>
+    <svg class="layer" data-depth="1.05" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <use href="#bare" x="1120" y="240" width="380" height="720" fill="#000"/>
+      <use href="#tree" x="-60" y="330" width="260" height="620" fill="#000"/>
+    </svg>
+    <div class="fog"></div>
+  </div>
+  <div class="copy">
+    <p class="ch-kicker fade" style="--i:0">Chapter 1 — The Wagon</p>
+    <h2 class="ch-title fade" id="t1" style="--i:1">Three neighbors. One bad idea.</h2>
+    <p class="ch-text fade" style="--i:2">It started with three people on the same road who loved Halloween a little too much and wanted an excuse to give something back. A hayride into the woods seemed harmless. That was the first mistake. The wagon still runs every night — it's how you get in. Getting out is your problem.</p>
+  </div>
+</section>
+
+<!-- =====================================================================
+     CHAPTER 2 — THE TRAIL
+     ===================================================================== -->
+<section class="chapter reveal" id="ch-2" aria-labelledby="t2">
+  <div class="scene" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="moon" style="right:auto;left:18%;top:9%"></div>
+    <svg class="layer" data-depth=".12" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <rect width="1440" height="900" fill="url(#pTrees)" opacity=".3" transform="translate(30 -60)"/>
+    </svg>
+    <svg class="layer" data-depth=".32" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <rect width="1440" height="900" fill="url(#pTreesBig)" opacity=".5" transform="translate(-70 90) scale(1 .9)"/>
+      <!-- the winding path -->
+      <path d="M720 900 C790 850 660 800 700 740 C740 690 690 660 712 620" stroke="#000" stroke-width="70" stroke-linecap="round" fill="none" opacity=".5"/>
+      <path d="M720 900 C790 850 660 800 700 740 C740 690 690 660 712 620" stroke="#9fb3a8" stroke-width="28" stroke-linecap="round" fill="none" opacity=".12"/>
+    </svg>
+    <svg class="layer" data-depth=".62" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <rect width="1440" height="900" fill="url(#pTreesBig)" opacity=".85" transform="translate(120 0)"/>
+    </svg>
+    <svg class="layer" data-depth="1.1" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <use href="#tree" x="-120" y="40" width="420" height="920" fill="#000"/>
+      <use href="#bare" x="1120" y="60" width="440" height="900" fill="#000"/>
+      <use href="#tree" x="1260" y="380" width="260" height="600" fill="#000"/>
+    </svg>
+    <div class="fog"></div>
+    <div class="fog fog-b"></div>
+  </div>
+  <div class="copy">
+    <p class="ch-kicker fade" style="--i:0">Chapter 2 — The Trail</p>
+    <h2 class="ch-title fade" id="t2" style="--i:1">The trees close in.</h2>
+    <p class="ch-text fade" style="--i:2">The trail winds through real forest near the Crow River — narrow, dark, and longer than it looked from the wagon. The path bends, the fog settles, and whatever is keeping pace with you off the trail doesn't seem to mind the brush. This isn't just a haunt. It's an experience designed to crawl under your skin.</p>
+  </div>
+</section>
+
+<!-- =====================================================================
+     CHAPTER 3 — THE TUNNELS (near-black, one lamp)
+     ===================================================================== -->
+<section class="chapter reveal" id="ch-3" aria-labelledby="t3">
+  <div class="scene" aria-hidden="true">
+    <svg class="layer" data-depth=".2" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+      <!-- receding tunnel rings -->
+      <g fill="none" stroke="#3b3326" stroke-width="3">
+        <ellipse cx="720" cy="520" rx="620" ry="440" opacity=".25"/>
+        <ellipse cx="720" cy="520" rx="470" ry="340" opacity=".2"/>
+        <ellipse cx="720" cy="520" rx="340" ry="250" opacity=".16"/>
+        <ellipse cx="720" cy="520" rx="230" ry="170" opacity=".12"/>
+        <ellipse cx="720" cy="520" rx="140" ry="100" opacity=".08"/>
+      </g>
+      <rect y="760" width="1440" height="140" fill="#0a0906"/>
+    </svg>
+    <div class="lamp-pool"></div>
+    <div class="lamp"></div>
+  </div>
+  <div class="copy center">
+    <p class="ch-kicker fade" style="--i:0">Chapter 3 — The Tunnels</p>
+    <h2 class="ch-title fade" id="t3" style="--i:1">You can't see the end.</h2>
+    <p class="ch-text fade" style="--i:2">The trail drops into tunnels and winding passages where the only light is the one you're standing under. Stay close. Count your group before you go in — and count again when you come out.</p>
+  </div>
+</section>
+
+<!-- =====================================================================
+     CHAPTER 4 — THE BUILDINGS (leaning barn, lit window, a shadow)
+     ===================================================================== -->
+<section class="chapter reveal" id="ch-4" aria-labelledby="t4">
+  <div class="scene" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="moon" style="right:20%;top:8%"></div>
+    <svg class="layer" data-depth=".15" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <rect width="1440" height="900" fill="url(#pBare)" opacity=".35" transform="translate(40 40) scale(1 .85)"/>
+      <rect width="1440" height="900" fill="url(#pTrees)" opacity=".4" transform="translate(-20 110)"/>
+    </svg>
+    <!-- the barn, leaning -->
+    <svg class="layer" data-depth=".5" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <rect y="780" width="1440" height="120" fill="#000" opacity=".6"/>
+      <g transform="translate(720 780) skewX(-6) translate(-720 -780)">
+        <!-- small shed behind -->
+        <path d="M940 780 L940 640 L1010 590 L1080 640 L1080 780Z" fill="#000" opacity=".8"/>
+        <!-- barn body: gambrel roof -->
+        <path d="M520 780 L520 570 L560 500 L720 430 L880 500 L920 570 L920 780Z" fill="#000"/>
+        <path d="M520 570 L560 500 L720 430 L880 500 L920 570" fill="none" stroke="#2c2530" stroke-width="4"/>
+        <!-- boards -->
+        <g stroke="#1c1720" stroke-width="2" opacity=".9"><path d="M560 600 H880 M560 650 H880 M560 700 H880 M560 750 H880"/></g>
+        <!-- door -->
+        <path d="M760 780 L760 660 L860 660 L860 780Z" fill="#050408"/>
+        <path d="M760 660 L860 780 M860 660 L760 780" stroke="#1c1720" stroke-width="3"/>
+        <!-- window glow + lurker -->
+        <circle cx="685" cy="640" r="150" fill="url(#gWin)" class="win-glow"/>
+        <rect x="652" y="602" width="66" height="76" rx="3" fill="#ffb347"/>
+        <g clip-path="url(#winclip)">
+          <path class="lurker" d="M602 690 L602 646 C602 626 634 626 634 646 L634 690Z M618 596 a13 13 0 1 1 0 26 a13 13 0 1 1 0 -26" fill="#2a1508"/>
+        </g>
+        <path d="M685 602 V678 M652 640 H718" stroke="#1a1008" stroke-width="4"/>
+        <!-- hayloft opening + weathervane -->
+        <path d="M700 470 L740 470 L740 520 L700 520Z" fill="#0a0810"/>
+        <path d="M718 430 V392 M700 402 H736 M718 392 L726 386 L718 380 L710 386Z" stroke="#000" stroke-width="3" fill="#000"/>
+        <use href="#crow" x="722" y="356" width="34" height="34" fill="#000"/>
+      </g>
+    </svg>
+    <!-- fence + foreground -->
+    <svg class="layer" data-depth="1.05" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <rect width="1440" height="900" fill="url(#pPickets)" opacity=".95" transform="translate(-6 40)"/>
+      <path d="M0 790 H1440 M0 840 H1440" stroke="#000" stroke-width="12"/>
+      <use href="#bare" x="-90" y="120" width="380" height="800" fill="#000"/>
+      <use href="#bare" x="1160" y="200" width="360" height="740" fill="#000"/>
+    </svg>
+    <div class="fog"></div>
+  </div>
+  <div class="copy">
+    <p class="ch-kicker fade" style="--i:0">Chapter 4 — The Buildings</p>
+    <h2 class="ch-title fade" id="t4" style="--i:1">Somebody's home.</h2>
+    <p class="ch-text fade" style="--i:2">Scattered through the woods are haunted buildings full of live actors and hand-built displays. The windows are lit. That isn't for your benefit.</p>
+  </div>
+</section>
+
+<!-- =====================================================================
+     CHAPTER 5 — THE CORN (sickly green, parallax rows, scarecrow turns)
+     ===================================================================== -->
+<section class="chapter reveal" id="ch-5" aria-labelledby="t5">
+  <div class="scene" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="moon" style="right:14%;top:10%"></div>
+    <svg class="layer" data-depth=".2" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <rect width="1440" height="900" fill="url(#pCorn)" opacity=".35" transform="translate(0 -40)"/>
+    </svg>
+    <!-- scarecrow sits in the middle row -->
+    <svg class="layer" data-depth=".5" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <rect width="1440" height="900" fill="url(#pCorn)" opacity=".6" transform="translate(21 0)"/>
+      <g class="scarecrow">
+        <rect x="716" y="540" width="8" height="360" fill="#000"/>
+        <rect x="600" y="636" width="240" height="8" fill="#000"/>
+        <!-- coat + sleeves -->
+        <path d="M688 630 L752 630 L772 760 L668 760Z" fill="#000"/>
+        <path d="M600 626 L690 626 L692 660 L602 660Z M750 626 L840 626 L838 660 L748 660Z" fill="#000"/>
+        <!-- straw fingers -->
+        <path d="M600 630 L570 618 M600 640 L566 644 M600 650 L572 668 M840 630 L870 618 M840 640 L874 644 M840 650 L868 668" stroke="#000" stroke-width="4" stroke-linecap="round"/>
+        <!-- head group rotates when the chapter enters -->
+        <g class="s-head">
+          <ellipse cx="720" cy="590" rx="28" ry="34" fill="#000"/>
+          <path d="M680 570 L760 570 L754 562 L744 522 L696 522 L686 562Z" fill="#000"/>
+          <path d="M700 606 C712 616 728 616 740 606" stroke="#000" stroke-width="3" fill="none"/>
+          <circle class="s-eye" cx="709" cy="586" r="4" fill="#d9ff8a"/>
+          <circle class="s-eye" cx="731" cy="586" r="4" fill="#d9ff8a"/>
+        </g>
+      </g>
+    </svg>
+    <svg class="layer" data-depth=".9" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <rect width="1440" height="900" fill="url(#pCornBig)" opacity=".92" transform="translate(-30 30)"/>
+    </svg>
+    <div class="fog"></div>
+    <div class="fog fog-b"></div>
+  </div>
+  <div class="copy">
+    <p class="ch-kicker fade" style="--i:0">Chapter 5 — The Corn</p>
+    <h2 class="ch-title fade" id="t5" style="--i:1">Rows you don't remember entering.</h2>
+    <p class="ch-text fade" style="--i:2">The eerie corn maze is the part people warn their friends about. The stalks are taller than you, every row looks like the last one, and the scarecrow was facing the other way a second ago.</p>
+  </div>
+</section>
+
+<!-- =====================================================================
+     CHAPTER 6 — THE GRAVEYARD (Ben's cage + zombie graveyard)
+     ===================================================================== -->
+<section class="chapter reveal" id="ch-6" aria-labelledby="t6">
+  <div class="scene" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="moon" style="right:auto;left:14%;top:10%"></div>
+    <svg class="layer" data-depth=".15" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <path d="M0 660 C200 620 380 640 560 610 C760 580 920 600 1100 580 C1280 560 1380 590 1440 600 L1440 900 L0 900Z" fill="#000" opacity=".25"/>
+      <rect width="1440" height="900" fill="url(#pBare)" opacity=".3" transform="translate(80 90) scale(1 .8)"/>
+    </svg>
+    <!-- stones + the cage -->
+    <svg class="layer" data-depth=".5" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <rect y="790" width="1440" height="110" fill="#000" opacity=".55"/>
+      <g fill="#000" opacity=".85">
+        <use href="#stone" x="380" y="690" width="90" height="110"/>
+        <use href="#stone" x="500" y="710" width="70" height="90" transform="rotate(-8 535 800)"/>
+        <use href="#stone" x="900" y="700" width="80" height="100"/>
+        <use href="#stone" x="1010" y="716" width="66" height="84" transform="rotate(7 1043 800)"/>
+        <path d="M596 800 L596 700 M576 726 H616" stroke="#000" stroke-width="10"/>
+        <path d="M1130 800 L1130 690 M1108 718 H1152" stroke="#000" stroke-width="10"/>
+      </g>
+      <!-- zombie clawing out (mid) -->
+      <g transform="translate(830 0)" fill="#000" opacity=".9">
+        <path d="M0 800 L0 740 C-2 722 12 720 14 736 L14 760 L20 760 L20 728 C20 714 36 714 36 728 L36 760 L42 760 L42 736 C42 722 58 722 58 738 L58 800Z"/>
+        <path d="M60 800 C70 780 90 776 96 784 C100 796 92 804 88 812 L88 820 L60 820Z"/>
+      </g>
+      <!-- the cage -->
+      <g>
+        <path d="M640 800 L640 640 Q720 540 800 640 L800 800Z" fill="#000" opacity=".45"/>
+        <circle cx="720" cy="660" r="26" fill="#d8d2c0"/>
+        <g fill="#0a0a0c"><ellipse cx="710" cy="656" rx="6" ry="7"/><ellipse cx="730" cy="656" rx="6" ry="7"/><path d="M714 672 H726 L720 680Z"/></g>
+        <path d="M712 690 H728 M720 686 V766 M702 706 H738 M700 722 H740 M702 738 H738 M706 754 H734" stroke="#d8d2c0" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <path d="M712 700 L672 654 L664 632 M728 700 L770 660 L778 636" stroke="#d8d2c0" stroke-width="6" stroke-linecap="round" fill="none"/>
+        <path d="M660 632 L662 640 M668 626 L672 636 M772 640 L768 646 M784 634 L780 642" stroke="#d8d2c0" stroke-width="3" stroke-linecap="round"/>
+        <g stroke="#000" stroke-width="7" stroke-linecap="round" fill="none">
+          <path d="M646 800 V636 M676 800 V600 M706 800 V582 M736 800 V582 M766 800 V600 M796 800 V636"/>
+          <path d="M634 640 Q720 528 806 640 M636 700 H804 M636 760 H804"/>
+        </g>
+        <rect x="620" y="796" width="200" height="14" rx="3" fill="#000"/>
+      </g>
+    </svg>
+    <!-- foreground: hand rising, leaning stone, bare tree -->
+    <svg class="layer" data-depth="1.05" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <use href="#bare" x="-100" y="40" width="460" height="920" fill="#000"/>
+      <use href="#bare" x="1140" y="80" width="420" height="880" fill="#000"/>
+      <use href="#stone" x="1000" y="720" width="150" height="220" fill="#000" transform="rotate(10 1075 940)"/>
+      <g transform="translate(470 0)" fill="#000">
+        <path d="M0 900 L0 790 C-4 760 6 748 18 750 C30 752 32 776 30 796 L36 796 L36 736 C36 720 58 720 58 738 L58 796 L64 796 L64 726 C64 710 88 710 88 728 L88 800 L94 800 L94 746 C94 732 112 732 112 748 L112 812 C122 796 138 790 146 800 C152 812 140 836 132 850 L132 900Z"/>
+      </g>
+    </svg>
+    <div class="fog"></div>
+    <div class="fog fog-b"></div>
+  </div>
+  <div class="copy">
+    <p class="ch-kicker fade" style="--i:0">Chapter 6 — The Graveyard</p>
+    <h2 class="ch-title fade" id="t6" style="--i:1">Ben's corner.</h2>
+    <p class="ch-text fade" style="--i:2">Our set designer Ben builds the graveyard by hand every season — the zombies clawing out of the ground, and the skeleton trapped in the cage who has been trying to get your attention since the wagon dropped you off. Every scare on this trail is a neighbor in makeup. Don't let that make you feel better.</p>
+  </div>
+</section>
+
+<!-- =====================================================================
+     CHAPTER 7 — THE EXIT (dawn, relief)
+     ===================================================================== -->
+<section class="chapter reveal" id="ch-7" aria-labelledby="t7">
+  <div class="scene" aria-hidden="true">
+    <svg class="layer" data-depth=".1" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <circle cx="720" cy="700" r="280" fill="url(#gSun)"/>
+      <circle cx="720" cy="700" r="90" fill="#fff4cf"/>
+      <path d="M0 690 C200 650 380 680 560 660 C760 636 920 656 1100 640 C1280 626 1380 660 1440 668 L1440 900 L0 900Z" fill="#000" opacity=".22"/>
+    </svg>
+    <svg class="layer" data-depth=".3" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <rect width="1440" height="900" fill="url(#pTrees)" opacity=".3" transform="translate(50 150) scale(1 .8)"/>
+      <use class="flyer" href="#crowfly" x="0" y="360" width="90" height="60" fill="#000" opacity=".7"/>
+    </svg>
+    <svg class="layer" data-depth=".6" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <path d="M0 780 C240 760 480 790 720 770 C960 750 1200 780 1440 764 L1440 900 L0 900Z" fill="#000" opacity=".28"/>
+      <rect width="1440" height="900" fill="url(#pCorn)" opacity=".18" transform="translate(0 40) scale(1 .7)"/>
+    </svg>
+    <svg class="layer" data-depth="1" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice">
+      <path d="M0 800 H1440 M0 850 H1440" stroke="#000" stroke-width="8" opacity=".55"/>
+      <g fill="#000" opacity=".6"><rect x="120" y="740" width="12" height="160"/><rect x="420" y="740" width="12" height="160"/><rect x="720" y="740" width="12" height="160"/><rect x="1020" y="740" width="12" height="160"/><rect x="1320" y="740" width="12" height="160"/></g>
+      <use href="#crow" x="1010" y="700" width="46" height="46" fill="#000" opacity=".7"/>
+    </svg>
+    <div class="fog"></div>
+  </div>
+  <div class="copy">
+    <p class="ch-kicker fade" style="--i:0">Chapter 7 — The Exit</p>
+    <h2 class="ch-title fade" id="t7" style="--i:1">You made it out.</h2>
+    <p class="ch-text fade" style="--i:2">Breathe. Grab something from the food trucks, tell your friends you weren't scared, and scroll on for the practical part — dates, prices, and how bringing a donation saves you five bucks.</p>
+    <div class="ch-actions fade" style="--i:3">
+      <a class="btn btn-primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
+      <a class="btn btn-ghost" href="#info">The details ↓</a>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
+     THE DAY ZONE — practical info
+     ===================================================================== -->
+<div class="day" id="day">
+
+  <!-- Intro + countdown -->
+  <section class="reveal" id="info" aria-labelledby="h-info">
+    <div class="wrap">
+      <p class="sec-kicker fade" style="--i:0">The details</p>
+      <h2 class="h2 fade" id="h-info" style="--i:1">Four nights. Twenty dollars. No fine print.</h2>
+      <p class="lead fade" style="--i:2">Most metro haunts run $30–50 and hide the price until checkout. We're $20, $15 if you bring a donation, and everything you need to know is right here on the page.</p>
+      <div class="keyfacts fade" style="--i:3">
+        <span><b>Oct 9 · 10 · 16 · 17</b></span>
+        <span><b>7:30–10:00 PM</b> · last entry 10</span>
+        <span><b>$20</b> · $15 with a donation</span>
+        <span><b>6470 Harff Rd</b>, Greenfield MN</span>
+      </div>
+
+      <div class="countdown fade" style="--i:4" role="timer" aria-live="off" aria-label="Countdown to opening night">
+        <p class="cd-label" id="cd-label">Opening night begins in<small>Fri Oct 9, 2026 · 7:30 PM</small></p>
+        <div class="cd" id="cd">
+          <div><b id="cd-d">00</b><span>days</span></div>
+          <div><b id="cd-h">00</b><span>hrs</span></div>
+          <div><b id="cd-m">00</b><span>min</span></div>
+          <div><b id="cd-s">00</b><span>sec</span></div>
+        </div>
+        <p class="cd-open" id="cd-open"></p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- What you walked through -->
+  <section class="reveal" id="expect" aria-labelledby="h-expect">
+    <div class="wrap">
+      <p class="sec-kicker fade" style="--i:0">What to expect</p>
+      <h2 class="h2 fade" id="h-expect" style="--i:1">Everything you just scrolled past, for real.</h2>
+      <p class="lead fade" style="--i:2">One ticket, one trail, in this order. It gets darker as you go.</p>
+      <div class="grid">
+        <div class="card fade" style="--i:2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 20c3-4 3-8 8-8s5 4 8 8M12 12V4M9 7l3-3 3 3"/></svg>
+          <h3>The haunted trail</h3><p>A hayride in, then a winding walk through real forest. Narrow paths, fog, and things that keep pace with you.</p>
+        </div>
+        <div class="card fade" style="--i:3">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 20V12a9 9 0 0 1 18 0v8M7 20v-6a5 5 0 0 1 10 0v6"/></svg>
+          <h3>Tunnels &amp; winding paths</h3><p>The trail dips underground and around blind corners. Your group gets closer together without discussing it.</p>
+        </div>
+        <div class="card fade" style="--i:4">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 21h18M5 21V9l7-5 7 5v12M10 21v-6h4v6M9 12h2M13 12h2"/></svg>
+          <h3>Haunted buildings</h3><p>Hand-built sets full of live actors and displays. Every room has someone in it. Some of them are on your side.</p>
+        </div>
+        <div class="card fade" style="--i:5">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 22V6M12 10c-3 0-5-2-6-5 3 0 5 1 6 5zM12 14c3 0 5-2 6-5-3 0-5 1-6 5zM12 18c-3 0-5-2-6-5 3 0 5 1 6 5zM12 6c-1-2 0-4 0-4s1 2 0 4z"/></svg>
+          <h3>The corn maze</h3><p>Eerie is the official word. Tall rows, dead ends, and a scarecrow that does not stay where you left it.</p>
+        </div>
+        <div class="card fade" style="--i:6">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6M9 8h.01M15 8h.01"/></svg>
+          <h3>Live actors &amp; interactive scares</h3><p>Neighbors in makeup who rehearse this. Interactive means they react to you — screaming counts as participation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Dates & hours -->
+  <section class="reveal" id="dates" aria-labelledby="h-dates">
+    <div class="wrap">
+      <p class="sec-kicker fade" style="--i:0">Dates &amp; hours · 2026 season</p>
+      <h2 class="h2 fade" id="h-dates" style="--i:1">Four nights in October. That's it.</h2>
+      <p class="lead fade" style="--i:2">Gates run 7:30 PM to 10:00 PM. Last entry is 10:00 sharp, so get there earlier than you think you need to.</p>
+      <div class="grid">
+        <div class="card fade" style="--i:2"><h3>Friday</h3><span class="big">Oct 9</span><p>7:30 – 10:00 PM · Opening night</p></div>
+        <div class="card fade" style="--i:3"><h3>Saturday</h3><span class="big">Oct 10</span><p>7:30 – 10:00 PM · Kids Day earlier, Noon – 3 PM</p></div>
+        <div class="card fade" style="--i:4"><h3>Friday</h3><span class="big">Oct 16</span><p>7:30 – 10:00 PM</p></div>
+        <div class="card fade" style="--i:5"><h3>Saturday</h3><span class="big">Oct 17</span><p>7:30 – 10:00 PM · Closing night</p></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Pricing -->
+  <section class="reveal" id="pricing" aria-labelledby="h-pricing">
+    <div class="wrap">
+      <p class="sec-kicker fade" style="--i:0">Pricing</p>
+      <h2 class="h2 fade" id="h-pricing" style="--i:1">$20 to walk it. $15 if you bring something for someone else.</h2>
+      <div class="price-grid">
+        <div class="price price-std fade" style="--i:2">
+          <span class="tag">Haunted Trail</span>
+          <div class="amt"><sup>$</sup>20</div>
+          <p>One ticket, the full trail: hayride, forest, tunnels, buildings, corn maze, graveyard. All four nights, 7:30–10 PM.</p>
+          <a class="btn btn-primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
+        </div>
+        <div class="price price-donate fade" style="--i:3">
+          <span class="tag">Bring a donation · save $5</span>
+          <div class="amt"><sup>$</sup>15</div>
+          <p>Same trail, five dollars less. Bring one of these to the gate:</p>
+          <ul>
+            <li>A non-perishable item for the food shelf</li>
+            <li>A winter clothing item — hats, gloves, coats</li>
+          </ul>
+          <a class="btn btn-primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets &amp; bring a donation</a>
+        </div>
+      </div>
+      <p class="price-note fade" style="--i:4"><b>Kids Day</b> (Sat Oct 10, Noon–3 PM) is <b>$5</b>, and that ticket is good for <b>$5 off</b> an evening haunt ticket. Tickets are sold through HauntPay; the donation discount is handled at the gate.</p>
+    </div>
+  </section>
+
+  <!-- Kids Day — sunlit -->
+  <section class="reveal" id="kids" aria-labelledby="h-kids">
+    <div class="sun" aria-hidden="true"></div>
+    <div class="wrap">
+      <div>
+        <p class="sec-kicker fade" style="--i:0">Kids Day · lights on</p>
+        <h2 class="h2 fade" id="h-kids" style="--i:1">Same trail. Daylight. Zero nightmares.</h2>
+        <div class="fade" style="--i:2">
+          <span class="pill">Sat Oct 10</span><span class="pill">Noon – 3 PM</span><span class="pill">$5</span>
+        </div>
+        <p class="lead fade" style="--i:3">Kids Day is the trail with the lights on and the scares turned off. Walk the woods, trick-or-treat along the path, and do the family activities before the actors get into makeup.</p>
+        <ul class="fade" style="--i:4">
+          <li>Lights-on walk of the haunted trail</li>
+          <li>Trick-or-treating along the way</li>
+          <li>Family activities on site</li>
+          <li>Your $5 Kids Day ticket is worth <b>$5 off</b> an evening haunt ticket</li>
+        </ul>
+        <a class="btn btn-primary fade" style="--i:5" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Kids Day Tickets — $5</a>
+      </div>
+      <div class="ph fade" style="--i:3" role="img" aria-label="Placeholder for a photo of kids trick-or-treating on the lights-on trail">PHOTO: Kids Day<small>Trick-or-treating on the trail, daylight, costumes, wagon in the background</small></div>
+    </div>
+  </section>
+
+  <!-- Community give-back -->
+  <section class="reveal" id="community" aria-labelledby="h-community">
+    <div class="wrap">
+      <p class="sec-kicker fade" style="--i:0">Community</p>
+      <h2 class="h2 fade" id="h-community" style="--i:1">Three neighbors started this to give back. Still the point.</h2>
+      <p class="lead fade" style="--i:2">Every ticket, every can of soup, every pair of mittens goes somewhere close to home. That's why the donation discount exists — it isn't a gimmick, it's the reason we're out here.</p>
+      <div class="grid">
+        <div class="card fade" style="--i:3">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 8h16l-1.5 12h-13zM8 8V6a4 4 0 0 1 8 0v2"/></svg>
+          <h3>Food shelf drive</h3><p>Bring a non-perishable item to the gate. It knocks $5 off your ticket and feeds a family nearby.</p>
+        </div>
+        <div class="card fade" style="--i:4">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 4l4 2 4-2 4 4-3 3v9H7v-9L4 8zM12 6v4"/></svg>
+          <h3>Winter clothing drive</h3><p>Hats, gloves, and coats — new or gently used. Minnesota winter is scarier than anything on the trail.</p>
+        </div>
+        <div class="card fade" style="--i:5">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3s5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 1-3s0 3 2 3c1-2 0-5 2-10z"/></svg>
+          <h3>Hanover Fire Department</h3><p>We partner with Hanover FD. They keep the whole thing safe; we help keep the lights on for them.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Join the crew -->
+  <section class="reveal" id="crew" aria-labelledby="h-crew">
+    <div class="wrap">
+      <div>
+        <p class="sec-kicker fade" style="--i:0">Join the crew</p>
+        <h2 class="h2 fade" id="h-crew" style="--i:1">Want to be the thing in the woods?</h2>
+        <p class="lead fade" style="--i:2">Every scare on the trail is a volunteer. We need actors, builders, makeup hands, parking crew, and people who are just good at standing very still. No experience required — enthusiasm and a free October weekend are the whole application.</p>
+        <div class="who">
+          <div class="fade" style="--i:3">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 4h16v12H8l-4 4zM8 9h8M8 12h5"/></svg>
+            <span><b>Evan</b> plays Beetlejuice on the trail and runs our social and tech. He's the one who answers your DMs.</span>
+          </div>
+          <div class="fade" style="--i:4">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 21l6-6M14 4l6 6-9 9-6-6zM14 4l-3 3"/></svg>
+            <span><b>Ben</b> is our set designer — the skeleton in the cage and the zombie graveyard are his. He's always looking for builders.</span>
+          </div>
+        </div>
+        <div class="ch-actions fade" style="--i:5">
+          <a class="btn btn-primary" href="#">Join the Crew</a>
+          <a class="btn btn-ghost" href="#">Actor login</a>
+        </div>
+      </div>
+      <div class="ph fade" style="--i:3" role="img" aria-label="Placeholder for a photo of the crew in makeup before opening">PHOTO: The crew<small>Actors in makeup at the wagon before gates open, headlamps on</small></div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- What guests say (sample) -->
+  <section class="reveal" id="guests" aria-labelledby="h-guests">
+    <div class="wrap">
+      <p class="sec-kicker fade" style="--i:0">What guests say</p>
+      <h2 class="h2 fade" id="h-guests" style="--i:1">Screamed, laughed, came back the next weekend.</h2>
+      <div class="quotes">
+        <blockquote class="fade" style="--i:2">"The corn maze got me. I'm 34."<cite>Sample quote</cite></blockquote>
+        <blockquote class="fade" style="--i:3">"Better than the $45 one, and we brought a bag of hats."<cite>Sample quote</cite></blockquote>
+        <blockquote class="fade" style="--i:4">"The skeleton in the cage talked to my kid by name. We're still discussing it."<cite>Sample quote</cite></blockquote>
+      </div>
+      <p class="sample fade" style="--i:5">Sample quotes for layout only — replace with real guest comments from social media.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- FAQ -->
+  <section class="reveal" id="faq" aria-labelledby="h-faq">
+    <div class="wrap">
+      <p class="sec-kicker fade" style="--i:0">FAQ</p>
+      <h2 class="h2 fade" id="h-faq" style="--i:1">Things people ask before they get on the wagon.</h2>
+      <div class="faq fade" style="--i:2">
+        <details><summary>How scary is it, really?</summary><div class="a">Scary. Live actors, tight spaces, tunnels, dark forest, and a corn maze that plays with your sense of direction. It's designed to crawl under your skin, not just make you jump. If you want the full experience with none of the fear, that's what Kids Day is for.</div></details>
+        <details><summary>Is there an age recommendation?</summary><div class="a">We don't set a hard age limit — you know your kid better than we do. Younger or nervous kids should come to Kids Day (Sat Oct 10, Noon–3 PM), where the lights are on and the actors are out of makeup. Teens and adults are the evening crowd.</div></details>
+        <details><summary>What if it rains?</summary><div class="a">A little rain makes the woods better, and we plan to be out there. If lightning or severe weather forces a change, we post it on Facebook and Instagram first — check before you drive out.</div></details>
+        <details><summary>Where do I park?</summary><div class="a">Parking is on site at 6470 Harff Road. Follow the signs and the crew with the flashlights, and leave nothing valuable in view.</div></details>
+        <details><summary>How long does it take?</summary><div class="a">Long enough. It's a hayride, a forest trail, tunnels, several buildings, and a corn maze — plan on a good stretch in the woods, and arrive well before last entry at 10 PM so you're not rushed.</div></details>
+        <details><summary>Will the actors touch me? Can I touch them?</summary><div class="a">Our actors won't touch you, and we ask the same of you. They're neighbors doing this for free; the props are handmade. Hands to yourself and everyone has a better night.</div></details>
+        <details><summary>Is the trail wheelchair or stroller accessible?</summary><div class="a">It's a real forest trail — dirt, roots, hills, and tunnels — so it's tough going for wheelchairs and strollers. Message us before you come and we'll talk through what's possible for your group.</div></details>
+        <details><summary>Is there food?</summary><div class="a">Yes. Just in Time Concessions and Burger Box are on site. Eat before or after the trail — nobody wants to carry fries through the corn.</div></details>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Directions -->
+  <section class="reveal" id="directions" aria-labelledby="h-dir">
+    <div class="wrap">
+      <div>
+        <p class="sec-kicker fade" style="--i:0">Find us</p>
+        <h2 class="h2 fade" id="h-dir" style="--i:1">Off Harff Road, near the Crow River.</h2>
+        <p class="addr fade" style="--i:2">6470 Harff Road<br>Greenfield, MN 55373</p>
+        <p class="lead fade" style="--i:3">About 35 minutes west of Minneapolis. Look for the sign and the crow; if you've hit the river you've gone too far.</p>
+        <p class="sec-kicker fade" style="--i:4" aria-hidden="true">Food trucks on site</p>
+        <div class="trucks fade" style="--i:4"><span>Just in Time Concessions</span><span>Burger Box</span></div>
+        <div class="ch-actions fade" style="--i:5">
+          <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&query=6470+Harff+Road+Greenfield+MN+55373" target="_blank" rel="noopener">Open in Maps</a>
+          <a class="btn btn-ghost" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
+        </div>
+      </div>
+      <div class="ph fade" style="--i:3" role="img" aria-label="Placeholder for an embedded map of 6470 Harff Road, Greenfield, MN">MAP: 6470 Harff Road<small>Embedded map with a pin at the entrance and the parking field</small></div>
+    </div>
+  </section>
+
+</div><!-- /.day -->
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <a class="brand" href="#ch-0" aria-label="Nightmare on the Crow — back to top">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#crow" fill="currentColor"/></svg>
+        <span><b>Nightmare on the Crow</b><small>Greenfield, MN · Haunted Trail</small></span>
+      </a>
+      <p class="tag">It all begins with a hayride.</p>
+      <div class="socials">
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+        <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 3h3a4 4 0 0 0 4 4v3a7 7 0 0 1-4-1.3V15a5.5 5.5 0 1 1-5.5-5.5h.5v3h-.5A2.5 2.5 0 1 0 13 15z"/></svg></a>
+      </div>
+    </div>
+    <div>
+      <h4>Visit</h4>
+      <ul>
+        <li>6470 Harff Road<br>Greenfield, MN 55373</li>
+        <li>Oct 9, 10, 16, 17 · 7:30–10 PM</li>
+        <li>Kids Day: Sat Oct 10 · Noon–3 PM</li>
+        <li><a href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets →</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Crew</h4>
+      <ul>
+        <li><a href="#crew">Join the Crew</a></li>
+        <li><a href="#">Actor login</a></li>
+        <li><a href="#community">Food &amp; clothing drives</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="fine">
+      <span>© 2026 Nightmare on the Crow · Greenfield, Minnesota</span>
+      <span>Built by three neighbors. Supporting the food shelf, the winter clothing drive, and Hanover Fire Department.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var chapters = Array.prototype.slice.call(document.querySelectorAll('.chapter'));
+  var reveals  = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  var railLinks = Array.prototype.slice.call(document.querySelectorAll('.rail a'));
+  var ch7 = document.getElementById('ch-7');
+
+  /* ---------- Reveal: add .in when a section is ~30% visible ---------- */
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.22 });
+    reveals.forEach(function (el) { io.observe(el); });
+
+    /* Active chapter dot: whichever chapter crosses the viewport's middle band */
+    var io2 = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var i = chapters.indexOf(e.target);
+        railLinks.forEach(function (a, j) {
+          a.classList.toggle('on', j === i);
+          if (j === i) a.setAttribute('aria-current', 'step'); else a.removeAttribute('aria-current');
+        });
+      });
+    }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+    chapters.forEach(function (c) { io2.observe(c); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  /* ---------- Parallax + day/night chrome ---------- */
+  var sets = chapters.map(function (c) {
+    return {
+      el: c,
+      layers: Array.prototype.slice.call(c.querySelectorAll('[data-depth]')).map(function (l) {
+        return { el: l, d: parseFloat(l.getAttribute('data-depth')) || 0 };
+      })
+    };
+  });
+  var ticking = false;
+
+  function frame() {
+    ticking = false;
+    var vh = window.innerHeight || 800;
+    /* Light chrome once The Exit reaches the middle of the screen */
+    document.body.classList.toggle('day', ch7.getBoundingClientRect().top < vh * 0.5);
+    if (reduce) return;
+    for (var i = 0; i < sets.length; i++) {
+      var r = sets[i].el.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > vh) continue;
+      var p = (r.top + r.height / 2 - vh / 2) / vh; /* 0 when centered, +-0.5 at the edges */
+      for (var j = 0; j < sets[i].layers.length; j++) {
+        var L = sets[i].layers[j];
+        L.el.style.transform = 'translate3d(0,' + (p * L.d * 110).toFixed(1) + 'px,0)';
+      }
+    }
+  }
+  function onScroll() { if (!ticking) { ticking = true; window.requestAnimationFrame(frame); } }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  frame();
+
+  /* ---------- Countdown to opening night (America/Chicago, CDT = UTC-5) ---------- */
+  var target = new Date('2026-10-09T19:30:00-05:00');
+  var seasonEnd = new Date('2026-10-17T22:00:00-05:00');
+  var elD = document.getElementById('cd-d'), elH = document.getElementById('cd-h'),
+      elM = document.getElementById('cd-m'), elS = document.getElementById('cd-s'),
+      cd = document.getElementById('cd'), cdOpen = document.getElementById('cd-open'),
+      cdLabel = document.getElementById('cd-label');
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function tick() {
+    var diff = target.getTime() - Date.now();
+    if (isNaN(diff)) return;
+    if (diff <= 0) {
+      cd.style.display = 'none';
+      cdOpen.style.display = 'block';
+      cdOpen.textContent = Date.now() < seasonEnd.getTime() ? 'The gates are open. See you on the trail.' : 'That’s a wrap on 2026. See you next October.';
+      cdLabel.innerHTML = 'Opening night<small>Fri Oct 9, 2026 · 7:30 PM</small>';
+      return;
+    }
+    var d = Math.floor(diff / 864e5); diff -= d * 864e5;
+    var h = Math.floor(diff / 36e5);  diff -= h * 36e5;
+    var m = Math.floor(diff / 6e4);   diff -= m * 6e4;
+    var s = Math.floor(diff / 1e3);
+    elD.textContent = pad(d); elH.textContent = pad(h); elM.textContent = pad(m); elS.textContent = pad(s);
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
+</body>
+</html>

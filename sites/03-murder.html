@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nightmare on the Crow — A Murder Gathers. Haunted Trail, Greenfield MN</title>
+<meta name="description" content="Nightmare on the Crow is a neighbor-built haunted trail in Greenfield, MN. Four nights — Oct 9, 10, 16, 17 — 7:30 to 10 PM. $20, or $15 with a food-shelf or winter-clothing donation. Kids Day Sat Oct 10.">
+<meta name="theme-color" content="#0b0b0d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* =============================================================
+   CONCEPT #3 — THE MURDER
+   Editorial brutalism. Near-black field, off-white type, one ember
+   accent used sparingly. A boids flock of crows lives on a fixed
+   <canvas> behind the whole page (see script at the bottom).
+   ============================================================= */
+
+:root{
+  --bg:#0b0b0d;
+  --ink:#ededea;
+  --ink-2:#a9a9ad;
+  --mute:#6f6f75;
+  --line:rgba(237,237,234,.14);
+  --line-soft:rgba(237,237,234,.07);
+  --ember:#ff5a1f;
+  --paper:#f2f0ea;        /* inverted (Kids Day) block */
+  --head:'Anton', Impact, 'Arial Narrow', sans-serif;
+  --mono:'JetBrains Mono', 'Space Mono', ui-monospace, Menlo, Consolas, monospace;
+  --body:'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --max:1360px;
+  --gut:24px;
+  --nav-h:60px;
+}
+@media (min-width:900px){ :root{ --gut:40px; --nav-h:68px; } }
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:var(--body); font-size:16px; line-height:1.55;
+  overflow-x:hidden; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{ margin:0; font-weight:400; }
+p{ margin:0 0 1em; }
+a{ color:inherit; }
+button{ font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer; }
+ul,ol{ margin:0; padding:0; list-style:none; }
+:focus-visible{ outline:2px solid var(--ember); outline-offset:3px; }
+::selection{ background:var(--ember); color:#0b0b0d; }
+.sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+
+/* ---------- background layers ---------- */
+#flock{ position:fixed; inset:0; z-index:0; display:block; pointer-events:none; }
+.rules{ position:fixed; inset:0; z-index:1; pointer-events:none; }
+.rules-in{
+  max-width:var(--max); height:100%; margin:0 auto; padding:0 var(--gut);
+  display:grid; grid-template-columns:repeat(4,1fr);
+}
+.rules-in span{ border-left:1px solid var(--line-soft); }
+.rules-in span:last-child{ border-right:1px solid var(--line-soft); }
+.rules-in span:nth-child(n+5){ display:none; }
+@media (min-width:900px){
+  .rules-in{ grid-template-columns:repeat(12,1fr); }
+  .rules-in span:nth-child(n+5){ display:block; }
+}
+
+/* ---------- layout primitives ---------- */
+.wrap{ position:relative; z-index:2; max-width:var(--max); margin:0 auto; padding:0 var(--gut); }
+.grid{ display:grid; grid-template-columns:repeat(4,1fr); column-gap:var(--gut); }
+@media (min-width:900px){ .grid{ grid-template-columns:repeat(12,1fr); } }
+.mono{ font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; }
+.idx{ font-family:var(--mono); font-size:.72rem; letter-spacing:.12em; color:var(--ember); }
+.h-display{ font-family:var(--head); text-transform:uppercase; line-height:.92; letter-spacing:-.005em; }
+.sec{ position:relative; z-index:2; border-top:1px solid var(--line); padding:64px 0 80px; }
+@media (min-width:900px){ .sec{ padding:96px 0 120px; } }
+.sec-head{
+  display:grid; grid-template-columns:auto 1fr; align-items:end; column-gap:var(--gut); row-gap:12px;
+  margin-bottom:40px;
+}
+.sec-head .idx{ grid-column:1; align-self:start; padding-top:.5rem; }
+.sec-head h2{ grid-column:2; font-size:clamp(2.6rem,7vw,6.5rem); }
+.sec-head .meta{ grid-column:2; color:var(--ink-2); }
+@media (min-width:900px){
+  .sec-head{ grid-template-columns:80px 1fr auto; margin-bottom:64px; }
+  .sec-head .meta{ grid-column:3; align-self:end; padding-bottom:.6rem; text-align:right; }
+}
+.lede{ font-size:1.125rem; line-height:1.5; color:var(--ink); max-width:56ch; }
+.small{ font-size:.9rem; color:var(--ink-2); }
+
+/* buttons */
+.btn{
+  display:inline-flex; align-items:center; gap:.7em; min-height:52px; padding:0 22px;
+  font-family:var(--mono); font-size:.8rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  text-decoration:none; border:1px solid var(--ink); color:var(--ink); background:transparent;
+  transition:background .2s, color .2s, border-color .2s;
+}
+.btn:hover{ background:var(--ink); color:#0b0b0d; }
+.btn-ember{ background:var(--ember); border-color:var(--ember); color:#0b0b0d; }
+.btn-ember:hover{ background:var(--ink); border-color:var(--ink); }
+.btn .arr{ display:inline-block; transition:transform .2s; }
+.btn:hover .arr{ transform:translateX(4px); }
+
+/* photo placeholders (no real assets by brief) */
+.ph{
+  position:relative; border:1px solid var(--line); min-height:220px;
+  background:
+    repeating-linear-gradient(135deg, rgba(237,237,234,.05) 0 1px, transparent 1px 14px),
+    linear-gradient(180deg, rgba(237,237,234,.03), rgba(237,237,234,0));
+  display:flex; align-items:flex-end; padding:14px;
+}
+.ph::before{ content:""; position:absolute; inset:14px; border:1px dashed var(--line); pointer-events:none; }
+.ph span{ font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-2); background:var(--bg); padding:6px 8px; border:1px solid var(--line); }
+.ph-paper{ border-color:rgba(11,11,13,.25); background:repeating-linear-gradient(135deg, rgba(11,11,13,.08) 0 1px, transparent 1px 14px); }
+.ph-paper::before{ border-color:rgba(11,11,13,.25); }
+.ph-paper span{ color:#0b0b0d; background:var(--paper); border-color:rgba(11,11,13,.3); }
+
+/* ---------- concept badge ---------- */
+.badge{
+  position:fixed; left:12px; bottom:12px; z-index:60;
+  font-family:var(--mono); font-size:.62rem; letter-spacing:.14em; text-transform:uppercase;
+  background:var(--ember); color:#0b0b0d; padding:7px 10px; font-weight:700;
+}
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky; top:0; z-index:50; height:var(--nav-h);
+  background:rgba(11,11,13,.82); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.nav .wrap{ height:100%; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.brand{ display:flex; align-items:center; gap:12px; text-decoration:none; }
+.brand svg{ width:44px; height:22px; fill:var(--ink); }
+.brand b{ font-family:var(--head); font-weight:400; text-transform:uppercase; font-size:1.05rem; letter-spacing:.04em; line-height:1; }
+.brand small{ display:block; font-family:var(--mono); font-size:.58rem; letter-spacing:.14em; color:var(--ink-2); margin-top:3px; }
+.nav-links{ display:none; gap:26px; }
+.nav-links a{ font-family:var(--mono); font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; text-decoration:none; color:var(--ink-2); }
+.nav-links a:hover{ color:var(--ink); }
+.nav-cta{ min-height:38px; padding:0 14px; font-size:.68rem; }
+.burger{ display:inline-flex; flex-direction:column; gap:5px; padding:10px; margin-right:-10px; }
+.burger i{ display:block; width:22px; height:2px; background:var(--ink); transition:transform .25s, opacity .2s; }
+.nav.open .burger i:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+.nav.open .burger i:nth-child(2){ opacity:0; }
+.nav.open .burger i:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+.nav-mobile{
+  display:none; position:absolute; top:100%; left:0; right:0; z-index:50;
+  background:var(--bg); border-bottom:1px solid var(--line); padding:8px var(--gut) 20px;
+}
+.nav.open .nav-mobile{ display:block; }
+.nav-mobile a{
+  display:block; padding:14px 0; border-bottom:1px solid var(--line-soft);
+  font-family:var(--head); text-transform:uppercase; font-size:1.8rem; text-decoration:none;
+}
+.nav-mobile a span{ font-family:var(--mono); font-size:.62rem; color:var(--ember); margin-right:14px; letter-spacing:.12em; vertical-align:middle; }
+@media (min-width:1100px){
+  .nav-links{ display:flex; }
+  .burger, .nav-mobile{ display:none !important; }
+}
+@media (max-width:1099px){ .nav-cta{ display:none; } }
+
+/* ---------- marquee ---------- */
+.marquee{ position:relative; z-index:2; border-bottom:1px solid var(--line); overflow:hidden; background:rgba(11,11,13,.6); }
+.marquee-track{ display:flex; width:max-content; animation:marq 42s linear infinite; }
+.marquee-track span{
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+  padding:12px 0; white-space:nowrap;
+}
+.marquee-track span i{ font-style:normal; color:var(--ember); padding:0 1.2em; }
+@keyframes marq{ from{ transform:translateX(0);} to{ transform:translateX(-50%);} }
+
+/* ---------- hero ---------- */
+.hero{ position:relative; z-index:2; min-height:calc(100svh - var(--nav-h) - 42px); display:flex; flex-direction:column; }
+.hero .wrap{ flex:1; display:flex; flex-direction:column; padding-top:36px; padding-bottom:40px; }
+.hero-top{ display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; color:var(--ink-2); margin-bottom:auto; }
+.hero-top .idx{ margin-right:1em; }
+.hero h1{
+  font-size:clamp(3.6rem, 12.5vw, 13rem); line-height:.88; margin:56px 0 40px;
+  max-width:11ch; letter-spacing:-.01em;
+}
+.hero h1 em{ font-style:normal; color:var(--ember); }
+.hero-bottom{ display:grid; grid-template-columns:1fr; gap:28px; align-items:end; }
+.hero-sub{ font-size:1.2rem; line-height:1.4; max-width:34ch; margin:0; }
+.hero-ctas{ display:flex; flex-wrap:wrap; gap:12px; }
+.hero-meta{ display:grid; grid-template-columns:1fr 1fr; gap:10px 24px; color:var(--ink-2); border-top:1px solid var(--line); padding-top:14px; }
+.hero-meta b{ display:block; color:var(--ink); font-weight:500; }
+@media (min-width:900px){
+  .hero .wrap{ padding-top:48px; padding-bottom:56px; }
+  .hero h1{ margin:64px 0 56px; }
+  .hero-bottom{ grid-template-columns:5fr 3fr 4fr; gap:var(--gut); }
+  .hero-meta{ grid-template-columns:1fr 1fr; border-top:0; padding-top:0; }
+}
+.hero-hint{ position:absolute; right:var(--gut); bottom:14px; color:var(--mute); font-family:var(--mono); font-size:.62rem; letter-spacing:.12em; text-transform:uppercase; }
+@media (max-width:899px){ .hero-hint{ display:none; } }
+
+/* ---------- countdown ---------- */
+.count{ display:grid; grid-template-columns:repeat(4,1fr); border:1px solid var(--line); }
+.count div{ padding:18px 10px 14px; border-right:1px solid var(--line); text-align:center; }
+.count div:last-child{ border-right:0; }
+.count b{ display:block; font-family:var(--mono); font-weight:700; font-size:clamp(2rem, 9.5vw, 8.5rem); line-height:1; letter-spacing:-.04em; font-variant-numeric:tabular-nums; }
+.count span{ display:block; margin-top:10px; font-family:var(--mono); font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-2); }
+@media (min-width:900px){ .count div{ padding:36px 20px 28px; } .count span{ font-size:.72rem; margin-top:18px; } }
+.count-foot{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-top:14px; color:var(--ink-2); }
+.count-foot .live::before{ content:""; display:inline-block; width:7px; height:7px; background:var(--ember); border-radius:50%; margin-right:8px; vertical-align:1px; }
+
+/* ---------- attractions: editorial rows ---------- */
+.rows{ border-top:1px solid var(--line); }
+.row{ border-bottom:1px solid var(--line); }
+.row-btn{
+  width:100%; display:grid; grid-template-columns:44px 1fr 32px; align-items:center; gap:12px;
+  padding:20px 0; text-align:left;
+}
+.row-idx{ font-family:var(--mono); font-size:.72rem; letter-spacing:.12em; color:var(--ink-2); }
+.row-name{ font-family:var(--head); text-transform:uppercase; font-size:clamp(1.9rem, 6vw, 4.4rem); line-height:1; transition:color .2s, transform .3s; }
+.row-tag{ display:none; font-family:var(--mono); font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2); text-align:right; }
+.row-plus{ font-family:var(--mono); font-size:1.4rem; color:var(--ink-2); text-align:right; transition:transform .3s; }
+.row-body{ display:grid; grid-template-rows:0fr; transition:grid-template-rows .45s cubic-bezier(.2,.8,.2,1); }
+.row-body > div{ overflow:hidden; }
+.row-body p{ max-width:60ch; color:var(--ink-2); padding:0 0 26px 56px; margin:0; }
+.row:hover .row-name, .row.open .row-name, .row:focus-within .row-name{ color:var(--ember); transform:translateX(8px); }
+.row:hover .row-body, .row.open .row-body, .row:focus-within .row-body{ grid-template-rows:1fr; }
+.row:hover .row-plus, .row.open .row-plus, .row:focus-within .row-plus{ transform:rotate(45deg); color:var(--ink); }
+@media (min-width:900px){
+  .row-btn{ grid-template-columns:80px 1fr 220px 40px; padding:26px 0; }
+  .row-tag{ display:block; }
+  .row-body p{ padding-left:80px; font-size:1.05rem; }
+}
+.trail-intro{ margin-bottom:40px; }
+@media (min-width:900px){
+  .trail-intro{ display:grid; grid-template-columns:repeat(12,1fr); column-gap:var(--gut); margin-bottom:56px; }
+  .trail-intro .lede{ grid-column:2 / span 6; }
+  .trail-intro .ph{ grid-column:9 / span 4; min-height:260px; }
+}
+.trail-intro .ph{ margin-top:24px; }
+@media (min-width:900px){ .trail-intro .ph{ margin-top:0; } }
+
+/* sample quotes strip */
+.quotes{ margin-top:56px; display:grid; grid-template-columns:1fr; border:1px solid var(--line); }
+.quotes blockquote{ margin:0; padding:22px; border-bottom:1px solid var(--line); font-family:var(--head); text-transform:uppercase; font-size:1.35rem; line-height:1.1; }
+.quotes blockquote:last-child{ border-bottom:0; }
+.quotes blockquote span{ display:block; margin-top:12px; font-family:var(--mono); font-size:.62rem; letter-spacing:.12em; color:var(--mute); }
+@media (min-width:900px){
+  .quotes{ grid-template-columns:repeat(3,1fr); }
+  .quotes blockquote{ border-bottom:0; border-right:1px solid var(--line); padding:28px; font-size:1.6rem; }
+  .quotes blockquote:last-child{ border-right:0; }
+}
+
+/* ---------- dates ---------- */
+.nights{ display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--line); }
+.night{ padding:20px 16px 22px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); min-height:200px; display:flex; flex-direction:column; }
+.night:nth-child(2n){ border-right:0; }
+.night:nth-child(n+3){ border-bottom:0; }
+.night .idx{ margin-bottom:auto; }
+.night .dow{ font-family:var(--mono); font-size:.72rem; letter-spacing:.14em; color:var(--ink-2); margin-top:20px; }
+.night .day{ font-family:var(--head); font-size:clamp(3.2rem, 11vw, 7.5rem); line-height:.9; letter-spacing:-.01em; }
+.night .day small{ display:block; font-size:.32em; letter-spacing:.06em; color:var(--ink-2); margin-top:4px; }
+.night .hrs{ margin-top:14px; font-family:var(--mono); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-2); line-height:1.6; }
+.night .tag{ display:inline-block; margin-top:10px; padding:4px 8px; background:var(--ember); color:#0b0b0d; font-family:var(--mono); font-size:.6rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; align-self:flex-start; }
+@media (min-width:900px){
+  .nights{ grid-template-columns:repeat(4,1fr); }
+  .night{ padding:28px 24px 30px; min-height:320px; border-bottom:0 !important; border-right:1px solid var(--line) !important; }
+  .night:last-child{ border-right:0 !important; }
+}
+.dates-note{ margin-top:20px; display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; color:var(--ink-2); }
+
+/* ---------- pricing table ---------- */
+.price-wrap{ display:grid; gap:40px; }
+@media (min-width:900px){ .price-wrap{ grid-template-columns:8fr 4fr; column-gap:var(--gut); align-items:start; } }
+table.price{ width:100%; border-collapse:collapse; border-top:1px solid var(--ink); }
+table.price th, table.price td{ text-align:left; vertical-align:top; padding:18px 12px 18px 0; border-bottom:1px solid var(--line); }
+table.price th{ font-family:var(--mono); font-weight:400; font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-2); padding:12px 12px 12px 0; }
+table.price td.item{ font-family:var(--head); text-transform:uppercase; font-size:clamp(1.5rem, 4.5vw, 2.6rem); line-height:1; }
+table.price td.amt{ font-family:var(--mono); font-weight:700; font-size:clamp(1.6rem, 5vw, 3rem); line-height:1; white-space:nowrap; letter-spacing:-.03em; }
+table.price td.note{ color:var(--ink-2); font-size:.9rem; }
+table.price tr.hot td{ background:linear-gradient(90deg, rgba(255,90,31,.14), transparent 70%); }
+table.price tr.hot td.amt, table.price tr.hot td.item{ color:var(--ember); }
+table.price td.note b{ color:var(--ink); font-weight:500; }
+table.price td.note{ display:none; }
+table.price .note-m{ display:block; margin-top:8px; font-family:var(--body); font-size:.85rem; color:var(--ink-2); text-transform:none; letter-spacing:0; line-height:1.45; }
+@media (min-width:700px){
+  table.price td.note{ display:table-cell; }
+  table.price .note-m{ display:none; }
+}
+.price-aside{ border:1px solid var(--ember); padding:24px; }
+.price-aside h3{ font-family:var(--head); text-transform:uppercase; font-size:clamp(2rem, 5vw, 3rem); line-height:.95; color:var(--ember); margin-bottom:14px; }
+.price-aside ul{ margin:14px 0 20px; }
+.price-aside li{ padding:8px 0; border-top:1px solid var(--line); font-size:.95rem; }
+.price-aside li::before{ content:"→ "; color:var(--ember); font-family:var(--mono); }
+.compare{ margin-top:48px; border-top:1px solid var(--line); padding-top:16px; display:grid; grid-template-columns:1fr; gap:8px; color:var(--ink-2); }
+.compare b{ color:var(--ink); font-weight:500; }
+@media (min-width:900px){ .compare{ grid-template-columns:repeat(3,1fr); column-gap:var(--gut); } }
+
+/* ---------- kids day: inverted ---------- */
+.kids{ background:var(--paper); color:#0b0b0d; border-top:0; }
+.kids .idx{ color:#0b0b0d; }
+.kids .sec-head .meta{ color:#3a3a3e; }
+.kids-grid{ display:grid; gap:32px; }
+@media (min-width:900px){ .kids-grid{ grid-template-columns:5fr 3fr 4fr; column-gap:var(--gut); } }
+.kids .lede{ color:#0b0b0d; }
+.kids dl{ margin:0; border-top:1px solid #0b0b0d; }
+.kids dl div{ display:grid; grid-template-columns:90px 1fr; gap:12px; padding:12px 0; border-bottom:1px solid rgba(11,11,13,.2); }
+.kids dt{ font-family:var(--mono); font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:#3a3a3e; padding-top:4px; }
+.kids dd{ margin:0; font-weight:500; }
+.kids .btn{ border-color:#0b0b0d; color:#0b0b0d; }
+.kids .btn:hover{ background:#0b0b0d; color:var(--paper); }
+.kids .btn-ember{ background:#0b0b0d; color:var(--paper); }
+.kids .btn-ember:hover{ background:var(--ember); border-color:var(--ember); color:#0b0b0d; }
+.kids-big{ font-family:var(--head); text-transform:uppercase; font-size:clamp(5rem, 22vw, 20rem); line-height:.8; letter-spacing:-.02em; margin:0 0 32px -.03em; }
+.kids-big span{ display:block; font-size:.28em; letter-spacing:.02em; color:#3a3a3e; margin-top:10px; }
+.kids ::selection{ background:#0b0b0d; color:var(--paper); }
+
+/* ---------- give back ---------- */
+.give{ display:grid; gap:0; border:1px solid var(--line); }
+.give article{ padding:24px 20px 28px; border-bottom:1px solid var(--line); }
+.give article:last-child{ border-bottom:0; }
+.give h3{ font-family:var(--head); text-transform:uppercase; font-size:clamp(1.8rem, 5vw, 2.8rem); line-height:1; margin:18px 0 12px; }
+.give p{ color:var(--ink-2); margin:0; }
+.give .idx{ color:var(--ink-2); }
+@media (min-width:900px){
+  .give{ grid-template-columns:repeat(3,1fr); }
+  .give article{ padding:32px 28px 36px; border-bottom:0; border-right:1px solid var(--line); min-height:300px; }
+  .give article:last-child{ border-right:0; }
+}
+.give-lede{ margin-bottom:36px; }
+@media (min-width:900px){
+  .give-lede{ display:grid; grid-template-columns:repeat(12,1fr); column-gap:var(--gut); }
+  .give-lede .lede{ grid-column:2 / span 7; }
+}
+
+/* ---------- crew ---------- */
+.crew-grid{ display:grid; gap:32px; }
+@media (min-width:900px){ .crew-grid{ grid-template-columns:5fr 7fr; column-gap:var(--gut); } }
+.crew-people{ display:grid; grid-template-columns:1fr; gap:0; border:1px solid var(--line); }
+.person{ padding:18px; border-bottom:1px solid var(--line); }
+.person:last-child{ border-bottom:0; }
+.person .ph{ min-height:180px; margin-bottom:16px; }
+.person h3{ font-family:var(--head); text-transform:uppercase; font-size:2rem; line-height:1; }
+.person .role{ display:block; margin:6px 0 10px; }
+.person p{ color:var(--ink-2); margin:0; font-size:.95rem; }
+@media (min-width:640px){ .crew-people{ grid-template-columns:1fr 1fr; } .person{ border-bottom:0; border-right:1px solid var(--line); } .person:last-child{ border-right:0; } }
+.crew-ctas{ display:flex; flex-wrap:wrap; gap:12px; margin-top:24px; }
+.crew-list{ margin:20px 0 0; border-top:1px solid var(--line); }
+.crew-list li{ padding:10px 0; border-bottom:1px solid var(--line-soft); display:grid; grid-template-columns:40px 1fr; gap:8px; color:var(--ink-2); }
+.crew-list li b{ color:var(--ember); font-family:var(--mono); font-weight:400; font-size:.7rem; letter-spacing:.12em; padding-top:3px; }
+
+/* ---------- faq ---------- */
+.faq{ border-top:1px solid var(--line); }
+.faq details{ border-bottom:1px solid var(--line); }
+.faq summary{
+  list-style:none; cursor:pointer; display:grid; grid-template-columns:44px 1fr 32px; gap:12px; align-items:start;
+  padding:20px 0; font-family:var(--head); text-transform:uppercase; font-size:clamp(1.25rem, 3.6vw, 2rem); line-height:1.05;
+}
+.faq summary::-webkit-details-marker{ display:none; }
+.faq summary .n{ font-family:var(--mono); font-size:.68rem; letter-spacing:.12em; color:var(--ink-2); padding-top:.45em; }
+.faq summary .pl{ font-family:var(--mono); font-size:1.3rem; color:var(--ink-2); text-align:right; transition:transform .3s; }
+.faq details[open] summary .pl{ transform:rotate(45deg); color:var(--ember); }
+.faq details[open] summary{ color:var(--ember); }
+.faq .a{ padding:0 0 24px 56px; max-width:62ch; color:var(--ink-2); }
+@media (min-width:900px){
+  .faq summary{ grid-template-columns:80px 1fr 40px; padding:24px 0; }
+  .faq .a{ padding-left:80px; font-size:1.02rem; }
+  .faq-grid{ display:grid; grid-template-columns:repeat(12,1fr); column-gap:var(--gut); }
+  .faq-grid .faq{ grid-column:1 / span 9; }
+  .faq-grid aside{ grid-column:10 / span 3; }
+}
+.faq-grid aside{ margin-top:32px; color:var(--ink-2); font-size:.9rem; }
+@media (min-width:900px){ .faq-grid aside{ margin-top:0; padding-top:24px; border-top:1px solid var(--ink); } }
+.faq-grid aside .btn{ margin-top:16px; }
+
+/* ---------- location ---------- */
+.loc-grid{ display:grid; gap:32px; }
+@media (min-width:900px){ .loc-grid{ grid-template-columns:5fr 7fr; column-gap:var(--gut); align-items:stretch; } }
+.addr{ font-family:var(--head); text-transform:uppercase; font-size:clamp(2.2rem, 7vw, 4.6rem); line-height:.95; }
+.addr a{ text-decoration:none; }
+.addr a:hover{ color:var(--ember); }
+.loc-list{ margin-top:24px; border-top:1px solid var(--line); }
+.loc-list li{ display:grid; grid-template-columns:110px 1fr; gap:12px; padding:12px 0; border-bottom:1px solid var(--line-soft); }
+.loc-list li span:first-child{ font-family:var(--mono); font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-2); padding-top:4px; }
+.map{ min-height:320px; position:relative; overflow:hidden; }
+.map svg{ position:absolute; inset:0; width:100%; height:100%; }
+.map .pin{ position:absolute; left:50%; top:46%; transform:translate(-50%,-50%); font-family:var(--mono); font-size:.62rem; letter-spacing:.12em; text-transform:uppercase; color:var(--ember); text-align:center; }
+.map .pin::before{ content:""; display:block; width:12px; height:12px; background:var(--ember); border-radius:50%; margin:0 auto 8px; box-shadow:0 0 0 6px rgba(255,90,31,.2); }
+
+/* ---------- footer ---------- */
+.foot{ position:relative; z-index:2; border-top:1px solid var(--line); background:var(--bg); }
+.foot-crow{ display:block; width:100%; height:auto; margin:0 auto; overflow:visible; }
+.foot-crow text{ font-family:var(--head); font-size:118px; letter-spacing:.02em; fill:var(--ink); }
+.foot-crow text.e{ fill:var(--ember); }
+.foot-cols{ display:grid; grid-template-columns:1fr 1fr; gap:28px var(--gut); padding:40px 0 30px; border-top:1px solid var(--line); }
+.foot-cols h4{ font-family:var(--mono); font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-2); margin-bottom:12px; }
+.foot-cols a{ text-decoration:none; }
+.foot-cols a:hover{ color:var(--ember); }
+.foot-cols li{ padding:3px 0; }
+.foot-cols .tag{ grid-column:1 / -1; font-family:var(--head); text-transform:uppercase; font-size:clamp(1.6rem, 5vw, 2.6rem); line-height:1; }
+@media (min-width:900px){
+  .foot-cols{ grid-template-columns:4fr 2fr 2fr 2fr 2fr; }
+  .foot-cols .tag{ grid-column:auto; }
+}
+.foot-bot{ display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px 24px; padding:18px 0 40px; border-top:1px solid var(--line); color:var(--mute); }
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  .marquee-track{ animation-play-state:paused; }
+  *,*::before,*::after{ transition:none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- Live flock (boids). Static scattered field under prefers-reduced-motion. -->
+<canvas id="flock" aria-hidden="true"></canvas>
+
+<!-- 12-column rule lines (4 on phones) -->
+<div class="rules" aria-hidden="true"><div class="rules-in">
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span><span></span><span></span>
+</div></div>
+
+<div class="badge" aria-label="Concept 3 — The Murder">Concept #3 — The Murder</div>
+
+<!-- Crow silhouette symbol (reused for the brand mark) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="crow" viewBox="0 0 1200 600">
+    <path d="M8 18 C180 120 330 210 455 250 C500 236 540 202 560 170 C572 140 622 130 642 160 L722 180 L652 198 C662 222 662 252 642 278 C692 264 740 250 760 245 C880 210 1030 120 1192 18 L1150 140 L1085 95 L1060 190 L995 150 L960 240 L890 210 L850 300 L790 300 L770 330 L660 400 L690 520 L640 505 L620 580 L600 525 L580 580 L560 505 L510 520 L540 400 L430 330 L410 300 L350 300 L310 210 L240 240 L205 150 L140 190 L115 95 L50 140 Z"/>
+  </symbol>
+</svg>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Nightmare on the Crow — home">
+      <svg role="img" aria-label="Crow silhouette"><use href="#crow"/></svg>
+      <span><b>Nightmare on the Crow</b><small>Greenfield, MN · Est. by three neighbors</small></span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#trail">Trail</a>
+      <a href="#dates">Dates</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#kids">Kids Day</a>
+      <a href="#give">Give Back</a>
+      <a href="#crew">Crew</a>
+      <a href="#faq">FAQ</a>
+      <a href="#find">Find Us</a>
+    </nav>
+    <a class="btn btn-ember nav-cta" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Get Tickets</a>
+    <button class="burger" id="burger" aria-expanded="false" aria-controls="navMobile" aria-label="Open menu"><i></i><i></i><i></i></button>
+  </div>
+  <nav class="nav-mobile" id="navMobile" aria-label="Mobile">
+    <a href="#trail"><span>002</span>Trail</a>
+    <a href="#dates"><span>003</span>Dates</a>
+    <a href="#pricing"><span>004</span>Pricing</a>
+    <a href="#kids"><span>005</span>Kids Day</a>
+    <a href="#give"><span>006</span>Give Back</a>
+    <a href="#crew"><span>007</span>Crew</a>
+    <a href="#faq"><span>008</span>FAQ</a>
+    <a href="#find"><span>009</span>Find Us</a>
+    <a href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" style="color:var(--ember)"><span>→</span>Get Tickets</a>
+  </nav>
+</header>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee" aria-label="Season at a glance: Oct 9, 10, 16, 17 — 7:30 to 10 PM — Greenfield MN — $20, or $15 with a donation">
+  <div class="marquee-track">
+    <span>OCT 9 · 10 · 16 · 17<i>—</i>7:30–10PM<i>—</i>GREENFIELD MN<i>—</i>$20 / $15 W/ DONATION<i>—</i>IT ALL BEGINS WITH A HAYRIDE<i>—</i></span>
+    <span aria-hidden="true">OCT 9 · 10 · 16 · 17<i>—</i>7:30–10PM<i>—</i>GREENFIELD MN<i>—</i>$20 / $15 W/ DONATION<i>—</i>IT ALL BEGINS WITH A HAYRIDE<i>—</i></span>
+  </div>
+</div>
+
+<main id="top">
+
+<!-- ============ 000 HERO ============ -->
+<section class="hero" id="hero" aria-labelledby="h1">
+  <div class="wrap">
+    <div class="hero-top mono">
+      <div><span class="idx">000</span> Greenfield, MN — 45°06'N 93°41'W</div>
+      <div>Haunted Trail · Season 2026</div>
+    </div>
+    <h1 class="h-display" id="h1">A murder gathers on the <em>Crow.</em></h1>
+    <div class="hero-bottom">
+      <p class="hero-sub">Four nights. One trail. Three neighbors who went too far.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-ember" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Get Tickets <span class="arr">→</span></a>
+        <a class="btn" href="#kids">Kids Day</a>
+      </div>
+      <dl class="hero-meta mono">
+        <div><dt>Nights</dt><dd><b>Oct 9 · 10 · 16 · 17</b></dd></div>
+        <div><dt>Hours</dt><dd><b>7:30 – 10:00 PM</b></dd></div>
+        <div><dt>Trail</dt><dd><b>$20 / $15 w/ donation</b></dd></div>
+        <div><dt>Where</dt><dd><b>6470 Harff Rd</b></dd></div>
+      </dl>
+    </div>
+  </div>
+  <div class="hero-hint" aria-hidden="true">Click anywhere to startle the flock ↓</div>
+</section>
+
+<!-- ============ 001 COUNTDOWN ============ -->
+<section class="sec" id="countdown" aria-labelledby="h-count">
+  <div class="wrap">
+    <header class="sec-head">
+      <span class="idx">001</span>
+      <h2 class="h-display" id="h-count">Until the gates open</h2>
+      <span class="meta mono">Fri Oct 9, 2026 · 7:30 PM CDT</span>
+    </header>
+    <div class="count" role="timer" aria-live="off" aria-label="Countdown to opening night">
+      <div><b id="cd-d">000</b><span>Days</span></div>
+      <div><b id="cd-h">00</b><span>Hrs</span></div>
+      <div><b id="cd-m">00</b><span>Min</span></div>
+      <div><b id="cd-s">00</b><span>Sec</span></div>
+    </div>
+    <div class="count-foot mono">
+      <span class="live" id="cd-status">Counting down to night one</span>
+      <span>Last entry 10:00 PM every night</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 002 THE TRAIL ============ -->
+<section class="sec" id="trail" aria-labelledby="h-trail">
+  <div class="wrap">
+    <header class="sec-head">
+      <span class="idx">002</span>
+      <h2 class="h-display" id="h-trail">What waits on the trail</h2>
+      <span class="meta mono">Six stops · No safe word</span>
+    </header>
+
+    <div class="trail-intro">
+      <p class="lede">This isn't just a haunt. It's an experience designed to crawl under your skin. A wagon drops you at the edge of the woods off Harff Road and the forest does the rest: winding paths, tunnels, buildings that should be empty and aren't, and a corn maze that only pretends to have an exit.</p>
+      <div class="ph" role="img" aria-label="Placeholder for a photo of the trail entrance at dusk"><span>Photo: trail entrance at dusk</span></div>
+    </div>
+
+    <ol class="rows" id="rows">
+      <li class="row">
+        <button class="row-btn" aria-expanded="false" aria-controls="r1">
+          <span class="row-idx">01</span><span class="row-name">The Hayride</span><span class="row-tag">It all begins here</span><span class="row-plus" aria-hidden="true">+</span>
+        </button>
+        <div class="row-body" id="r1"><div><p>It all begins with a hayride. Climb on, sit close, and try not to count the things watching from the treeline. The wagon goes in. Whether it comes back out with the same headcount is between you and the woods.</p></div></div>
+      </li>
+      <li class="row">
+        <button class="row-btn" aria-expanded="false" aria-controls="r2">
+          <span class="row-idx">02</span><span class="row-name">The Trail</span><span class="row-tag">Forest · winding paths</span><span class="row-plus" aria-hidden="true">+</span>
+        </button>
+        <div class="row-body" id="r2"><div><p>A trail that winds through real forest on real ground: roots, ruts, and switchbacks lit just enough to see what you'd rather not. Every turn was walked, wired, and rehearsed by neighbors who know exactly where you'll look.</p></div></div>
+      </li>
+      <li class="row">
+        <button class="row-btn" aria-expanded="false" aria-controls="r3">
+          <span class="row-idx">03</span><span class="row-name">The Tunnels</span><span class="row-tag">Tight · dark · not alone</span><span class="row-plus" aria-hidden="true">+</span>
+        </button>
+        <div class="row-body" id="r3"><div><p>Low ceilings. Long stretches with no light at all. Sound travels strangely down here, so the scream you hear ahead of you might be your own group. Might not.</p></div></div>
+      </li>
+      <li class="row">
+        <button class="row-btn" aria-expanded="false" aria-controls="r4">
+          <span class="row-idx">04</span><span class="row-name">Haunted Buildings</span><span class="row-tag">Live actors · displays</span><span class="row-plus" aria-hidden="true">+</span>
+        </button>
+        <div class="row-body" id="r4"><div><p>Structures full of live actors and hand-built scenes: Ben's zombie graveyard, the skeleton trapped in the cage, rooms that look wrong before you understand why. Doors close behind you. That's the whole idea.</p></div></div>
+      </li>
+      <li class="row">
+        <button class="row-btn" aria-expanded="false" aria-controls="r5">
+          <span class="row-idx">05</span><span class="row-name">The Corn Maze</span><span class="row-tag">Eerie · dead ends</span><span class="row-plus" aria-hidden="true">+</span>
+        </button>
+        <div class="row-body" id="r5"><div><p>Stalks taller than you, rows tighter than they look, and a rustling that keeps pace with you no matter how fast you walk. The maze has an exit. Finding it is the attraction.</p></div></div>
+      </li>
+      <li class="row">
+        <button class="row-btn" aria-expanded="false" aria-controls="r6">
+          <span class="row-idx">06</span><span class="row-name">Live Actors</span><span class="row-tag">Interactive scares</span><span class="row-plus" aria-hidden="true">+</span>
+        </button>
+        <div class="row-body" id="r6"><div><p>The crew is your neighbors: volunteers who spend their October nights in the cold and the makeup because scaring you is the best part of their year. They don't touch. They don't need to.</p></div></div>
+      </li>
+    </ol>
+
+    <div class="quotes" aria-label="What guests say (sample copy)">
+      <blockquote>"I made my husband walk in front."<span>Sample quote — placeholder for real guest feedback</span></blockquote>
+      <blockquote>"The tunnels. I'm not talking about the tunnels."<span>Sample quote — placeholder for real guest feedback</span></blockquote>
+      <blockquote>"Twenty bucks and a bag of canned corn. Worth it."<span>Sample quote — placeholder for real guest feedback</span></blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 003 DATES ============ -->
+<section class="sec" id="dates" aria-labelledby="h-dates">
+  <div class="wrap">
+    <header class="sec-head">
+      <span class="idx">003</span>
+      <h2 class="h-display" id="h-dates">Four nights only</h2>
+      <span class="meta mono">7:30 – 10:00 PM · Last entry 10 PM</span>
+    </header>
+    <ol class="nights">
+      <li class="night">
+        <span class="idx">Night 01</span>
+        <span class="dow">Friday</span>
+        <span class="day">Oct<br>09<small>Opening night</small></span>
+        <span class="hrs">7:30 PM – 10:00 PM<br>Last entry 10 PM</span>
+      </li>
+      <li class="night">
+        <span class="idx">Night 02</span>
+        <span class="dow">Saturday</span>
+        <span class="day">Oct<br>10</span>
+        <span class="hrs">7:30 PM – 10:00 PM<br>Last entry 10 PM</span>
+        <a class="tag" href="#kids">+ Kids Day Noon–3</a>
+      </li>
+      <li class="night">
+        <span class="idx">Night 03</span>
+        <span class="dow">Friday</span>
+        <span class="day">Oct<br>16</span>
+        <span class="hrs">7:30 PM – 10:00 PM<br>Last entry 10 PM</span>
+      </li>
+      <li class="night">
+        <span class="idx">Night 04</span>
+        <span class="dow">Saturday</span>
+        <span class="day">Oct<br>17<small>Final night</small></span>
+        <span class="hrs">7:30 PM – 10:00 PM<br>Last entry 10 PM</span>
+      </li>
+    </ol>
+    <div class="dates-note mono">
+      <span>Rain or shine unless it's unsafe — check Facebook the day of.</span>
+      <span>Bring a jacket. It's October in Minnesota.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 004 PRICING ============ -->
+<section class="sec" id="pricing" aria-labelledby="h-price">
+  <div class="wrap">
+    <header class="sec-head">
+      <span class="idx">004</span>
+      <h2 class="h-display" id="h-price">Pricing, out loud</h2>
+      <span class="meta mono">No hidden fees on this page · Per person</span>
+    </header>
+    <div class="price-wrap">
+      <table class="price">
+        <thead><tr><th scope="col">Ticket</th><th scope="col">Price</th><th scope="col">Notes</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="item">Haunted Trail<span class="note-m">Fri &amp; Sat nights, 7:30–10 PM. Online via HauntPay.</span></td>
+            <td class="amt">$20</td>
+            <td class="note">Fri &amp; Sat nights, 7:30–10 PM. Online via HauntPay.</td>
+          </tr>
+          <tr class="hot">
+            <td class="item">Trail + Donation<span class="note-m"><b>Bring a food-shelf item or winter clothing</b> (hats, gloves, coats) and the trail is $15.</span></td>
+            <td class="amt">$15</td>
+            <td class="note"><b>Bring a food-shelf item or a winter clothing item</b> — hats, gloves, coats — and the trail is $15. The donation goes to neighbors who need it.</td>
+          </tr>
+          <tr>
+            <td class="item">Kids Day<span class="note-m">Sat Oct 10, Noon–3 PM. Lights on, trick-or-treat, family activities.</span></td>
+            <td class="amt">$5</td>
+            <td class="note">Sat Oct 10, Noon–3 PM. Lights-on trail, trick-or-treating, family activities.</td>
+          </tr>
+          <tr>
+            <td class="item">Kids Day → Evening<span class="note-m">Your Kids Day ticket is worth $5 off an evening haunt ticket.</span></td>
+            <td class="amt">−$5</td>
+            <td class="note">Your Kids Day ticket is redeemable for $5 off an evening haunt ticket. Come back after dark.</td>
+          </tr>
+        </tbody>
+      </table>
+      <aside class="price-aside" aria-labelledby="h-donate">
+        <h3 id="h-donate">Bring a can. Save five bucks. Feed a neighbor.</h3>
+        <p class="small">What counts as a donation:</p>
+        <ul>
+          <li>Non-perishable food for the food shelf</li>
+          <li>Hats, gloves, or mittens</li>
+          <li>Coats and winter jackets, any size</li>
+        </ul>
+        <a class="btn btn-ember" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Get Tickets <span class="arr">→</span></a>
+      </aside>
+    </div>
+    <div class="compare small">
+      <div><b>$20.</b> Most Twin Cities haunts run $30–50 a head before fees.</div>
+      <div><b>Built by neighbors,</b> not a ticketing company. Every dollar stays local.</div>
+      <div><b>The price on this page</b> is the price at the gate. That's the whole policy.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 005 KIDS DAY (inverted) ============ -->
+<section class="sec kids" id="kids" aria-labelledby="h-kids">
+  <div class="wrap">
+    <header class="sec-head">
+      <span class="idx">005</span>
+      <h2 class="h-display" id="h-kids">Lights on. Little ones in.</h2>
+      <span class="meta mono">Sat Oct 10 · Noon – 3 PM · $5</span>
+    </header>
+    <div class="kids-grid">
+      <div>
+        <p class="kids-big" aria-hidden="true">Kids<br>Day<span>Sat · Oct 10</span></p>
+        <p class="lede">Same trail, all the lights on, none of the nightmares. Trick-or-treat your way through the woods, meet the crew out of character, and let the little ones see the sets up close before the sun goes down and things change.</p>
+        <div class="crew-ctas">
+          <a class="btn btn-ember" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Kids Day Tickets <span class="arr">→</span></a>
+        </div>
+      </div>
+      <dl>
+        <div><dt>When</dt><dd>Saturday, October 10 · Noon to 3 PM</dd></div>
+        <div><dt>Price</dt><dd>$5 per kid</dd></div>
+        <div><dt>Trail</dt><dd>Lights-on walk through the haunted trail</dd></div>
+        <div><dt>Do</dt><dd>Trick-or-treating and family activities</dd></div>
+        <div><dt>Bonus</dt><dd>Your Kids Day ticket is worth $5 off an evening haunt ticket</dd></div>
+        <div><dt>Food</dt><dd>Just in Time Concessions and Burger Box on site</dd></div>
+      </dl>
+      <div class="ph ph-paper" role="img" aria-label="Placeholder for a photo of families on the lights-on trail"><span>Photo: families on the lights-on trail</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 006 GIVE BACK ============ -->
+<section class="sec" id="give" aria-labelledby="h-give">
+  <div class="wrap">
+    <header class="sec-head">
+      <span class="idx">006</span>
+      <h2 class="h-display" id="h-give">The scare is the fundraiser</h2>
+      <span class="meta mono">Food shelf · Winter clothing · Hanover FD</span>
+    </header>
+    <div class="give-lede">
+      <p class="lede">Three neighbors started this because they loved Halloween and loved giving back, in that order on paper and the other order in practice. Every ticket, every canned good, every coat left at the gate goes to people in the west metro who need it.</p>
+    </div>
+    <div class="give">
+      <article>
+        <span class="idx mono">A</span>
+        <h3>Food Shelf Drive</h3>
+        <p>Bring a non-perishable food item and your trail ticket drops to $15. The bins fill up fast on Saturdays. Help us make that a problem.</p>
+      </article>
+      <article>
+        <span class="idx mono">B</span>
+        <h3>Winter Clothing Drive</h3>
+        <p>Hats, gloves, coats: anything that keeps a neighbor warm through a Minnesota winter counts as a donation and earns the same $5 off.</p>
+      </article>
+      <article>
+        <span class="idx mono">C</span>
+        <h3>Hanover Fire Department</h3>
+        <p>We partner with the Hanover Fire Department. When you buy a ticket, part of what you're paying for is the people who show up when the sirens go.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 007 JOIN THE CREW ============ -->
+<section class="sec" id="crew" aria-labelledby="h-crew">
+  <div class="wrap">
+    <header class="sec-head">
+      <span class="idx">007</span>
+      <h2 class="h-display" id="h-crew">Join the crew</h2>
+      <span class="meta mono">Volunteer actors · builders · wranglers</span>
+    </header>
+    <div class="crew-grid">
+      <div>
+        <p class="lede">A murder is only a murder if enough crows show up. We recruit volunteer actors, set builders, and people who just want to stand in the dark and make strangers scream. No experience necessary. Cold tolerance helpful.</p>
+        <ol class="crew-list">
+          <li><b>01</b><span>Fill out the form. Tell us if you'd rather scare, build, or run the wagon.</span></li>
+          <li><b>02</b><span>Come to a walkthrough. Learn your spot on the trail and the rules of the woods.</span></li>
+          <li><b>03</b><span>Show up four nights in October. Leave with stories nobody at work will believe.</span></li>
+        </ol>
+        <div class="crew-ctas">
+          <a class="btn btn-ember" href="#">Join the Crew <span class="arr">→</span></a>
+          <a class="btn" href="#">Actor Login</a>
+        </div>
+      </div>
+      <div class="crew-people">
+        <article class="person">
+          <div class="ph" role="img" aria-label="Placeholder for a photo of Evan in Beetlejuice makeup"><span>Photo: Evan as Beetlejuice</span></div>
+          <h3>Evan</h3>
+          <span class="role mono">Beetlejuice · Social &amp; tech</span>
+          <p>Says his name three times and then handles the website, the socials, and whatever's beeping. The guy you'll meet on the trail and then again in your feed.</p>
+        </article>
+        <article class="person">
+          <div class="ph" role="img" aria-label="Placeholder for a photo of Ben's caged skeleton set piece"><span>Photo: the skeleton in the cage</span></div>
+          <h3>Ben</h3>
+          <span class="role mono">Set designer · Graveyard</span>
+          <p>Builds the things that make you stop walking: the skeleton trapped in the cage, the zombie graveyard, and rooms you'll swear were bigger on the inside.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 008 FAQ ============ -->
+<section class="sec" id="faq" aria-labelledby="h-faq">
+  <div class="wrap">
+    <header class="sec-head">
+      <span class="idx">008</span>
+      <h2 class="h-display" id="h-faq">Questions from the brave</h2>
+      <span class="meta mono">Eight answers · Zero comfort</span>
+    </header>
+    <div class="faq-grid">
+      <div class="faq">
+        <details>
+          <summary><span class="n">Q1</span><span>How scary is it, actually?</span><span class="pl" aria-hidden="true">+</span></summary>
+          <div class="a">Scary. It's a haunted trail through dark woods with tunnels, buildings full of live actors, and a corn maze. It's designed to crawl under your skin, not to be walked through with your eyes closed. If you want the same woods without the nightmares, that's what Kids Day is for.</div>
+        </details>
+        <details>
+          <summary><span class="n">Q2</span><span>Is there an age recommendation?</span><span class="pl" aria-hidden="true">+</span></summary>
+          <div class="a">We don't set a hard age limit; you know your kid better than we do. The evening trail is intense, dark, and loud. For younger kids, bring them to Kids Day on Saturday, Oct 10, from noon to 3 PM: lights on, trick-or-treating, and the crew out of costume.</div>
+        </details>
+        <details>
+          <summary><span class="n">Q3</span><span>What if it rains?</span><span class="pl" aria-hidden="true">+</span></summary>
+          <div class="a">We run in the rain. Mud is part of the trail's charm. If weather turns unsafe (lightning, high wind), we'll post updates on Facebook and Instagram before gates open. Dress for October in Minnesota either way: layers, closed-toe shoes you don't love.</div>
+        </details>
+        <details>
+          <summary><span class="n">Q4</span><span>Where do I park?</span><span class="pl" aria-hidden="true">+</span></summary>
+          <div class="a">On site at 6470 Harff Road. Follow the crew's lights when you pull in. It's a field, so give yourself a minute and don't block the wagon lane.</div>
+        </details>
+        <details>
+          <summary><span class="n">Q5</span><span>How long does it take?</span><span class="pl" aria-hidden="true">+</span></summary>
+          <div class="a">Budget an evening. Between the hayride, the trail, the tunnels, the buildings, and the maze, it isn't a sprint, and the woods move at their own pace. Last entry is 10 PM, so arrive earlier if you want time for the food trucks.</div>
+        </details>
+        <details>
+          <summary><span class="n">Q6</span><span>Will the actors touch me?</span><span class="pl" aria-hidden="true">+</span></summary>
+          <div class="a">No. Our actors don't touch guests, and we ask the same of you. Hands off the crew, the sets, and the things in the cages. Anyone who can't manage that will be walked out, and not the fun way.</div>
+        </details>
+        <details>
+          <summary><span class="n">Q7</span><span>Is the trail wheelchair accessible?</span><span class="pl" aria-hidden="true">+</span></summary>
+          <div class="a">Honest answer: the trail is natural forest ground with roots, ruts, mud, and tunnels, and it isn't paved. Reach out before you visit and we'll talk through what we can realistically do for your group, including Kids Day, when the lights are on and the pace is slower.</div>
+        </details>
+        <details>
+          <summary><span class="n">Q8</span><span>Is there food?</span><span class="pl" aria-hidden="true">+</span></summary>
+          <div class="a">Yes. Just in Time Concessions and Burger Box are on site. Eat before the tunnels or after. Not during.</div>
+        </details>
+      </div>
+      <aside>
+        <p class="mono" style="color:var(--ember)">Still not sure?</p>
+        <p>Message us on Facebook, Instagram, or TikTok. A real neighbor answers, usually the one who isn't currently wearing a mask.</p>
+        <a class="btn" href="#">Message the crew</a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 009 FIND US ============ -->
+<section class="sec" id="find" aria-labelledby="h-find">
+  <div class="wrap">
+    <header class="sec-head">
+      <span class="idx">009</span>
+      <h2 class="h-display" id="h-find">Find the woods</h2>
+      <span class="meta mono">West metro · ~35 min from Minneapolis</span>
+    </header>
+    <div class="loc-grid">
+      <div>
+        <p class="addr"><a href="https://maps.google.com/?q=6470+Harff+Road+Greenfield+MN+55373" rel="noopener">6470 Harff Road<br>Greenfield, MN<br>55373</a></p>
+        <ul class="loc-list">
+          <li><span>Drive</span><span>About 35 minutes west of Minneapolis, near the Crow River.</span></li>
+          <li><span>Look for</span><span>The crew's lights on Harff Road. If you've passed the river, you've gone too far.</span></li>
+          <li><span>Gates</span><span>7:30 PM. Last entry 10 PM. Kids Day gates at noon on Oct 10.</span></li>
+          <li><span>Bring</span><span>A ticket, a jacket, and a can of something for the food shelf.</span></li>
+        </ul>
+        <div class="crew-ctas">
+          <a class="btn btn-ember" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Get Tickets <span class="arr">→</span></a>
+          <a class="btn" href="https://maps.google.com/?q=6470+Harff+Road+Greenfield+MN+55373" rel="noopener">Open in Maps</a>
+        </div>
+      </div>
+      <div class="ph map" role="img" aria-label="Placeholder map showing 6470 Harff Road, Greenfield, Minnesota">
+        <!-- schematic map: river, roads, grid -->
+        <svg viewBox="0 0 800 420" preserveAspectRatio="none" aria-hidden="true">
+          <g stroke="rgba(237,237,234,.12)" stroke-width="1" fill="none">
+            <path d="M0 80 H800 M0 200 H800 M0 330 H800 M120 0 V420 M300 0 V420 M520 0 V420 M690 0 V420"/>
+          </g>
+          <path d="M-10 350 C120 300 180 420 300 360 S480 250 560 300 S700 380 820 320" stroke="rgba(237,237,234,.35)" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <path d="M60 210 C200 200 320 160 400 190 S620 230 780 180" stroke="var(--ink)" stroke-width="2" fill="none"/>
+          <text x="600" y="345" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2" fill="rgba(237,237,234,.5)">CROW RIVER</text>
+          <text x="620" y="172" font-family="JetBrains Mono, monospace" font-size="11" letter-spacing="2" fill="rgba(237,237,234,.5)">HARFF RD</text>
+        </svg>
+        <div class="pin">6470 Harff Rd</div>
+        <span>Map: 6470 Harff Rd, Greenfield</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <!-- Crow silhouette built from the word CROW, clipped to the crow path -->
+    <svg class="foot-crow" viewBox="0 0 1200 600" role="img" aria-label="Large crow silhouette made from the word CROW repeated">
+      <defs>
+        <clipPath id="crowclip">
+          <path d="M8 18 C180 120 330 210 455 250 C500 236 540 202 560 170 C572 140 622 130 642 160 L722 180 L652 198 C662 222 662 252 642 278 C692 264 740 250 760 245 C880 210 1030 120 1192 18 L1150 140 L1085 95 L1060 190 L995 150 L960 240 L890 210 L850 300 L790 300 L770 330 L660 400 L690 520 L640 505 L620 580 L600 525 L580 580 L560 505 L510 520 L540 400 L430 330 L410 300 L350 300 L310 210 L240 240 L205 150 L140 190 L115 95 L50 140 Z"/>
+        </clipPath>
+      </defs>
+      <g clip-path="url(#crowclip)">
+        <text x="-60" y="96">CROW CROW CROW CROW CROW CROW CROW CROW CROW CROW</text>
+        <text x="-220" y="206">CROW CROW CROW CROW CROW CROW CROW CROW CROW CROW</text>
+        <text x="-100" y="316" class="e">CROW CROW CROW CROW CROW CROW CROW CROW CROW CROW</text>
+        <text x="-260" y="426">CROW CROW CROW CROW CROW CROW CROW CROW CROW CROW</text>
+        <text x="-140" y="536">CROW CROW CROW CROW CROW CROW CROW CROW CROW CROW</text>
+        <text x="-40" y="646">CROW CROW CROW CROW CROW CROW CROW CROW CROW CROW</text>
+      </g>
+    </svg>
+
+    <div class="foot-cols">
+      <p class="tag">It all begins<br>with a hayride!</p>
+      <div>
+        <h4>Where</h4>
+        <ul><li>6470 Harff Road</li><li>Greenfield, MN 55373</li></ul>
+      </div>
+      <div>
+        <h4>When</h4>
+        <ul><li>Oct 9 · 10 · 16 · 17</li><li>7:30 – 10:00 PM</li><li>Kids Day Oct 10, 12–3</li></ul>
+      </div>
+      <div>
+        <h4>Follow</h4>
+        <ul><li><a href="#">Facebook</a></li><li><a href="#">Instagram</a></li><li><a href="#">TikTok</a></li></ul>
+      </div>
+      <div>
+        <h4>Crew</h4>
+        <ul><li><a href="#">Join the Crew</a></li><li><a href="#">Actor Login</a></li><li><a href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Get Tickets</a></li></ul>
+      </div>
+    </div>
+    <div class="foot-bot mono">
+      <span>© <span id="year">2026</span> Nightmare on the Crow · Greenfield, MN</span>
+      <span>Concept mockup · No photos used · Placeholders marked</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* =============================================================
+   1. NAV — mobile menu toggle
+   ============================================================= */
+(function(){
+  var nav = document.getElementById('nav');
+  var btn = document.getElementById('burger');
+  var menu = document.getElementById('navMobile');
+  if(!nav || !btn || !menu) return;
+  function setOpen(open){
+    nav.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  }
+  btn.addEventListener('click', function(){ setOpen(!nav.classList.contains('open')); });
+  menu.addEventListener('click', function(e){ if(e.target.closest('a')) setOpen(false); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') setOpen(false); });
+})();
+
+/* =============================================================
+   2. COUNTDOWN — Oct 9, 2026 7:30 PM America/Chicago (CDT = UTC-5)
+   ============================================================= */
+(function(){
+  var target = new Date('2026-10-09T19:30:00-05:00').getTime();
+  var elD = document.getElementById('cd-d'), elH = document.getElementById('cd-h'),
+      elM = document.getElementById('cd-m'), elS = document.getElementById('cd-s'),
+      status = document.getElementById('cd-status');
+  if(!elD || !elH || !elM || !elS) return;
+  function pad(n, w){ n = String(n); while(n.length < w) n = '0' + n; return n; }
+  function tick(){
+    var diff = target - Date.now();
+    if(!isFinite(diff) || diff < 0) diff = 0;
+    var d = Math.floor(diff / 864e5);
+    var h = Math.floor(diff / 36e5) % 24;
+    var m = Math.floor(diff / 6e4) % 60;
+    var s = Math.floor(diff / 1e3) % 60;
+    elD.textContent = pad(d, 3);
+    elH.textContent = pad(h, 2);
+    elM.textContent = pad(m, 2);
+    elS.textContent = pad(s, 2);
+    if(diff === 0 && status){ status.textContent = 'The gates are open'; }
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+
+/* =============================================================
+   3. ATTRACTION ROWS — hover expands via CSS; click/tap toggles for touch
+   ============================================================= */
+(function(){
+  var rows = document.querySelectorAll('#rows .row');
+  Array.prototype.forEach.call(rows, function(row){
+    var btn = row.querySelector('.row-btn');
+    btn.addEventListener('click', function(){
+      var open = !row.classList.contains('open');
+      Array.prototype.forEach.call(rows, function(r){
+        r.classList.remove('open');
+        r.querySelector('.row-btn').setAttribute('aria-expanded', 'false');
+      });
+      row.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+  var y = document.getElementById('year');
+  if(y) y.textContent = String(new Date().getFullYear());
+})();
+
+/* =============================================================
+   4. THE MURDER — boids flock of crows on a fixed canvas.
+      - 120–200 birds depending on viewport area
+      - lazy drift; startle on click/tap or fast scroll; regroup over seconds
+      - gentle cursor avoidance while the pointer is over the hero
+      - DPR capped at 2; paused when the tab is hidden
+      - prefers-reduced-motion: one static scattered field, no animation
+   ============================================================= */
+(function(){
+  var canvas = document.getElementById('flock');
+  if(!canvas || !canvas.getContext) return;
+  var ctx = canvas.getContext('2d');
+  var hero = document.getElementById('hero');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var W = 0, H = 0, dpr = 1;
+  var boids = [];
+  var pointer = { x: -9999, y: -9999, active: false };
+  var heroBottom = 0;           // hero's page-space bottom edge
+  var raf = 0, last = 0, running = false;
+
+  // Tuning (px, px/s, px/s^2)
+  var CRUISE = 48, PANIC_SPEED = 440, MIN_SPEED = 20;
+  var R = 72, R2 = R * R, SEP = 26, SEP2 = SEP * SEP;
+  var K_COH = 2.2, K_ALI = 2.6, K_SEP = 1500;
+  var POINTER_R = 150, POINTER_R2 = POINTER_R * POINTER_R;
+  var SCARE_R = 300;
+
+  var TIERS = [
+    { size: 5.0, alpha: 0.11, sp: 0.8 },
+    { size: 7.0, alpha: 0.17, sp: 0.95 },
+    { size: 9.5, alpha: 0.25, sp: 1.1 }
+  ];
+
+  function rand(a, b){ return a + Math.random() * (b - a); }
+
+  function makeBoid(){
+    var t = Math.random() < 0.45 ? 0 : (Math.random() < 0.6 ? 1 : 2);
+    var ang = rand(0, Math.PI * 2);
+    var spd = rand(MIN_SPEED, CRUISE);
+    return {
+      x: rand(0, W), y: rand(0, H),
+      vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
+      tier: t, size: TIERS[t].size * rand(0.85, 1.15), sp: TIERS[t].sp,
+      phase: rand(0, Math.PI * 2), glide: rand(0, 2), panic: 0
+    };
+  }
+
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.floor(W * dpr);
+    canvas.height = Math.floor(H * dpr);
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    heroBottom = hero ? (hero.offsetTop + hero.offsetHeight) : 0;
+
+    var target = Math.max(120, Math.min(200, Math.round((W * H) / 7000)));
+    while(boids.length < target) boids.push(makeBoid());
+    while(boids.length > target) boids.pop();
+    // keep everyone on screen after a resize
+    for(var i = 0; i < boids.length; i++){
+      if(boids[i].x > W) boids[i].x = rand(0, W);
+      if(boids[i].y > H) boids[i].y = rand(0, H);
+    }
+    if(reduce) drawStatic();
+  }
+
+  /* ---- one crow polygon, heading along its velocity ---- */
+  function crowPath(b, flap){
+    var a = Math.atan2(b.vy, b.vx), c = Math.cos(a), s = Math.sin(a), sz = b.size;
+    var f = flap;                            // 0.3 (wings down/short) .. 1 (spread)
+    var wx = -sz * 0.25 + (1 - f) * sz * 0.4; // wingtips sweep back on the down stroke
+    var wy = sz * 1.65 * f;
+    var pts = [
+      [-sz * 0.95, 0],            // tail
+      [wx, -wy],                  // left wingtip
+      [sz * 0.25, -sz * 0.2],     // left shoulder
+      [sz * 0.85, 0],             // head
+      [sz * 0.25, sz * 0.2],      // right shoulder
+      [wx, wy]                    // right wingtip
+    ];
+    for(var i = 0; i < pts.length; i++){
+      var px = pts[i][0], py = pts[i][1];
+      var X = b.x + px * c - py * s, Y = b.y + px * s + py * c;
+      if(i === 0) ctx.moveTo(X, Y); else ctx.lineTo(X, Y);
+    }
+    ctx.closePath();
+  }
+
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    for(var t = 0; t < TIERS.length; t++){
+      ctx.fillStyle = 'rgba(237,237,234,' + TIERS[t].alpha + ')';
+      ctx.beginPath();
+      for(var i = 0; i < boids.length; i++){
+        var b = boids[i];
+        if(b.tier !== t || b.panic > 0.55) continue;
+        var flap = b.glide > 0 ? 0.92 : 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(b.phase));
+        crowPath(b, flap);
+      }
+      ctx.fill();
+    }
+    // startled birds flash ember, sparingly
+    ctx.fillStyle = 'rgba(255,90,31,0.55)';
+    ctx.beginPath();
+    for(var j = 0; j < boids.length; j++){
+      var p = boids[j];
+      if(p.panic <= 0.55) continue;
+      crowPath(p, 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(p.phase)));
+    }
+    ctx.fill();
+  }
+
+  function drawStatic(){
+    // Reduced motion: a still, scattered field of crows in mixed wing positions.
+    ctx.clearRect(0, 0, W, H);
+    for(var t = 0; t < TIERS.length; t++){
+      ctx.fillStyle = 'rgba(237,237,234,' + TIERS[t].alpha + ')';
+      ctx.beginPath();
+      for(var i = 0; i < boids.length; i++){
+        var b = boids[i];
+        if(b.tier !== t) continue;
+        crowPath(b, 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(b.phase)));
+      }
+      ctx.fill();
+    }
+  }
+
+  /* ---- simulation step ---- */
+  function step(dt){
+    var n = boids.length;
+    var pointerInHero = pointer.active && (pointer.y + window.scrollY) < heroBottom;
+    for(var i = 0; i < n; i++){
+      var b = boids[i];
+      var cx = 0, cy = 0, ax = 0, ay = 0, sx = 0, sy = 0, cnt = 0;
+      for(var j = 0; j < n; j++){
+        if(j === i) continue;
+        var o = boids[j];
+        var dx = o.x - b.x, dy = o.y - b.y;
+        var d2 = dx * dx + dy * dy;
+        if(d2 > R2) continue;
+        cnt++;
+        cx += o.x; cy += o.y; ax += o.vx; ay += o.vy;
+        if(d2 < SEP2 && d2 > 0.01){ sx -= dx / d2; sy -= dy / d2; }
+        if(o.panic > b.panic + 0.2) b.panic += 0.35 * dt * (o.panic - b.panic); // fear spreads
+      }
+      var fx = 0, fy = 0;
+      var calm = 1 - b.panic;
+      if(cnt){
+        fx += (cx / cnt - b.x) * K_COH * calm;
+        fy += (cy / cnt - b.y) * K_COH * calm;
+        fx += (ax / cnt - b.vx) * K_ALI;
+        fy += (ay / cnt - b.vy) * K_ALI;
+        fx += sx * K_SEP * (1 + b.panic * 2);
+        fy += sy * K_SEP * (1 + b.panic * 2);
+      }
+      // wander
+      fx += (Math.random() - 0.5) * 60;
+      fy += (Math.random() - 0.5) * 60;
+      // gentle cursor avoidance on the hero
+      if(pointerInHero){
+        var pdx = b.x - pointer.x, pdy = b.y - pointer.y;
+        var pd2 = pdx * pdx + pdy * pdy;
+        if(pd2 < POINTER_R2 && pd2 > 0.01){
+          var pd = Math.sqrt(pd2);
+          var pf = (1 - pd / POINTER_R) * 700;
+          fx += pdx / pd * pf; fy += pdy / pd * pf;
+        }
+      }
+      // soft edge return so the flock lives mostly on screen
+      var m = 60;
+      if(b.x < m) fx += (m - b.x) * 2.5; else if(b.x > W - m) fx -= (b.x - (W - m)) * 2.5;
+      if(b.y < m) fy += (m - b.y) * 2.5; else if(b.y > H - m) fy -= (b.y - (H - m)) * 2.5;
+
+      b.vx += fx * dt; b.vy += fy * dt;
+
+      // speed limits scale with panic
+      var maxS = (CRUISE + (PANIC_SPEED - CRUISE) * b.panic) * b.sp;
+      var minS = MIN_SPEED * b.sp;
+      var sp = Math.sqrt(b.vx * b.vx + b.vy * b.vy) || 0.0001;
+      if(sp > maxS){ b.vx *= maxS / sp; b.vy *= maxS / sp; }
+      else if(sp < minS){ b.vx *= minS / sp; b.vy *= minS / sp; }
+
+      b.x += b.vx * dt; b.y += b.vy * dt;
+      // hard wrap as a safety net
+      if(b.x < -40) b.x = W + 40; else if(b.x > W + 40) b.x = -40;
+      if(b.y < -40) b.y = H + 40; else if(b.y > H + 40) b.y = -40;
+
+      // wing cycle: lazy flapping with glides; frantic when panicked
+      b.panic *= Math.exp(-dt / 1.6);
+      if(b.panic < 0.01) b.panic = 0;
+      if(b.glide > 0){ b.glide -= dt; if(b.panic > 0.3) b.glide = 0; }
+      else {
+        b.phase += dt * Math.PI * 2 * (1.3 + b.panic * 5.5) * b.sp;
+        if(b.panic < 0.1 && Math.random() < dt * 0.25) b.glide = rand(0.8, 2.4);
+      }
+    }
+  }
+
+  /* ---- startle behaviours ---- */
+  function scare(x, y){
+    for(var i = 0; i < boids.length; i++){
+      var b = boids[i];
+      var dx = b.x - x, dy = b.y - y;
+      var d = Math.sqrt(dx * dx + dy * dy) || 1;
+      if(d > SCARE_R) continue;
+      var k = 1 - d / SCARE_R;
+      b.vx += dx / d * (140 + 320 * k);
+      b.vy += dy / d * (140 + 320 * k);
+      b.panic = Math.max(b.panic, 0.45 + 0.55 * k);
+      b.glide = 0;
+    }
+  }
+  function scatter(){
+    for(var i = 0; i < boids.length; i++){
+      var b = boids[i];
+      var a = rand(0, Math.PI * 2), s = rand(180, 360);
+      b.vx += Math.cos(a) * s; b.vy += Math.sin(a) * s;
+      b.panic = Math.max(b.panic, rand(0.6, 1));
+      b.glide = 0;
+    }
+  }
+
+  /* ---- loop control ---- */
+  function frame(now){
+    if(!running) return;
+    var dt = (now - last) / 1000;
+    last = now;
+    if(dt > 0.05) dt = 0.05;   // clamp after stalls
+    if(dt > 0){ step(dt); draw(); }
+    raf = requestAnimationFrame(frame);
+  }
+  function start(){
+    if(running || reduce) return;
+    running = true; last = performance.now();
+    raf = requestAnimationFrame(frame);
+  }
+  function stop(){
+    running = false;
+    if(raf) cancelAnimationFrame(raf);
+    raf = 0;
+  }
+
+  /* ---- wiring ---- */
+  var resizeT = 0;
+  window.addEventListener('resize', function(){
+    clearTimeout(resizeT); resizeT = setTimeout(resize, 120);
+  });
+  resize();
+
+  if(reduce){
+    drawStatic();
+    return;
+  }
+
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden) stop(); else start();
+  });
+
+  window.addEventListener('pointermove', function(e){
+    pointer.x = e.clientX; pointer.y = e.clientY; pointer.active = true;
+  }, { passive: true });
+  window.addEventListener('pointerleave', function(){ pointer.active = false; });
+  document.addEventListener('mouseleave', function(){ pointer.active = false; });
+
+  // click / tap anywhere startles the birds near the point
+  window.addEventListener('pointerdown', function(e){
+    if(e.target.closest && e.target.closest('a, button, summary, details')) return; // let UI be UI
+    scare(e.clientX, e.clientY);
+  }, { passive: true });
+
+  // fast scroll scatters the whole flock (throttled)
+  var lastY = window.scrollY, lastT = performance.now(), cool = 0;
+  window.addEventListener('scroll', function(){
+    var now = performance.now();
+    var dy = Math.abs(window.scrollY - lastY);
+    var dtm = now - lastT;
+    lastY = window.scrollY; lastT = now;
+    if(dtm > 0 && dtm < 200 && dy / dtm > 3.2 && now > cool){
+      cool = now + 1800;
+      scatter();
+    }
+  }, { passive: true });
+
+  start();
+})();
+</script>
+</body>
+</html>

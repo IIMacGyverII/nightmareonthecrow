@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nightmare on the Crow — Website Concepts</title>
+<meta name="description" content="Ten website design concepts for Nightmare on the Crow, Greenfield MN. Click any concept to view the full site.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f5f2; --card:#fff; --line:#e3e0d8; --line-2:#d8d4ca;
+    --fg:#1c1c1c; --muted:#5f5a52; --faint:#9a938a; --num:#b9b2a6;
+    --accent:#e85d04; --preview-bg:#efede8;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55}
+  a{color:inherit}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 24px}
+
+  /* Intro */
+  header{background:var(--card);border-bottom:1px solid var(--line)}
+  header .wrap{padding:48px 24px;text-align:center}
+  .eyebrow{margin:0;font-size:12px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:var(--faint)}
+  h1{margin:12px 0 0;font-size:clamp(28px,4vw,38px);font-weight:700;letter-spacing:-.02em;line-height:1.1}
+  .lede{max-width:680px;margin:16px auto 0;font-size:15px;color:var(--muted)}
+  .lede strong{color:var(--fg);font-weight:600}
+  .facts{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 18px;margin:20px 0 0;padding:0;list-style:none;font-size:13px;color:var(--muted)}
+  .facts li::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin-right:8px;vertical-align:2px}
+
+  /* Grid */
+  section.gallery .wrap{padding:48px 24px}
+  .grid{display:grid;grid-template-columns:1fr;gap:36px}
+  @media (min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+
+  .card{display:flex;flex-direction:column;overflow:hidden;border-radius:14px;border:1px solid var(--line);background:var(--card);box-shadow:0 1px 2px rgba(0,0,0,.04);text-decoration:none;transition:transform .2s,box-shadow .2s}
+  .card:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(0,0,0,.12)}
+  .card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+
+  /* Live scaled preview of the actual page */
+  .preview{position:relative;overflow:hidden;background:var(--preview-bg);border-bottom:1px solid var(--line);aspect-ratio:16/10}
+  .preview iframe{position:absolute;left:0;top:0;width:1280px;height:1480px;border:0;transform-origin:top left;transform:scale(var(--s,.36));pointer-events:none;user-select:none}
+  .preview .shield{position:absolute;inset:0}
+  .preview .pill{position:absolute;right:12px;bottom:12px;padding:6px 12px;border-radius:999px;background:rgba(0,0,0,.72);color:#fff;font-size:12px;font-weight:500;opacity:0;transition:opacity .2s}
+  .card:hover .pill,.card:focus-visible .pill{opacity:1}
+
+  .body{display:flex;flex-direction:column;flex:1;padding:22px 24px 24px}
+  .title{display:flex;align-items:baseline;gap:12px}
+  .num{font-size:13px;font-weight:700;color:var(--num)}
+  h2{margin:0;font-size:18px;font-weight:700;letter-spacing:-.01em}
+  .card:hover h2{text-decoration:underline}
+  .desc{margin:8px 0 0;font-size:14px;color:var(--muted)}
+  .hook{margin:12px 0 0;font-size:12px;color:var(--faint)}
+  .hook b{color:var(--muted);font-weight:600}
+
+  .filler{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center;border-radius:14px;border:1px dashed var(--line-2)}
+  .filler p{margin:0;font-size:14px}
+  .filler .t{font-weight:600;color:var(--muted)}
+  .filler .s{margin-top:8px;color:var(--faint)}
+
+  /* At a glance */
+  section.glance{border-top:1px solid var(--line);background:var(--card)}
+  section.glance .wrap{padding:40px 24px}
+  h3{margin:0 0 14px;font-size:13px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
+  .tbl{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  td:first-child{color:var(--num);font-weight:700}
+  td:nth-child(2){font-weight:600;white-space:nowrap}
+  td{color:var(--muted)}
+
+  footer{border-top:1px solid var(--line);background:var(--card)}
+  footer .wrap{padding:32px 24px;text-align:center;font-size:12px;color:var(--faint)}
+  footer p{margin:0}
+  footer p + p{margin-top:4px}
+
+  @media (prefers-reduced-motion:reduce){.card,.pill{transition:none}.card:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Website Concepts</p>
+    <h1>Nightmare on the Crow</h1>
+    <p class="lede">Ten different looks for your new website. Each one is a complete, working homepage with the same information, your <strong>four nights</strong>, your <strong>$20 / $15-with-a-donation</strong> pricing, Kids Day, the food-shelf drive, and the story of three neighbors, presented ten different ways. Click any of them to view the full site, and pick the one that feels most like your haunt.</p>
+    <ul class="facts">
+      <li>Oct 9 · 10 · 16 · 17</li>
+      <li>7:30–10 PM</li>
+      <li>$20, or $15 with a donation</li>
+      <li>Kids Day Oct 10, noon–3, $5</li>
+    </ul>
+  </div>
+</header>
+
+<section class="gallery">
+  <div class="wrap">
+    <div class="grid">
+
+      <a class="card" href="sites/01-gazette.html">
+        <div class="preview"><iframe src="sites/01-gazette.html" title="Preview of The Greenfield Gazette" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe><div class="shield"></div><span class="pill">View full site →</span></div>
+        <div class="body">
+          <div class="title"><span class="num">01</span><h2>The Greenfield Gazette</h2></div>
+          <p class="desc">The whole site is a small-town newspaper reporting on what's gone wrong on Harff Road. Your attractions become news stories and classified ads, and the price runs as a clip-out coupon.</p>
+          <p class="hook"><b>Try:</b> hover the blacked-out words to un-redact them.</p>
+        </div>
+      </a>
+
+      <a class="card" href="sites/02-blackout.html">
+        <div class="preview"><iframe src="sites/02-blackout.html" title="Preview of Blackout" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe><div class="shield"></div><span class="pill">View full site →</span></div>
+        <div class="body">
+          <div class="title"><span class="num">02</span><h2>Blackout</h2></div>
+          <p class="desc">The page loads pitch black and the visitor's cursor is a flashlight. Things hide in the dark around the words, and one of them doesn't stay put. A "Lights On" button for anyone who'd rather not.</p>
+          <p class="hook"><b>Try:</b> move your mouse slowly around the edges of the page.</p>
+        </div>
+      </a>
+
+      <a class="card" href="sites/03-murder.html">
+        <div class="preview"><iframe src="sites/03-murder.html" title="Preview of The Murder" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe><div class="shield"></div><span class="pill">View full site →</span></div>
+        <div class="body">
+          <div class="title"><span class="num">03</span><h2>The Murder</h2></div>
+          <p class="desc">A living flock of crows drifts behind the entire site and scatters when you click. Huge headlines, a scrolling ticker of your dates, and the most "big-budget" feel of the ten.</p>
+          <p class="hook"><b>Try:</b> click anywhere to startle the flock.</p>
+        </div>
+      </a>
+
+      <a class="card" href="sites/04-trailmap.html">
+        <div class="preview"><iframe src="sites/04-trailmap.html" title="Preview of Survive the Trail" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe><div class="shield"></div><span class="pill">View full site →</span></div>
+        <div class="body">
+          <div class="title"><span class="num">04</span><h2>Survive the Trail</h2></div>
+          <p class="desc">A hand-drawn map of the property with seven numbered stops. Tap each one to read a note from the crew about what happens there. It answers "what do I get for $20?" better than any paragraph could.</p>
+          <p class="hook"><b>Try:</b> find all seven stops on the map.</p>
+        </div>
+      </a>
+
+      <a class="card" href="sites/05-vhs.html">
+        <div class="preview"><iframe src="sites/05-vhs.html" title="Preview of Tape 09" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe><div class="shield"></div><span class="pill">View full site →</span></div>
+        <div class="body">
+          <div class="title"><span class="num">05</span><h2>Tape 09</h2></div>
+          <p class="desc">Recovered camcorder footage from the trail. Scanlines, tracking glitches, a blinking REC light and a tape-counter countdown. Built to get shared by teens and twenty-somethings.</p>
+          <p class="hook"><b>Try:</b> the EFFECTS toggle in the corner turns the static off.</p>
+        </div>
+      </a>
+
+      <a class="card" href="sites/06-bonfire.html">
+        <div class="preview"><iframe src="sites/06-bonfire.html" title="Preview of The Bonfire" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe><div class="shield"></div><span class="pill">View full site →</span></div>
+        <div class="body">
+          <div class="title"><span class="num">06</span><h2>The Bonfire</h2></div>
+          <p class="desc">The closest to your current orange-and-black look, done at a premium level. Rising embers, drifting fog, a giant countdown to opening night and one glowing ticket button. The safe, proven choice.</p>
+          <p class="hook"><b>Try:</b> scroll and watch the nav shrink to a Tickets pill.</p>
+        </div>
+      </a>
+
+      <a class="card" href="sites/07-walkit.html">
+        <div class="preview"><iframe src="sites/07-walkit.html" title="Preview of Walk It" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe><div class="shield"></div><span class="pill">View full site →</span></div>
+        <div class="body">
+          <div class="title"><span class="num">07</span><h2>Walk It</h2></div>
+          <p class="desc">Scrolling the page is walking the trail. Eight scenes, from the headlights on Harff Road through the tunnels, the corn and the graveyard, to a dawn exit where all the practical info lives.</p>
+          <p class="hook"><b>Try:</b> scroll slowly and watch the barn window.</p>
+        </div>
+      </a>
+
+      <a class="card" href="sites/08-lightswitch.html">
+        <div class="preview"><iframe src="sites/08-lightswitch.html" title="Preview of Lights On / Lights Off" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe><div class="shield"></div><span class="pill">View full site →</span></div>
+        <div class="body">
+          <div class="title"><span class="num">08</span><h2>Lights On / Lights Off</h2></div>
+          <p class="desc">One big light switch in the header. Off is the haunt: dark and orange. On is the same site re-done for Kids Day parents: sunny, friendly, and the crow gets a tiny hat. Both audiences, one website.</p>
+          <p class="hook"><b>Try:</b> flip the switch.</p>
+        </div>
+      </a>
+
+      <a class="card" href="sites/09-almanac.html">
+        <div class="preview"><iframe src="sites/09-almanac.html" title="Preview of The Scarecrow's Almanac" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe><div class="shield"></div><span class="pill">View full site →</span></div>
+        <div class="body">
+          <div class="title"><span class="num">09</span><h2>The Scarecrow's Almanac</h2></div>
+          <p class="desc">A farmers' almanac for the October nights, written by the scarecrow who watches the corn. Woodcut illustrations, a real calendar of your four nights, and an FAQ answered in the scarecrow's voice. The most handmade and neighborly of the ten.</p>
+          <p class="hook"><b>Try:</b> the scarecrow watches your cursor.</p>
+        </div>
+      </a>
+
+      <a class="card" href="sites/10-textadventure.html">
+        <div class="preview"><iframe src="sites/10-textadventure.html" title="Preview of Harff Road: A Text Adventure" loading="lazy" tabindex="-1" aria-hidden="true" scrolling="no"></iframe><div class="shield"></div><span class="pill">View full site →</span></div>
+        <div class="body">
+          <div class="title"><span class="num">10</span><h2>Harff Road: A Text Adventure</h2></div>
+          <p class="desc">The homepage is a playable game. Type or tap your way down the trail and learn the dates, prices and Kids Day along the way. A "skip to the boring part" link drops anyone straight to a clean info page.</p>
+          <p class="hook"><b>Try:</b> type <b>ride the wagon</b>, then <b>check my wallet</b>.</p>
+        </div>
+      </a>
+
+      <div class="filler">
+        <p class="t">Like parts of different ones?</p>
+        <p class="s">That works too. The final website can combine them: one concept's look, another's countdown, another's wording. The pricing, dates and community story travel to any of them.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="glance">
+  <div class="wrap">
+    <h3>At a glance</h3>
+    <div class="tbl">
+      <table>
+        <tr><th>#</th><th>Concept</th><th>Big idea</th><th>Best for</th></tr>
+        <tr><td>01</td><td>Greenfield Gazette</td><td>Newspaper from a town gone wrong</td><td>Story and word of mouth</td></tr>
+        <tr><td>02</td><td>Blackout</td><td>Flashlight cursor reveals the page</td><td>A first impression nobody forgets</td></tr>
+        <tr><td>03</td><td>The Murder</td><td>Live crow flock behind the page</td><td>Looking bigger than the competition</td></tr>
+        <tr><td>04</td><td>Survive the Trail</td><td>Interactive property map</td><td>Explaining what you get for $20</td></tr>
+        <tr><td>05</td><td>Tape 09</td><td>Recovered VHS footage</td><td>Social sharing, teens and 20s</td></tr>
+        <tr><td>06</td><td>The Bonfire</td><td>Premium countdown and ticket funnel</td><td>Selling the most tickets</td></tr>
+        <tr><td>07</td><td>Walk It</td><td>Scroll through the trail in chapters</td><td>Immersion and press</td></tr>
+        <tr><td>08</td><td>Lights On / Off</td><td>One switch, two audiences</td><td>Growing Kids Day</td></tr>
+        <tr><td>09</td><td>Scarecrow's Almanac</td><td>Handmade folk almanac</td><td>Local, neighborly identity</td></tr>
+        <tr><td>10</td><td>Text Adventure</td><td>Playable terminal homepage</td><td>Going viral</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Photos shown are placeholders. The finished site will use real photos and video from the trail, the buildings and the crew.</p>
+    <p>Nightmare on the Crow · 6470 Harff Road, Greenfield, MN 55373 · Dates, hours and prices reflect nightmareonthecrow.com as of September 2026.</p>
+  </div>
+</footer>
+
+<script>
+  // Scale each 1280px-wide preview iframe to fit its card width.
+  (function () {
+    var previews = document.querySelectorAll('.preview');
+    function fit() {
+      previews.forEach(function (p) {
+        p.style.setProperty('--s', (p.clientWidth / 1280).toFixed(4));
+      });
+    }
+    fit();
+    var t;
+    window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(fit, 100); });
+  })();
+</script>
+</body>
+</html>

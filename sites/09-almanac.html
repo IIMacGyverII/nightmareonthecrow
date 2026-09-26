@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Scarecrow's Almanac — Nightmare on the Crow, Greenfield MN</title>
+<meta name="description" content="The Scarecrow's Almanac: a true account of the October 2026 nights at Nightmare on the Crow, a neighbor-built haunted trail on Harff Road in Greenfield, Minnesota. Four nights, $20 a soul or $15 with a food-shelf or winter-clothing donation. Kids Day Oct 10.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   CONCEPT #9 — THE SCARECROW'S ALMANAC
+   Folk-horror, handcrafted. Cream paper, ink black, dried-blood red, mustard.
+   All illustration is inline SVG in a woodcut/linocut manner: hard black
+   shapes, hatching via SVG pattern fills. Fonts: Pirata One (display), IM Fell
+   English (body), IM Fell English SC (labels).
+   ========================================================================== */
+
+:root{
+  --paper:#f1e9d6;
+  --paper-deep:#e6dbc0;
+  --paper-fold:#cfc3a3;
+  --ink:#1a1612;
+  --ink-soft:#3d332a;
+  --blood:#7a1f1f;
+  --mustard:#c9a227;
+  --display:'Pirata One', 'IM Fell English', Georgia, serif;
+  --body:'IM Fell English', Georgia, 'Times New Roman', serif;
+  --sc:'IM Fell English SC', 'IM Fell English', Georgia, serif;
+  --measure:64ch;
+  --frame:1080px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+body{
+  margin:0;
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:clamp(1.05rem, 1rem + .3vw, 1.2rem);
+  line-height:1.55;
+  background-color:var(--paper);
+  /* faint linen weave + a vignette so the paper feels aged at the edges */
+  background-image:
+    repeating-linear-gradient(0deg, rgba(40,25,5,.035) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(40,25,5,.03) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(70,45,10,.14) 100%);
+  overflow-x:hidden;
+}
+
+a{color:var(--blood);text-decoration-thickness:1px;text-underline-offset:.15em}
+a:hover{color:var(--ink)}
+:focus-visible{outline:3px solid var(--blood);outline-offset:3px}
+.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+h1,h2,h3,h4{font-family:var(--display);font-weight:400;line-height:1.05;margin:0;letter-spacing:.01em}
+h2{font-size:clamp(2rem, 1.6rem + 2vw, 3.2rem)}
+h3{font-size:clamp(1.4rem, 1.2rem + .8vw, 1.9rem)}
+p{margin:0 0 1em}
+.sc,.label{font-family:var(--sc);letter-spacing:.06em;text-transform:lowercase}
+.lede{font-size:1.15em;font-style:italic}
+.small{font-size:.9em}
+.red{color:var(--blood)}
+.center{text-align:center}
+.book{max-width:var(--frame);margin:0 auto;padding:0 16px}
+
+/* SVG defaults so every illustration reads as ink on paper */
+svg{display:block;max-width:100%}
+.ink{fill:var(--ink)}
+.paper{fill:var(--paper)}
+
+/* --------------------------------------------------------------------------
+   Concept badge, dog-ears
+   -------------------------------------------------------------------------- */
+.badge{
+  position:fixed;left:12px;bottom:70px;z-index:60;
+  font-family:var(--sc);font-size:.72rem;letter-spacing:.08em;
+  background:var(--ink);color:var(--paper);padding:.35em .7em;
+  border:1px solid var(--mustard);box-shadow:3px 3px 0 var(--blood);
+  transform:rotate(-2deg);
+}
+.dogear{position:fixed;bottom:0;width:58px;height:58px;z-index:55;pointer-events:none}
+.dogear.br{right:0;background:linear-gradient(to top left, var(--paper-fold) 49%, rgba(0,0,0,.28) 49.5%, #f8f2e3 51%)}
+.dogear.bl{left:0;background:linear-gradient(to top right, var(--paper-fold) 49%, rgba(0,0,0,.28) 49.5%, #f8f2e3 51%)}
+@media (max-width:600px){.dogear{width:40px;height:40px}.badge{bottom:52px;font-size:.62rem}}
+
+/* --------------------------------------------------------------------------
+   Sticky navigation, styled as the almanac's running head
+   -------------------------------------------------------------------------- */
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:var(--paper);
+  border-bottom:2px solid var(--ink);
+  box-shadow:0 2px 0 var(--paper), 0 3px 0 var(--ink);
+}
+.nav-in{max-width:var(--frame);margin:0 auto;padding:.45rem 16px;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:var(--ink);font-family:var(--display);font-size:1.35rem;margin-right:auto}
+.brand svg{width:34px;height:22px}
+.nav-list{display:flex;gap:.2rem 1.1rem;list-style:none;margin:0;padding:0;flex-wrap:wrap;align-items:center}
+.nav-list a{font-family:var(--sc);font-size:.95rem;color:var(--ink);text-decoration:none;letter-spacing:.05em;border-bottom:2px solid transparent;padding:.2em 0}
+.nav-list a:hover,.nav-list a:focus-visible{border-bottom-color:var(--blood)}
+.nav-list .cta{background:var(--blood);color:var(--paper);padding:.35em .9em;border:1.5px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+.nav-list .cta:hover{background:var(--ink);border-bottom-color:var(--ink)}
+.nav-toggle{display:none;font-family:var(--sc);font-size:1rem;background:none;border:1.5px solid var(--ink);color:var(--ink);padding:.3em .8em;cursor:pointer;letter-spacing:.05em}
+@media (max-width:900px){
+  .nav-toggle{display:inline-block}
+  .nav-list{display:none;width:100%;flex-direction:column;align-items:stretch;gap:0;border-top:1px dashed var(--ink);padding-top:.4rem;margin-top:.2rem}
+  .nav-list.open{display:flex}
+  .nav-list li{border-bottom:1px dotted rgba(26,22,18,.35)}
+  .nav-list a{display:block;padding:.55em .2em;font-size:1.05rem}
+  .nav-list .cta{margin:.6rem 0 .3rem;text-align:center}
+}
+
+/* --------------------------------------------------------------------------
+   Cover / hero
+   -------------------------------------------------------------------------- */
+.cover{
+  margin:1.6rem auto 0;
+  border:3px solid var(--ink);
+  outline:1px solid var(--ink);outline-offset:5px;
+  padding:clamp(1.2rem, 3vw, 2.6rem) clamp(.8rem, 3vw, 2.4rem);
+  position:relative;
+  text-align:center;
+  background:
+    linear-gradient(var(--paper), var(--paper)) padding-box,
+    repeating-linear-gradient(45deg, rgba(26,22,18,.06) 0 2px, transparent 2px 9px);
+}
+/* hand-drawn corner ornaments on the cover frame */
+.cover::before,.cover::after{
+  content:"";position:absolute;width:26px;height:26px;
+  border:3px solid var(--ink);
+}
+.cover::before{top:-3px;left:-3px;border-right:0;border-bottom:0;box-shadow:inset 4px 4px 0 var(--paper), inset 6px 6px 0 var(--ink)}
+.cover::after{bottom:-3px;right:-3px;border-left:0;border-top:0;box-shadow:inset -4px -4px 0 var(--paper), inset -6px -6px 0 var(--ink)}
+.cover .kicker{font-family:var(--sc);font-size:clamp(.8rem,.75rem + .4vw,1.05rem);letter-spacing:.14em;margin:0 0 .6rem}
+.cover h1{
+  font-size:clamp(2.7rem, 1.6rem + 6.4vw, 6.4rem);
+  line-height:.95;margin:.1em 0 .25em;
+  text-shadow:2px 2px 0 var(--paper), 4px 4px 0 var(--mustard);
+}
+.cover .sub{font-style:italic;font-size:clamp(1.1rem, 1rem + 1vw, 1.7rem);max-width:30ch;margin:0 auto .3em;line-height:1.25}
+.cover .place{font-family:var(--sc);letter-spacing:.18em;font-size:clamp(.85rem,.8rem + .5vw,1.15rem);margin:.4rem 0 0}
+.cover .rule{width:min(60%, 420px);margin:1rem auto}
+
+.plate{display:grid;grid-template-columns:1fr minmax(220px, 340px) 1fr;align-items:end;gap:1rem;margin:1rem auto .5rem;max-width:900px}
+.plate .side{display:flex;flex-direction:column;align-items:center;gap:.4rem}
+.plate .side svg{width:min(100%, 190px)}
+.plate .side .cap{font-family:var(--sc);font-size:.85rem;letter-spacing:.1em}
+#scarecrow{width:100%;height:auto;cursor:crosshair}
+#sc-head{transform-box:fill-box;transform-origin:50% 92%;transition:transform .18s ease-out;will-change:transform}
+@media (prefers-reduced-motion:reduce){#sc-head{transition:none}}
+@media (max-width:700px){
+  .plate{grid-template-columns:1fr 1fr;grid-template-areas:"sc sc" "l r"}
+  .plate .center-col{grid-area:sc;max-width:280px;margin:0 auto}
+  .plate .side.l{grid-area:l}.plate .side.r{grid-area:r}
+  .plate .side svg{width:min(100%,140px)}
+}
+
+.ribbon{
+  display:inline-block;background:var(--ink);color:var(--paper);
+  font-family:var(--display);font-size:clamp(1.15rem,1rem + 1.2vw,1.7rem);
+  padding:.35em 1.4em;margin:.8rem 0 .2rem;position:relative;letter-spacing:.03em;
+}
+.ribbon::before,.ribbon::after{content:"";position:absolute;top:0;bottom:0;width:14px;background:var(--ink)}
+.ribbon::before{left:-13px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,45% 50%)}
+.ribbon::after{right:-13px;clip-path:polygon(0 0,100% 0,55% 50%,100% 100%,0 100%)}
+.cover .publisher{font-style:italic;margin:.9rem auto 0;max-width:46ch;font-size:.98em}
+.cta-row{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;margin:1.3rem 0 .3rem}
+.btn{
+  display:inline-block;font-family:var(--sc);font-size:1.1rem;letter-spacing:.08em;
+  padding:.65em 1.5em;border:2px solid var(--ink);text-decoration:none;
+  background:var(--blood);color:var(--paper);box-shadow:4px 4px 0 var(--ink);
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.btn:hover,.btn:focus-visible{color:var(--paper);background:var(--ink);transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+.btn.ghost{background:var(--paper);color:var(--ink)}
+.btn.ghost:hover,.btn.ghost:focus-visible{background:var(--mustard);color:var(--ink)}
+
+/* --------------------------------------------------------------------------
+   Countdown — "Nights until the first lantern is lit"
+   -------------------------------------------------------------------------- */
+.lantern{margin:2.4rem auto 0;text-align:center;padding:1.4rem 1rem;border-top:3px double var(--ink);border-bottom:3px double var(--ink)}
+.lantern h2{font-size:clamp(1.6rem,1.3rem + 1.6vw,2.6rem)}
+.ct{display:flex;justify-content:center;gap:clamp(.5rem,2vw,1.4rem);flex-wrap:wrap;margin:1rem 0 .4rem}
+.ct-cell{
+  min-width:5.2rem;padding:.4rem .6rem .5rem;border:2px dashed var(--ink);background:var(--paper);
+  box-shadow:3px 3px 0 var(--paper-deep);position:relative;
+}
+.ct-cell:nth-child(1){transform:rotate(-2deg)}
+.ct-cell:nth-child(2){transform:rotate(1.4deg)}
+.ct-cell:nth-child(3){transform:rotate(-.8deg)}
+.ct-cell:nth-child(4){transform:rotate(2deg)}
+.ct-num{display:block;font-family:var(--display);font-size:clamp(2.6rem,2rem + 3vw,4.4rem);line-height:1;color:var(--blood);font-variant-numeric:tabular-nums;text-shadow:1px 1px 0 var(--ink)}
+.ct-lbl{display:block;font-family:var(--sc);letter-spacing:.14em;font-size:.85rem;margin-top:.2rem}
+#cd-note{font-style:italic;margin:.5rem 0 0}
+@media (max-width:480px){
+  .lantern{padding:1.4rem .4rem}
+  .ct{gap:.45rem}
+  .ct-cell{min-width:4.3rem;padding:.3rem .35rem .4rem}
+  .ct-num{font-size:2.3rem}
+  .ct-lbl{font-size:.72rem;letter-spacing:.1em}
+}
+
+/* --------------------------------------------------------------------------
+   Sections, headings with landing crows, dividers
+   -------------------------------------------------------------------------- */
+.section{padding:3rem 0 1rem;scroll-margin-top:4.5rem}
+.hd-wrap{text-align:center;margin-bottom:1.4rem}
+.hd{position:relative;display:inline-block;padding:0 .3em}
+.hd-crow{position:absolute;right:-.55em;top:-.95em;width:1.35em;height:.9em;pointer-events:none}
+.hd-crow svg{width:100%;height:100%}
+.hd-crow{opacity:0;transform:translate(-18px,-34px) rotate(-14deg)}
+.hd.landed .hd-crow{opacity:1;transform:none;transition:transform .9s cubic-bezier(.2,.9,.3,1.15), opacity .5s ease}
+/* alternate headings: crow lands on the left */
+.hd.alt .hd-crow{right:auto;left:-.6em;transform:translate(18px,-34px) rotate(14deg) scaleX(-1)}
+.hd.alt.landed .hd-crow{transform:scaleX(-1)}
+@media (prefers-reduced-motion:reduce){
+  .hd-crow{opacity:1;transform:none}
+  .hd.alt .hd-crow{transform:scaleX(-1)}
+  .hd.landed .hd-crow{transition:none}
+}
+.hd-sub{font-style:italic;margin:.4rem 0 0;font-size:1.05em}
+.divider{width:min(100%, 520px);margin:1.6rem auto 0}
+
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1.6rem 2.4rem;align-items:start}
+.prose{max-width:var(--measure);margin:0 auto}
+.dropcap::first-letter{font-family:var(--display);font-size:3.4em;float:left;line-height:.78;padding:.08em .12em 0 0;color:var(--blood)}
+
+/* Photo / map placeholders as woodcut "plates" */
+.plate-ph{
+  border:2px solid var(--ink);padding:.5rem;background:var(--paper);
+  box-shadow:5px 5px 0 var(--paper-deep), 5px 5px 0 1px var(--ink);
+}
+.plate-ph .ph{
+  aspect-ratio:4/3;display:grid;place-items:center;text-align:center;
+  background:
+    repeating-linear-gradient(-45deg, rgba(26,22,18,.55) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(45deg, rgba(26,22,18,.25) 0 1px, transparent 1px 7px),
+    var(--paper-deep);
+  border:1px solid var(--ink);padding:1rem;
+}
+.plate-ph .ph span{background:var(--paper);border:1.5px dashed var(--ink);padding:.4em .8em;font-family:var(--sc);letter-spacing:.08em;font-size:.9rem;max-width:26ch}
+.plate-ph.wide .ph{aspect-ratio:16/7}
+.plate-ph figcaption{font-style:italic;font-size:.92em;text-align:center;margin-top:.5rem}
+
+/* --------------------------------------------------------------------------
+   Table of Contents with dotted leaders
+   -------------------------------------------------------------------------- */
+.toc{max-width:640px;margin:0 auto;list-style:none;padding:0}
+.toc li{display:flex;align-items:baseline;gap:.5rem;padding:.3rem 0;font-size:1.08em}
+.toc .num{font-family:var(--sc);min-width:2.4em;color:var(--blood);letter-spacing:.08em}
+.toc a{color:var(--ink);text-decoration:none}
+.toc a:hover,.toc a:focus-visible{color:var(--blood);text-decoration:underline}
+.toc .dots{flex:1;border-bottom:2px dotted var(--ink);transform:translateY(-.35em);min-width:1.5rem;opacity:.75}
+.toc .pg{font-family:var(--sc);letter-spacing:.06em}
+
+/* --------------------------------------------------------------------------
+   Calendar of Nights — October 2026
+   -------------------------------------------------------------------------- */
+.cal{width:100%;border-collapse:collapse;table-layout:fixed;border:2.5px solid var(--ink);background:var(--paper)}
+.cal caption{font-family:var(--display);font-size:clamp(1.5rem,1.2rem + 1.4vw,2.3rem);padding:.3em 0 .5em;caption-side:top}
+.cal th{font-family:var(--sc);letter-spacing:.08em;font-weight:400;font-size:.85rem;border:1.5px solid var(--ink);background:var(--ink);color:var(--paper);padding:.35em 0}
+.cal td{border:1.5px solid var(--ink);height:clamp(48px,9vw,86px);vertical-align:top;padding:.2em .3em;position:relative;font-family:var(--sc);font-size:clamp(.85rem,.8rem + .4vw,1.1rem)}
+.cal td.blank{background:repeating-linear-gradient(45deg, rgba(26,22,18,.25) 0 1px, transparent 1px 6px)}
+.cal td.haunt{background:var(--paper-deep);box-shadow:inset 0 0 0 2px var(--blood)}
+.cal td.haunt .d{color:var(--blood);font-weight:bold}
+.cal .mark{position:absolute;right:.15em;bottom:.1em;display:flex;gap:.15em;align-items:flex-end}
+.cal .mark svg{width:clamp(18px,4vw,34px);height:auto}
+.cal .mark .sun{width:clamp(16px,3.4vw,28px)}
+.cal-legend{display:flex;gap:1.2rem 2rem;flex-wrap:wrap;justify-content:center;margin:1rem 0 0;font-family:var(--sc);letter-spacing:.06em;font-size:.95rem}
+.cal-legend span{display:inline-flex;align-items:center;gap:.4rem}
+.cal-legend svg{width:28px;height:auto}
+.nights{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:1rem;margin-top:1.6rem}
+.night{border:2px solid var(--ink);padding:.9rem .9rem 1rem;text-align:center;background:var(--paper);box-shadow:4px 4px 0 var(--paper-deep),4px 4px 0 1px var(--ink)}
+.night .dow{font-family:var(--sc);letter-spacing:.14em;font-size:.85rem}
+.night .day{font-family:var(--display);font-size:2.8rem;line-height:1;color:var(--blood)}
+.night .hrs{font-style:italic;font-size:.95em}
+.night.kids{background:linear-gradient(var(--paper),var(--paper)) padding-box, var(--mustard);border-color:var(--ink);box-shadow:4px 4px 0 var(--mustard),4px 4px 0 1px var(--ink)}
+
+/* Phases of the moon */
+.moons{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:1rem;margin-top:1.4rem;text-align:center}
+.moon svg{width:84px;margin:0 auto .3rem}
+.moon .ph-name{font-family:var(--sc);letter-spacing:.1em}
+.moon .ph-date{font-style:italic;font-size:.95em}
+
+/* --------------------------------------------------------------------------
+   Signs & Omens (attractions)
+   -------------------------------------------------------------------------- */
+.omens{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:1.4rem}
+.omen{border:2px solid var(--ink);padding:1rem 1.1rem 1.1rem;background:var(--paper);position:relative;display:flex;flex-direction:column;gap:.5rem}
+.omen::after{content:"";position:absolute;inset:4px;border:1px solid var(--ink);pointer-events:none}
+.omen svg{width:64px;height:64px;flex:none}
+.omen h3{font-family:var(--body);font-style:italic;font-size:1.3em;line-height:1.2}
+.omen .what{font-family:var(--sc);letter-spacing:.08em;color:var(--blood);font-size:.9rem}
+.omen p{margin:0}
+.omen .top{display:flex;gap:.8rem;align-items:center}
+.quote-strip{margin:2rem auto 0;max-width:820px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:1rem}
+.quote-strip blockquote{margin:0;border-left:3px solid var(--blood);padding:.2rem 0 .2rem .9rem;font-style:italic}
+.quote-strip cite{display:block;font-style:normal;font-family:var(--sc);font-size:.8rem;letter-spacing:.08em;margin-top:.2rem}
+
+/* --------------------------------------------------------------------------
+   Prices & Tithes
+   -------------------------------------------------------------------------- */
+.price-wrap{max-width:760px;margin:0 auto;border:3px double var(--ink);padding:1.2rem clamp(.8rem,3vw,2rem)}
+.price{width:100%;border-collapse:collapse}
+.price th{font-family:var(--sc);letter-spacing:.1em;font-weight:400;text-align:left;border-bottom:2px solid var(--ink);padding:.3em 0;font-size:.9rem}
+.price th:last-child,.price td:last-child{text-align:right;white-space:nowrap}
+.price td{padding:.55em 0;border-bottom:1px dotted rgba(26,22,18,.5);vertical-align:baseline}
+.price td .it{font-style:italic;font-size:.9em;display:block}
+.price .amt{font-family:var(--display);font-size:1.9em;line-height:1;color:var(--blood)}
+.price .amt small{font-family:var(--sc);font-size:.45em;color:var(--ink);vertical-align:middle;letter-spacing:.06em}
+.price tr.best td{background:linear-gradient(90deg,transparent,rgba(201,162,39,.25) 15%,rgba(201,162,39,.25) 85%,transparent)}
+.stamp{
+  display:inline-block;transform:rotate(-6deg);border:3px solid var(--blood);color:var(--blood);
+  font-family:var(--sc);letter-spacing:.16em;padding:.2em .7em;font-size:1rem;margin:.6rem 0 0;
+  mask-image:repeating-linear-gradient(45deg, #000 0 3px, rgba(0,0,0,.7) 3px 4px);
+  -webkit-mask-image:repeating-linear-gradient(45deg, #000 0 3px, rgba(0,0,0,.7) 3px 4px);
+}
+.tithe-list{list-style:none;padding:0;margin:.6rem 0 0;display:grid;gap:.5rem}
+.tithe-list li{display:flex;gap:.7rem;align-items:flex-start}
+.tithe-list svg{width:30px;height:30px;flex:none;margin-top:.15em}
+
+/* --------------------------------------------------------------------------
+   Kids Day, Neighbors, Crew
+   -------------------------------------------------------------------------- */
+.kids-card{border:3px solid var(--ink);background:var(--paper);padding:1.4rem clamp(1rem,3vw,2rem);position:relative;
+  box-shadow:6px 6px 0 var(--mustard),6px 6px 0 2px var(--ink)}
+.kids-card .big{font-family:var(--display);font-size:clamp(1.8rem,1.4rem + 2vw,3rem);color:var(--blood);line-height:1.1}
+.fact-row{display:flex;flex-wrap:wrap;gap:.6rem 1.6rem;margin:.6rem 0 1rem;font-family:var(--sc);letter-spacing:.08em}
+.fact-row span b{font-family:var(--display);font-weight:400;font-size:1.35em;color:var(--blood)}
+.neigh{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:1.4rem;margin-top:1.4rem}
+.neigh article{text-align:center;padding:1rem}
+.neigh svg{width:96px;height:96px;margin:0 auto .5rem}
+.neigh h3{margin-bottom:.4rem}
+.crew-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:1.6rem 2.4rem;align-items:start}
+.roll{list-style:none;padding:0;margin:0}
+.roll li{border-bottom:1px dotted var(--ink);padding:.5rem 0;display:flex;gap:.6rem;align-items:baseline}
+.roll .role{font-family:var(--sc);letter-spacing:.08em;min-width:6.5em;color:var(--blood)}
+.poster{border:3px solid var(--ink);padding:1.2rem;text-align:center;background:var(--paper);box-shadow:inset 0 0 0 5px var(--paper), inset 0 0 0 6px var(--ink)}
+.poster .huge{font-family:var(--display);font-size:clamp(2.2rem,1.6rem + 3vw,3.8rem);line-height:.95;color:var(--blood)}
+.poster .mid{font-family:var(--sc);letter-spacing:.14em;margin:.4rem 0}
+
+/* --------------------------------------------------------------------------
+   Questions Put to the Scarecrow (FAQ)
+   -------------------------------------------------------------------------- */
+.faq{max-width:780px;margin:0 auto}
+.faq details{border-top:1.5px solid var(--ink)}
+.faq details:last-child{border-bottom:1.5px solid var(--ink)}
+.faq summary{cursor:pointer;list-style:none;padding:.8rem .2rem .8rem 2.2rem;position:relative;font-family:var(--body);font-size:1.12em;font-style:italic}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::before{content:"Q.";position:absolute;left:.2rem;top:.75rem;font-family:var(--display);font-style:normal;color:var(--blood);font-size:1.2em}
+.faq summary::after{content:"+";position:absolute;right:.4rem;top:.7rem;font-family:var(--display);font-style:normal;font-size:1.4em;line-height:1}
+.faq details[open] summary::after{content:"–"}
+.faq .a{padding:0 .2rem 1rem 2.2rem;position:relative}
+.faq .a::before{content:"A.";position:absolute;left:.2rem;top:-.1rem;font-family:var(--display);color:var(--ink);font-size:1.2em}
+.faq .a p:last-child{margin-bottom:0}
+
+/* --------------------------------------------------------------------------
+   Directions
+   -------------------------------------------------------------------------- */
+.addr{font-family:var(--display);font-size:clamp(1.5rem,1.2rem + 1.4vw,2.2rem);line-height:1.1;margin:.2rem 0 .6rem}
+.steps{padding-left:1.2rem;margin:0 0 1rem}
+.steps li{margin-bottom:.4rem}
+.victuals{border:2px dashed var(--ink);padding:.8rem 1rem;margin-top:1rem}
+
+/* --------------------------------------------------------------------------
+   Footer (colophon)
+   -------------------------------------------------------------------------- */
+.colophon{margin-top:3.5rem;border-top:3px solid var(--ink);background:var(--ink);color:var(--paper);padding:2.2rem 0 5rem}
+.colophon a{color:var(--mustard)}
+.colophon a:hover{color:var(--paper)}
+.colophon .in{max-width:var(--frame);margin:0 auto;padding:0 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:1.6rem}
+.colophon h3{color:var(--mustard);margin-bottom:.5rem}
+.colophon .fine{font-size:.85em;opacity:.85;grid-column:1/-1;border-top:1px dotted rgba(241,233,214,.4);padding-top:1rem;text-align:center;font-style:italic}
+.socials{list-style:none;padding:0;margin:0;display:flex;gap:.8rem;flex-wrap:wrap}
+.socials a{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--sc);letter-spacing:.08em;text-decoration:none;border:1.5px solid var(--mustard);padding:.3em .7em}
+.socials a:hover{background:var(--mustard);color:var(--ink)}
+.socials svg{width:18px;height:18px;fill:currentColor}
+.colophon .btn{margin-top:.4rem}
+</style>
+</head>
+<body>
+
+<!-- ==========================================================================
+     Shared SVG defs: hatching patterns + reusable woodcut symbols.
+     Referenced by every inline illustration below via url(#…) / <use>.
+     ========================================================================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#1a1612" stroke-width="1.7"/>
+    </pattern>
+    <pattern id="hatch-fine" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+      <line x1="0" y1="0" x2="0" y2="4" stroke="#1a1612" stroke-width="1"/>
+    </pattern>
+    <pattern id="hatch-h" width="5" height="5" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="2.5" x2="5" y2="2.5" stroke="#1a1612" stroke-width="1.3"/>
+    </pattern>
+    <pattern id="crosshatch" width="7" height="7" patternUnits="userSpaceOnUse">
+      <path d="M0 0L7 7M7 0L0 7" stroke="#1a1612" stroke-width="1"/>
+    </pattern>
+    <pattern id="stipple" width="6" height="6" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1" fill="#1a1612"/><circle cx="4.5" cy="4.5" r="1" fill="#1a1612"/>
+    </pattern>
+
+    <!-- perched crow, facing right -->
+    <symbol id="crow" viewBox="0 0 64 42">
+      <path fill="#1a1612" d="M1 15 L15 20 C19 12 30 8 42 11 C44 5 51 3 55 7 L63 12 L54 14 C56 18 54 22 50 24 C46 30 34 33 22 31 L4 34 L18 29 C10 27 5 22 1 15 Z"/>
+      <path d="M26 32 L24 41 M31 32 L32 41" stroke="#1a1612" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="49" cy="10" r="1.4" fill="#f1e9d6"/>
+    </symbol>
+
+    <!-- small woodcut sun for Kids Day -->
+    <symbol id="sun" viewBox="0 0 40 40">
+      <g stroke="#1a1612" stroke-width="2.2" stroke-linecap="round">
+        <line x1="20" y1="2" x2="20" y2="8"/><line x1="20" y1="32" x2="20" y2="38"/>
+        <line x1="2" y1="20" x2="8" y2="20"/><line x1="32" y1="20" x2="38" y2="20"/>
+        <line x1="7.3" y1="7.3" x2="11.5" y2="11.5"/><line x1="28.5" y1="28.5" x2="32.7" y2="32.7"/>
+        <line x1="7.3" y1="32.7" x2="11.5" y2="28.5"/><line x1="28.5" y1="11.5" x2="32.7" y2="7.3"/>
+      </g>
+      <circle cx="20" cy="20" r="9" fill="#c9a227" stroke="#1a1612" stroke-width="2.2"/>
+      <circle cx="20" cy="20" r="5" fill="url(#hatch-fine)"/>
+    </symbol>
+
+    <!-- one corn stalk -->
+    <symbol id="stalk" viewBox="0 0 40 120">
+      <g stroke="#1a1612" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="20" y1="120" x2="20" y2="14"/>
+        <path d="M20 92 C10 90 3 80 1 62 C10 70 16 80 20 92 Z" fill="url(#hatch)"/>
+        <path d="M20 70 C30 66 38 56 39 40 C30 48 24 58 20 70 Z" fill="url(#hatch)"/>
+        <path d="M20 54 C12 50 6 40 6 26 C14 34 18 44 20 54 Z" fill="url(#hatch)"/>
+        <path d="M20 106 C28 104 36 96 38 84 C30 90 24 98 20 106 Z" fill="url(#hatch)"/>
+        <ellipse cx="26" cy="78" rx="4.5" ry="11" fill="#c9a227"/>
+        <path d="M20 14 L14 2 M20 14 L20 1 M20 14 L27 3" stroke-width="1.8"/>
+      </g>
+    </symbol>
+
+    <!-- ornamental fleuron for dividers -->
+    <symbol id="fleuron" viewBox="0 0 60 24">
+      <path fill="#1a1612" d="M30 2 L36 12 L30 22 L24 12 Z"/>
+      <path d="M2 12 C10 4 18 4 24 12 C18 20 10 20 2 12 Z M58 12 C50 4 42 4 36 12 C42 20 50 20 58 12 Z" fill="none" stroke="#1a1612" stroke-width="1.6"/>
+      <circle cx="30" cy="12" r="2" fill="#f1e9d6"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- concept badge + dog-ear folds -->
+<div class="badge" aria-label="Concept 9, The Scarecrow's Almanac">CONCEPT #9 — The Scarecrow's Almanac</div>
+<div class="dogear br" aria-hidden="true"></div>
+<div class="dogear bl" aria-hidden="true"></div>
+
+<a class="visually-hidden" href="#contents">Skip to contents</a>
+
+<!-- ==========================================================================
+     Navigation (running head)
+     ========================================================================== -->
+<header class="nav">
+  <div class="nav-in">
+    <a class="brand" href="#top" aria-label="Nightmare on the Crow, back to the cover">
+      <svg viewBox="0 0 64 42" aria-hidden="true"><use href="#crow"/></svg>
+      Nightmare on the Crow
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-list">Contents</button>
+    <ul class="nav-list" id="nav-list">
+      <li><a href="#calendar">Nights</a></li>
+      <li><a href="#omens">Omens</a></li>
+      <li><a href="#tithes">Prices</a></li>
+      <li><a href="#little-ones">Little Ones</a></li>
+      <li><a href="#neighbors">Neighbors</a></li>
+      <li><a href="#hands">Crew</a></li>
+      <li><a href="#questions">Questions</a></li>
+      <li><a href="#field">Directions</a></li>
+      <li><a class="cta" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="top" class="book">
+
+  <!-- ========================================================================
+       COVER
+       ======================================================================== -->
+  <section class="cover" aria-labelledby="title">
+    <p class="kicker">Fourth Season · Anno Domini 2026 · Twenty Dollars a Soul, or Fifteen and a Kindness</p>
+    <h1 id="title">The Scarecrow's Almanac</h1>
+    <p class="sub">Being a True Account of the Nights of October on the Crow</p>
+    <p class="place">Greenfield, Minn. — Fourth Season</p>
+
+    <svg class="rule" viewBox="0 0 400 24" aria-hidden="true">
+      <line x1="0" y1="12" x2="168" y2="12" stroke="#1a1612" stroke-width="2"/>
+      <line x1="232" y1="12" x2="400" y2="12" stroke="#1a1612" stroke-width="2"/>
+      <use href="#fleuron" x="170" y="0" width="60" height="24"/>
+    </svg>
+
+    <!-- The plate: moon & crow | scarecrow (head follows cursor) | corn rows -->
+    <div class="plate">
+      <div class="side l">
+        <svg viewBox="0 0 200 200" role="img" aria-label="Woodcut of a crescent moon with a crow perched on its lower horn">
+          <g fill="#1a1612">
+            <path d="M40 30 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3z"/>
+            <path d="M170 60 l2 6 6 2 -6 2 -2 6 -2 -6 -6 -2 6 -2z"/>
+            <path d="M160 150 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z"/>
+            <path d="M25 140 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z"/>
+          </g>
+          <path d="M140 25 A80 80 0 1 0 140 175 A78 78 0 0 1 140 25 Z" fill="url(#hatch-fine)" stroke="#1a1612" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M140 25 A80 80 0 1 0 140 175 A78 78 0 0 1 140 25 Z" fill="none" stroke="#1a1612" stroke-width="3"/>
+          <path d="M60 60 C40 90 45 130 70 160" fill="none" stroke="#1a1612" stroke-width="6" stroke-linecap="round"/>
+          <use href="#crow" x="104" y="140" width="56" height="37"/>
+        </svg>
+        <span class="cap">The Crow Moon</span>
+      </div>
+
+      <div class="center-col">
+        <svg id="scarecrow" viewBox="0 0 320 420" role="img" aria-label="Woodcut of the scarecrow who watches the corn, a crow perched on his crossbar">
+          <g stroke="#1a1612" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <!-- pole & crossbar -->
+            <rect x="153" y="150" width="14" height="270" fill="url(#hatch-h)"/>
+            <rect x="44" y="178" width="232" height="10" fill="url(#hatch-h)"/>
+            <!-- straw hands -->
+            <g stroke="#c9a227" stroke-width="2.5">
+              <path d="M52 176 L30 160 M50 180 L22 176 M52 186 L28 198 M54 190 L38 210"/>
+              <path d="M268 176 L290 160 M270 180 L298 176 M268 186 L292 198 M266 190 L282 210"/>
+            </g>
+            <g stroke="#1a1612" stroke-width="1.6">
+              <path d="M52 178 L34 166 M50 182 L26 182 M52 188 L32 202"/>
+              <path d="M268 178 L286 166 M270 182 L294 182 M268 188 L288 202"/>
+            </g>
+            <!-- sleeves -->
+            <path d="M120 196 L54 172 L52 192 L118 226 Z" fill="url(#hatch)"/>
+            <path d="M200 196 L266 172 L268 192 L202 226 Z" fill="url(#hatch)"/>
+            <!-- coat -->
+            <path d="M112 190 L208 190 L224 322 L96 322 Z" fill="url(#crosshatch)"/>
+            <path d="M112 190 L160 200 L208 190 L200 214 L160 226 L120 214 Z" fill="#7a1f1f"/>
+            <rect x="126" y="252" width="34" height="30" fill="#c9a227"/>
+            <path d="M126 252 L160 282 M160 252 L126 282" stroke-width="1.5"/>
+            <rect x="174" y="288" width="28" height="24" fill="#7a1f1f"/>
+            <path d="M174 288 L202 312 M202 288 L174 312" stroke-width="1.5"/>
+            <circle cx="160" cy="236" r="4.5" fill="#1a1612"/>
+            <circle cx="160" cy="266" r="4.5" fill="#1a1612"/>
+            <circle cx="160" cy="298" r="4.5" fill="#1a1612"/>
+            <!-- trousers + straw at the cuffs -->
+            <path d="M100 322 L156 322 L150 400 L110 400 Z" fill="url(#hatch)"/>
+            <path d="M164 322 L220 322 L212 400 L170 400 Z" fill="url(#hatch)"/>
+            <g stroke="#c9a227" stroke-width="2.5">
+              <path d="M114 400 L108 418 M124 400 L124 419 M136 400 L142 418 M148 400 L154 416"/>
+              <path d="M174 400 L168 418 M186 400 L186 419 M198 400 L204 418 M208 400 L214 416"/>
+            </g>
+            <!-- head group: rotates to follow the cursor -->
+            <g id="sc-head">
+              <rect x="150" y="128" width="20" height="30" fill="#f1e9d6"/>
+              <g stroke="#c9a227" stroke-width="2.2">
+                <path d="M132 134 L118 146 M136 138 L124 154 M188 134 L202 146 M184 138 L196 154"/>
+              </g>
+              <path d="M118 64 C118 30 202 30 202 64 L206 122 C202 142 118 142 114 122 Z" fill="#f1e9d6"/>
+              <path d="M178 40 C200 52 206 96 202 128 C194 136 184 138 176 138 C190 108 190 70 178 40 Z" fill="url(#hatch-fine)" stroke="none"/>
+              <path d="M118 64 C118 30 202 30 202 64 L206 122 C202 142 118 142 114 122 Z" fill="none"/>
+              <!-- button eyes -->
+              <circle cx="142" cy="90" r="7" fill="#1a1612"/>
+              <circle cx="178" cy="90" r="7" fill="#1a1612"/>
+              <path d="M139 87 L145 93 M145 87 L139 93 M175 87 L181 93 M181 87 L175 93" stroke="#f1e9d6" stroke-width="1.4"/>
+              <!-- stitched nose & mouth -->
+              <path d="M160 98 L153 112 L167 112 Z" fill="#c9a227"/>
+              <path d="M136 122 Q160 136 184 122" fill="none"/>
+              <path d="M144 121 L146 131 M152 125 L153 135 M160 127 L160 137 M168 125 L167 135 M176 121 L174 131" stroke-width="2"/>
+              <!-- hat -->
+              <ellipse cx="160" cy="58" rx="74" ry="13" fill="#1a1612"/>
+              <path d="M118 58 L124 10 Q160 -2 196 10 L202 58 Z" fill="#1a1612"/>
+              <rect x="121" y="40" width="78" height="10" fill="#7a1f1f" stroke="none"/>
+              <path d="M124 10 Q160 20 196 10" fill="none" stroke="#f1e9d6" stroke-width="1.5"/>
+            </g>
+            <!-- crow on the crossbar -->
+            <use href="#crow" x="222" y="140" width="58" height="38" stroke="none"/>
+          </g>
+        </svg>
+      </div>
+
+      <div class="side r">
+        <svg viewBox="0 0 200 200" role="img" aria-label="Woodcut of corn rows under a dark sky">
+          <rect x="0" y="0" width="200" height="200" fill="none"/>
+          <path d="M0 190 L200 190" stroke="#1a1612" stroke-width="3"/>
+          <path d="M0 176 C40 170 80 178 120 172 C150 168 180 176 200 172" fill="none" stroke="#1a1612" stroke-width="1.8"/>
+          <use href="#stalk" x="8" y="70" width="40" height="120"/>
+          <use href="#stalk" x="44" y="56" width="42" height="134"/>
+          <use href="#stalk" x="86" y="64" width="40" height="126"/>
+          <use href="#stalk" x="122" y="50" width="44" height="140"/>
+          <use href="#stalk" x="160" y="68" width="40" height="122"/>
+          <use href="#crow" x="10" y="20" width="44" height="30"/>
+        </svg>
+        <span class="cap">The Corn on Harff Road</span>
+      </div>
+    </div>
+
+    <p class="ribbon">It All Begins with a Hayride!</p>
+    <p class="publisher">Set down by the scarecrow who watches the corn, and printed for the Three Neighbors of <strong>Nightmare on the Crow</strong>, 6470 Harff Road, Greenfield, Minnesota.</p>
+    <div class="cta-row">
+      <a class="btn" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
+      <a class="btn ghost" href="#contents">Read the Almanac ↓</a>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       COUNTDOWN
+       ======================================================================== -->
+  <section class="lantern" aria-labelledby="cd-title">
+    <h2 id="cd-title">Nights until the first lantern is lit:</h2>
+    <div class="ct" role="timer" aria-live="off" aria-label="Countdown to Friday, October 9, 2026 at 7:30 in the evening">
+      <div class="ct-cell"><span class="ct-num" id="cd-d">--</span><span class="ct-lbl">nights</span></div>
+      <div class="ct-cell"><span class="ct-num" id="cd-h">--</span><span class="ct-lbl">hours</span></div>
+      <div class="ct-cell"><span class="ct-num" id="cd-m">--</span><span class="ct-lbl">minutes</span></div>
+      <div class="ct-cell"><span class="ct-num" id="cd-s">--</span><span class="ct-lbl">seconds</span></div>
+    </div>
+    <p id="cd-note">Friday the 9th of October, half past seven in the evening. The gate closes at ten.</p>
+  </section>
+
+  <!-- ========================================================================
+       A WORD FROM THE SCARECROW + CONTENTS
+       ======================================================================== -->
+  <section class="section" id="contents" aria-labelledby="contents-title">
+    <div class="cols">
+      <div class="prose">
+        <h2 class="hd" style="font-size:clamp(1.7rem,1.4rem + 1.4vw,2.6rem)">A Word from the Scarecrow<span class="hd-crow" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></h2>
+        <p class="dropcap" style="margin-top:1rem">I have stood in this field a long while. I have watched three neighbors who loved Halloween turn a hayride into something that crawls under the skin, and then hand the proceeds back to the town in cans and coats. I have watched the crows learn the actors' cues. I have watched grown men run.</p>
+        <p>This almanac is my account of what is coming this October. It is set down plain: the nights, the prices, the omens, the questions folk ask me at the gate. Read it by lantern. Then come and see whether I've told you true.</p>
+        <p class="small"><em>— The Scarecrow, from the crossbar on Harff Road</em></p>
+      </div>
+      <div>
+        <div class="hd-wrap" style="text-align:left">
+          <h2 class="hd alt" id="contents-title">Contents<span class="hd-crow" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></h2>
+        </div>
+        <ol class="toc">
+          <li><span class="num">I.</span><a href="#calendar">Calendar of Nights</a><span class="dots"></span><span class="pg">Oct.</span></li>
+          <li><span class="num">II.</span><a href="#moon">Phases of the Moon</a><span class="dots"></span><span class="pg">Oct.</span></li>
+          <li><span class="num">III.</span><a href="#omens">Signs &amp; Omens</a><span class="dots"></span><span class="pg">the trail</span></li>
+          <li><span class="num">IV.</span><a href="#tithes">Prices &amp; Tithes</a><span class="dots"></span><span class="pg">$20 / $15</span></li>
+          <li><span class="num">V.</span><a href="#little-ones">For the Little Ones</a><span class="dots"></span><span class="pg">Oct. 10</span></li>
+          <li><span class="num">VI.</span><a href="#neighbors">The Three Neighbors</a><span class="dots"></span><span class="pg">give-back</span></li>
+          <li><span class="num">VII.</span><a href="#hands">Hands Wanted for the Harvest</a><span class="dots"></span><span class="pg">crew</span></li>
+          <li><span class="num">VIII.</span><a href="#questions">Questions Put to the Scarecrow</a><span class="dots"></span><span class="pg">FAQ</span></li>
+          <li><span class="num">IX.</span><a href="#field">How to Find the Field</a><span class="dots"></span><span class="pg">Harff Rd.</span></li>
+        </ol>
+      </div>
+    </div>
+    <svg class="divider" viewBox="0 0 520 24" aria-hidden="true"><line x1="0" y1="12" x2="228" y2="12" stroke="#1a1612" stroke-width="2"/><line x1="292" y1="12" x2="520" y2="12" stroke="#1a1612" stroke-width="2"/><use href="#fleuron" x="230" y="0" width="60" height="24"/></svg>
+  </section>
+
+  <!-- ========================================================================
+       I. CALENDAR OF NIGHTS — October 2026 (Oct 1 is a Thursday)
+       ======================================================================== -->
+  <section class="section" id="calendar" aria-labelledby="cal-title">
+    <div class="hd-wrap">
+      <h2 class="hd" id="cal-title">I. Calendar of Nights<span class="hd-crow" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></h2>
+      <p class="hd-sub">Four nights only. Half past seven till ten of the clock; the gate admits no one after ten.</p>
+    </div>
+
+    <table class="cal">
+      <caption>October, MMXXVI</caption>
+      <thead>
+        <tr><th scope="col"><abbr title="Sunday">Sun</abbr></th><th scope="col"><abbr title="Monday">Mon</abbr></th><th scope="col"><abbr title="Tuesday">Tue</abbr></th><th scope="col"><abbr title="Wednesday">Wed</abbr></th><th scope="col"><abbr title="Thursday">Thu</abbr></th><th scope="col"><abbr title="Friday">Fri</abbr></th><th scope="col"><abbr title="Saturday">Sat</abbr></th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="blank" aria-hidden="true"></td><td class="blank" aria-hidden="true"></td><td class="blank" aria-hidden="true"></td><td class="blank" aria-hidden="true"></td>
+          <td><span class="d">1</span></td><td><span class="d">2</span></td><td><span class="d">3</span></td>
+        </tr>
+        <tr>
+          <td><span class="d">4</span></td><td><span class="d">5</span></td><td><span class="d">6</span></td><td><span class="d">7</span></td><td><span class="d">8</span></td>
+          <td class="haunt"><span class="d">9</span><span class="visually-hidden">Haunt night, 7:30 to 10 PM</span><span class="mark" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></td>
+          <td class="haunt"><span class="d">10</span><span class="visually-hidden">Kids Day noon to 3 PM, then haunt night 7:30 to 10 PM</span><span class="mark" aria-hidden="true"><svg class="sun" viewBox="0 0 40 40"><use href="#sun"/></svg><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></td>
+        </tr>
+        <tr>
+          <td><span class="d">11</span></td><td><span class="d">12</span></td><td><span class="d">13</span></td><td><span class="d">14</span></td><td><span class="d">15</span></td>
+          <td class="haunt"><span class="d">16</span><span class="visually-hidden">Haunt night, 7:30 to 10 PM</span><span class="mark" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></td>
+          <td class="haunt"><span class="d">17</span><span class="visually-hidden">Haunt night, 7:30 to 10 PM</span><span class="mark" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></td>
+        </tr>
+        <tr>
+          <td><span class="d">18</span></td><td><span class="d">19</span></td><td><span class="d">20</span></td><td><span class="d">21</span></td><td><span class="d">22</span></td><td><span class="d">23</span></td><td><span class="d">24</span></td>
+        </tr>
+        <tr>
+          <td><span class="d">25</span></td><td><span class="d">26</span></td><td><span class="d">27</span></td><td><span class="d">28</span></td><td><span class="d">29</span></td><td><span class="d">30</span></td><td><span class="d">31</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="cal-legend" aria-label="Calendar legend">
+      <span><svg viewBox="0 0 64 42" aria-hidden="true"><use href="#crow"/></svg> a crow marks a haunt night, 7:30–10 PM</span>
+      <span><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#sun"/></svg> the sun marks Kids Day, noon–3 PM</span>
+    </div>
+
+    <div class="nights">
+      <article class="night"><div class="dow">Friday</div><div class="day">Oct 9</div><div class="hrs">7:30 – 10:00 PM<br>the first lantern</div></article>
+      <article class="night kids"><div class="dow">Saturday</div><div class="day">Oct 10</div><div class="hrs">Kids Day noon – 3 PM<br>Haunt 7:30 – 10:00 PM</div></article>
+      <article class="night"><div class="dow">Friday</div><div class="day">Oct 16</div><div class="hrs">7:30 – 10:00 PM<br>the corn is taller</div></article>
+      <article class="night"><div class="dow">Saturday</div><div class="day">Oct 17</div><div class="hrs">7:30 – 10:00 PM<br>the last lantern</div></article>
+    </div>
+    <p class="center" style="margin-top:1.4rem"><a class="btn" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets for a Night</a></p>
+
+    <!-- II. Phases of the Moon (decorative; dates as the scarecrow reckons them) -->
+    <div id="moon" style="scroll-margin-top:4.5rem;margin-top:2.6rem">
+      <div class="hd-wrap">
+        <h2 class="hd alt" style="font-size:clamp(1.7rem,1.4rem + 1.4vw,2.6rem)">II. Phases of the Moon<span class="hd-crow" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></h2>
+        <p class="hd-sub">As the scarecrow reckons them. Consult the sky before you trust him.</p>
+      </div>
+      <div class="moons">
+        <div class="moon">
+          <svg viewBox="0 0 100 100" role="img" aria-label="Last quarter moon">
+            <circle cx="50" cy="50" r="42" fill="url(#hatch-fine)" stroke="#1a1612" stroke-width="3"/>
+            <path d="M50 8 A42 42 0 0 0 50 92 Z" fill="#1a1612"/>
+          </svg>
+          <div class="ph-name">Last Quarter</div><div class="ph-date">about the 3rd</div>
+        </div>
+        <div class="moon">
+          <svg viewBox="0 0 100 100" role="img" aria-label="New moon">
+            <circle cx="50" cy="50" r="42" fill="#1a1612" stroke="#1a1612" stroke-width="3"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="#f1e9d6" stroke-width="1" stroke-dasharray="3 4"/>
+          </svg>
+          <div class="ph-name">New Moon</div><div class="ph-date">about the 10th — no moon at all over the second night</div>
+        </div>
+        <div class="moon">
+          <svg viewBox="0 0 100 100" role="img" aria-label="First quarter moon">
+            <circle cx="50" cy="50" r="42" fill="url(#hatch-fine)" stroke="#1a1612" stroke-width="3"/>
+            <path d="M50 8 A42 42 0 0 1 50 92 Z" fill="#1a1612"/>
+          </svg>
+          <div class="ph-name">First Quarter</div><div class="ph-date">about the 18th, once the lanterns are out</div>
+        </div>
+        <div class="moon">
+          <svg viewBox="0 0 100 100" role="img" aria-label="Full moon">
+            <circle cx="50" cy="50" r="42" fill="url(#stipple)" stroke="#1a1612" stroke-width="3"/>
+            <circle cx="38" cy="40" r="7" fill="url(#hatch-fine)"/><circle cx="62" cy="58" r="10" fill="url(#hatch-fine)"/>
+          </svg>
+          <div class="ph-name">Full Moon</div><div class="ph-date">about the 26th — the Hunter's Moon</div>
+        </div>
+      </div>
+      <p class="center small" style="margin-top:1rem"><em>Note well: the haunt runs dark on the 9th, 10th, 16th and 17th. The moon will be thin or absent every one of those nights. Bring your nerve; the corn will bring the dark.</em></p>
+    </div>
+    <svg class="divider" viewBox="0 0 520 24" aria-hidden="true"><line x1="0" y1="12" x2="228" y2="12" stroke="#1a1612" stroke-width="2"/><line x1="292" y1="12" x2="520" y2="12" stroke="#1a1612" stroke-width="2"/><use href="#fleuron" x="230" y="0" width="60" height="24"/></svg>
+  </section>
+
+  <!-- ========================================================================
+       III. SIGNS & OMENS — the attractions, written as omens
+       ======================================================================== -->
+  <section class="section" id="omens" aria-labelledby="omens-title">
+    <div class="hd-wrap">
+      <h2 class="hd" id="omens-title">III. Signs &amp; Omens<span class="hd-crow" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></h2>
+      <p class="hd-sub">What to expect on the trail, as the old folk would have told it.</p>
+    </div>
+    <div class="omens">
+      <article class="omen">
+        <div class="top">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><g stroke="#1a1612" stroke-width="2.5" stroke-linejoin="round" fill="none"><path d="M8 34 L14 20 L50 20 L56 34 Z" fill="url(#hatch)"/><rect x="6" y="34" width="52" height="10" fill="#1a1612"/><circle cx="18" cy="52" r="7" fill="url(#hatch-h)"/><circle cx="46" cy="52" r="7" fill="url(#hatch-h)"/><path d="M14 20 L18 8 M50 20 L46 8 M22 20 C22 12 42 12 42 20"/></g></svg>
+          <h3>When the wagon creaks…</h3>
+        </div>
+        <div class="what">The Hayride</div>
+        <p>It all begins with a hayride. You'll be carried out past the last porch light to where the trail starts, and the wagon will not turn around for anybody. Sit close. Keep your hands in.</p>
+      </article>
+      <article class="omen">
+        <div class="top">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><use href="#stalk" x="4" y="2" width="20" height="60"/><use href="#stalk" x="22" y="0" width="22" height="64"/><use href="#stalk" x="42" y="4" width="20" height="58"/></svg>
+          <h3>When the corn whispers…</h3>
+        </div>
+        <div class="what">The Corn Maze</div>
+        <p>Rows taller than a tall man. Paths that fold back on themselves like a letter you'd rather not read. It's eerie in there, and something walks the rows beside you, keeping pace. It is probably one of ours.</p>
+      </article>
+      <article class="omen">
+        <div class="top">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><g stroke="#1a1612" stroke-width="2.5" stroke-linejoin="round" fill="none"><path d="M32 60 L32 30 M32 40 L20 28 M32 34 L44 22 M32 46 L22 40 M32 44 L42 36" stroke-width="3"/><path d="M8 30 C8 12 20 4 32 6 C46 4 58 14 56 30 C54 44 40 44 32 40 C22 46 8 44 8 30 Z" fill="url(#crosshatch)"/><path d="M2 60 L62 60"/></g></svg>
+          <h3>When the trees close in…</h3>
+        </div>
+        <div class="what">The Haunted Trail</div>
+        <p>The trail winds through the forest by tunnels and winding paths. Keep to the path; the path does not always keep to you. What you hear behind you is closer than it sounds.</p>
+      </article>
+      <article class="omen">
+        <div class="top">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><g stroke="#1a1612" stroke-width="2.5" stroke-linejoin="round" fill="none"><path d="M8 28 L20 14 L32 8 L44 14 L56 28 Z" fill="#1a1612"/><rect x="10" y="28" width="44" height="30" fill="url(#hatch-h)"/><rect x="26" y="38" width="12" height="20" fill="#c9a227"/><path d="M26 38 L38 58 M38 38 L26 58" stroke-width="1.5"/><path d="M2 58 L62 58"/></g></svg>
+          <h3>When a light burns in the barn…</h3>
+        </div>
+        <div class="what">The Haunted Buildings</div>
+        <p>Buildings full of live actors and displays. Every door opens. Not every door lets you back out the way you came. If a room seems empty, it is waiting for you to say so out loud.</p>
+      </article>
+      <article class="omen">
+        <div class="top">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><g stroke="#1a1612" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" fill="none"><path d="M20 62 L20 40 C12 36 12 22 22 20 L26 4 L30 20 L34 2 L38 20 L44 6 L46 22 C54 26 52 38 44 40 L44 62 Z" fill="url(#hatch-fine)"/><path d="M20 62 L44 62"/></g></svg>
+          <h3>When a hand reaches from the dark…</h3>
+        </div>
+        <div class="what">Live Actors &amp; Interactive Scares</div>
+        <p>Live actors, all through the trail, every one of them a neighbor who volunteered to be your nightmare. This isn't just a haunt. It's an experience designed to crawl under your skin and stay there till Thanksgiving.</p>
+      </article>
+      <article class="omen">
+        <div class="top">
+          <svg viewBox="0 0 64 64" aria-hidden="true"><g stroke="#1a1612" stroke-width="2.5" stroke-linejoin="round" fill="none"><rect x="14" y="6" width="36" height="52" fill="url(#hatch-h)"/><path d="M22 6 L22 58 M30 6 L30 58 M38 6 L38 58 M46 6 L46 58" stroke-width="3"/><circle cx="34" cy="24" r="7" fill="#f1e9d6"/><path d="M31 23 L33 23 M35 23 L37 23 M32 28 L36 28" stroke-width="1.6"/><path d="M6 58 L58 58"/></g></svg>
+          <h3>When the crows go quiet…</h3>
+        </div>
+        <div class="what">The Graveyard &amp; the Cage</div>
+        <p>Ben builds the sets, and Ben built a zombie graveyard and a skeleton trapped in a cage. The skeleton has been in there some time. The crows won't sit near it, and crows will sit on anything.</p>
+      </article>
+    </div>
+
+    <div class="cols" style="margin-top:2rem">
+      <figure class="plate-ph" style="margin:0">
+        <div class="ph"><span>PHOTO: trail entrance at dusk, lantern lit</span></div>
+        <figcaption>Plate I. The mouth of the trail, as the wagon leaves it.</figcaption>
+      </figure>
+      <figure class="plate-ph" style="margin:0">
+        <div class="ph"><span>PHOTO: actors in the corn maze, fog, red light</span></div>
+        <figcaption>Plate II. The corn, on a night with no moon.</figcaption>
+      </figure>
+    </div>
+
+    <div class="quote-strip" aria-label="Testimonies gathered at the gate (sample copy)">
+      <blockquote>"Cheaper than the big haunts and scarier than most of them."<cite>— a guest, 2025 (sample copy)</cite></blockquote>
+      <blockquote>"My teenager screamed in the corn and then asked to go again."<cite>— a guest, 2025 (sample copy)</cite></blockquote>
+      <blockquote>"Brought a coat, saved five bucks, felt like a decent person."<cite>— a guest, 2025 (sample copy)</cite></blockquote>
+    </div>
+    <svg class="divider" viewBox="0 0 520 24" aria-hidden="true"><line x1="0" y1="12" x2="228" y2="12" stroke="#1a1612" stroke-width="2"/><line x1="292" y1="12" x2="520" y2="12" stroke="#1a1612" stroke-width="2"/><use href="#fleuron" x="230" y="0" width="60" height="24"/></svg>
+  </section>
+
+  <!-- ========================================================================
+       IV. PRICES & TITHES
+       ======================================================================== -->
+  <section class="section" id="tithes" aria-labelledby="tithes-title">
+    <div class="hd-wrap">
+      <h2 class="hd alt" id="tithes-title">IV. Prices &amp; Tithes<span class="hd-crow" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></h2>
+      <p class="hd-sub">Printed here in ink, where the other haunts print nothing at all.</p>
+    </div>
+    <div class="price-wrap">
+      <table class="price">
+        <thead><tr><th scope="col">Admission</th><th scope="col">Price</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Haunted Trail, one soul<span class="it">any of the four nights, 7:30–10 PM</span></td>
+            <td><span class="amt">$20</span></td>
+          </tr>
+          <tr class="best">
+            <td><strong>Haunted Trail, with a tithe to the neighbors</strong><span class="it">bring a food-shelf donation or a winter clothing item to the gate</span></td>
+            <td><span class="amt">$15</span></td>
+          </tr>
+          <tr>
+            <td>Kids Day, Saturday Oct 10<span class="it">noon–3 PM · lights-on trail, trick-or-treating, family doings</span></td>
+            <td><span class="amt">$5</span></td>
+          </tr>
+          <tr>
+            <td>Kids Day ticket, redeemed against an evening haunt ticket<span class="it">come by day, come back by dark</span></td>
+            <td><span class="amt">$5 <small>off</small></span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="center"><span class="stamp">Save Five Dollars — Bring a Tithe</span></div>
+      <h3 style="margin-top:1.4rem">What counts as a tithe</h3>
+      <p>A tithe is nothing grander than a kindness carried in your hands. Bring one to the gate and keep five dollars in your pocket:</p>
+      <ul class="tithe-list">
+        <li><svg viewBox="0 0 30 30" aria-hidden="true"><rect x="7" y="4" width="16" height="22" rx="2" fill="url(#hatch-h)" stroke="#1a1612" stroke-width="2"/><rect x="7" y="10" width="16" height="9" fill="#7a1f1f" stroke="#1a1612" stroke-width="2"/></svg><span><strong>A can or box for the food shelf.</strong> Anything that keeps; the neighbors will carry it where it's needed.</span></li>
+        <li><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M8 26 L8 10 C8 4 22 4 22 10 L22 26 Z" fill="url(#hatch)" stroke="#1a1612" stroke-width="2" stroke-linejoin="round"/><rect x="6" y="22" width="18" height="5" fill="#c9a227" stroke="#1a1612" stroke-width="2"/></svg><span><strong>A hat, a pair of gloves, or a coat.</strong> The winter clothing drive. It gets cold on the Crow; not everyone has a coat for it.</span></li>
+      </ul>
+      <p class="small" style="margin:1rem 0 0"><em>The other haunts around the Cities ask thirty to fifty dollars and won't tell you the number till checkout. This one is twenty, or fifteen and a kindness. The scarecrow approves.</em></p>
+      <p class="center" style="margin-top:1.2rem"><a class="btn" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a></p>
+    </div>
+    <svg class="divider" viewBox="0 0 520 24" aria-hidden="true"><line x1="0" y1="12" x2="228" y2="12" stroke="#1a1612" stroke-width="2"/><line x1="292" y1="12" x2="520" y2="12" stroke="#1a1612" stroke-width="2"/><use href="#fleuron" x="230" y="0" width="60" height="24"/></svg>
+  </section>
+
+  <!-- ========================================================================
+       V. FOR THE LITTLE ONES — Kids Day
+       ======================================================================== -->
+  <section class="section" id="little-ones" aria-labelledby="kids-title">
+    <div class="hd-wrap">
+      <h2 class="hd" id="kids-title">V. For the Little Ones<span class="hd-crow" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></h2>
+      <p class="hd-sub">One afternoon the scarecrow keeps the lights on.</p>
+    </div>
+    <div class="cols">
+      <div class="kids-card">
+        <svg viewBox="0 0 40 40" style="width:56px;margin-bottom:.4rem" aria-hidden="true"><use href="#sun"/></svg>
+        <div class="big">Kids Day — Saturday, October 10</div>
+        <div class="fact-row">
+          <span><b>Noon–3 PM</b></span>
+          <span><b>$5</b> a child</span>
+          <span><b>$5 off</b> an evening haunt</span>
+        </div>
+        <p>By daylight the trail is a different creature. The lanterns stay lit, the actors keep their masks on their laps, and the little ones walk the <strong>lights-on trail</strong>, go <strong>trick-or-treating</strong>, and get up to <strong>family activities</strong> in the yard. Nobody jumps out. The scarecrow has given his word.</p>
+        <p>Hold on to your Kids Day ticket: it is good for <strong>$5 off an evening haunt ticket</strong>, for the grown-ups who'd like to come back after dark and find out what the corn is like without the sun.</p>
+        <a class="btn" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Kids Day Tickets</a>
+      </div>
+      <figure class="plate-ph" style="margin:0">
+        <div class="ph"><span>PHOTO: families on the lights-on trail, kids in costume with candy bags</span></div>
+        <figcaption>Plate III. The one afternoon the crows behave.</figcaption>
+      </figure>
+    </div>
+    <svg class="divider" viewBox="0 0 520 24" aria-hidden="true"><line x1="0" y1="12" x2="228" y2="12" stroke="#1a1612" stroke-width="2"/><line x1="292" y1="12" x2="520" y2="12" stroke="#1a1612" stroke-width="2"/><use href="#fleuron" x="230" y="0" width="60" height="24"/></svg>
+  </section>
+
+  <!-- ========================================================================
+       VI. THE THREE NEIGHBORS — community give-back
+       ======================================================================== -->
+  <section class="section" id="neighbors" aria-labelledby="neigh-title">
+    <div class="hd-wrap">
+      <h2 class="hd alt" id="neigh-title">VI. The Three Neighbors<span class="hd-crow" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></h2>
+      <p class="hd-sub">Why there is a haunt on Harff Road at all.</p>
+    </div>
+    <div class="prose">
+      <p class="lede">Three neighbors loved Halloween. Three neighbors loved giving back. They put the two together on a hayride, and the field has not been quiet in October since.</p>
+      <p>Every tithe carried through the gate goes where it's meant to. The haunt is a neighbor's project, built and staffed by neighbors, and it pays its debts to the town in the currency the town needs: food, warm clothes, and a good turn for the folk who run toward fires.</p>
+    </div>
+
+    <svg viewBox="0 0 320 170" style="width:min(100%,420px);margin:1.4rem auto 0" role="img" aria-label="Woodcut of a barn at the edge of the corn, three crows on the roof">
+      <path d="M0 160 L320 160" stroke="#1a1612" stroke-width="3"/>
+      <path d="M0 148 C60 142 120 150 180 144 C230 140 280 150 320 146" fill="none" stroke="#1a1612" stroke-width="1.5"/>
+      <g stroke="#1a1612" stroke-width="3" stroke-linejoin="round">
+        <rect x="80" y="86" width="160" height="74" fill="url(#hatch-h)"/>
+        <path d="M70 90 L96 46 L160 22 L224 46 L250 90 Z" fill="url(#hatch)"/>
+        <rect x="140" y="112" width="40" height="48" fill="#7a1f1f"/>
+        <path d="M140 112 L180 160 M180 112 L140 160" stroke="#f1e9d6" stroke-width="2"/>
+        <path d="M148 60 L172 60 L172 82 L148 82 Z" fill="#c9a227"/>
+        <path d="M160 60 L160 82 M148 71 L172 71" stroke-width="2"/>
+        <line x1="160" y1="22" x2="160" y2="8"/>
+        <path d="M160 8 L176 12 L160 16 Z" fill="#7a1f1f"/>
+      </g>
+      <use href="#crow" x="98" y="42" width="30" height="20"/>
+      <use href="#crow" x="186" y="34" width="30" height="20"/>
+      <use href="#crow" x="222" y="52" width="30" height="20"/>
+      <use href="#stalk" x="8" y="60" width="34" height="100"/>
+      <use href="#stalk" x="36" y="70" width="32" height="90"/>
+      <use href="#stalk" x="252" y="64" width="34" height="96"/>
+      <use href="#stalk" x="282" y="72" width="34" height="88"/>
+    </svg>
+
+    <div class="neigh">
+      <article>
+        <svg viewBox="0 0 96 96" aria-hidden="true"><g stroke="#1a1612" stroke-width="3" stroke-linejoin="round"><rect x="12" y="24" width="72" height="12" fill="#1a1612"/><rect x="12" y="52" width="72" height="12" fill="#1a1612"/><rect x="20" y="8" width="16" height="16" fill="url(#hatch-h)"/><rect x="42" y="4" width="14" height="20" fill="#7a1f1f"/><rect x="62" y="10" width="18" height="14" fill="url(#hatch)"/><rect x="22" y="36" width="20" height="16" fill="url(#hatch)"/><rect x="50" y="40" width="26" height="12" fill="#c9a227"/><path d="M16 64 L16 88 M80 64 L80 88" stroke-linecap="round"/></g></svg>
+        <h3>The Food Shelf</h3>
+        <p>Every can you carry to the gate is stacked, counted and driven to the local food shelf. A cheaper ticket for you; a fuller shelf for a neighbor you may never meet.</p>
+      </article>
+      <article>
+        <svg viewBox="0 0 96 96" aria-hidden="true"><g stroke="#1a1612" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><path d="M30 20 L48 12 L66 20 L84 30 L76 46 L66 42 L66 88 L30 88 L30 42 L20 46 L12 30 Z" fill="url(#hatch)"/><path d="M48 12 L48 88" stroke-width="2"/><circle cx="54" cy="40" r="2.5" fill="#1a1612"/><circle cx="54" cy="56" r="2.5" fill="#1a1612"/><circle cx="54" cy="72" r="2.5" fill="#1a1612"/><path d="M40 12 C40 4 56 4 56 12" fill="#7a1f1f"/></g></svg>
+        <h3>The Clothing Drive</h3>
+        <p>Hats, gloves, coats: the winter clothing drive gathers what a Minnesota November demands and hands it to folk who'd otherwise go without. Bring a warm thing; get in for fifteen.</p>
+      </article>
+      <article>
+        <svg viewBox="0 0 96 96" aria-hidden="true"><g stroke="#1a1612" stroke-width="3" stroke-linejoin="round"><path d="M48 6 L86 22 L80 60 L48 90 L16 60 L10 22 Z" fill="#7a1f1f"/><path d="M48 18 L72 30 L68 56 L48 74 L28 56 L24 30 Z" fill="#f1e9d6"/><path d="M40 34 L56 34 M48 34 L48 62 M36 48 L60 48" stroke-width="4" stroke-linecap="round"/><path d="M30 40 C30 30 66 30 66 40" fill="none" stroke-width="2"/></g></svg>
+        <h3>Hanover Fire Department</h3>
+        <p>The haunt partners with the Hanover Fire Department, the neighbors who show up when the night goes truly wrong. Part of what you spend on a scare goes back to the people who put fires out.</p>
+      </article>
+    </div>
+    <svg class="divider" viewBox="0 0 520 24" aria-hidden="true"><line x1="0" y1="12" x2="228" y2="12" stroke="#1a1612" stroke-width="2"/><line x1="292" y1="12" x2="520" y2="12" stroke="#1a1612" stroke-width="2"/><use href="#fleuron" x="230" y="0" width="60" height="24"/></svg>
+  </section>
+
+  <!-- ========================================================================
+       VII. HANDS WANTED FOR THE HARVEST — Join the Crew
+       ======================================================================== -->
+  <section class="section" id="hands" aria-labelledby="hands-title">
+    <div class="hd-wrap">
+      <h2 class="hd" id="hands-title">VII. Hands Wanted for the Harvest<span class="hd-crow" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></h2>
+      <p class="hd-sub">The corn does not scare itself. Join the crew.</p>
+    </div>
+    <div class="crew-grid">
+      <div class="poster">
+        <div class="mid">Wanted · Four Nights in October</div>
+        <div class="huge">Actors, Builders, Lantern-Keepers</div>
+        <div class="mid">No experience required · Costume &amp; makeup provided by the field</div>
+        <p style="margin:1rem 0">Every nightmare on this trail is a neighbor who volunteered. If you can lurk, lunge, cackle, build a coffin, run a fog machine, or park a wagon, there is a place for you in the corn.</p>
+        <div class="cta-row" style="margin-top:.4rem">
+          <a class="btn" href="#">Sign the Roll</a>
+          <a class="btn ghost" href="#">Actor Login</a>
+        </div>
+      </div>
+      <div>
+        <h3>Some of the hands already in the field</h3>
+        <ul class="roll">
+          <li><span class="role">Evan</span><span>Plays Beetlejuice on the trail; runs the socials and the wiring between shows. If you've seen a post at midnight, that was Evan.</span></li>
+          <li><span class="role">Ben</span><span>Set designer. Built the skeleton trapped in the cage and the zombie graveyard. Is currently building something he won't describe.</span></li>
+          <li><span class="role">The Scarecrow</span><span>Watches the corn. Keeps this almanac. Turns his head when you aren't looking.</span></li>
+          <li><span class="role">You</span><span>Standing very still behind a tree on Harff Road this October, waiting for the wagon to creak.</span></li>
+        </ul>
+        <p class="small" style="margin-top:1rem"><em>Write to the neighbors through the socials in the colophon, or sign the roll above. Actors already on the books may use the actor login.</em></p>
+      </div>
+    </div>
+    <svg class="divider" viewBox="0 0 520 24" aria-hidden="true"><line x1="0" y1="12" x2="228" y2="12" stroke="#1a1612" stroke-width="2"/><line x1="292" y1="12" x2="520" y2="12" stroke="#1a1612" stroke-width="2"/><use href="#fleuron" x="230" y="0" width="60" height="24"/></svg>
+  </section>
+
+  <!-- ========================================================================
+       VIII. QUESTIONS PUT TO THE SCARECROW — FAQ
+       ======================================================================== -->
+  <section class="section" id="questions" aria-labelledby="q-title">
+    <div class="hd-wrap">
+      <h2 class="hd alt" id="q-title">VIII. Questions Put to the Scarecrow<span class="hd-crow" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></h2>
+      <p class="hd-sub">Asked at the gate, answered from the crossbar.</p>
+    </div>
+    <div class="faq">
+      <details>
+        <summary>How scary is it, truly?</summary>
+        <div class="a"><p>Scary enough that grown men have run past me faster than they walked in. There are live actors in the dark, tunnels, buildings you must go through, and a corn maze that does not care whether you find the way out. This isn't a hayride with a few pumpkins; it's built to crawl under your skin. If you frighten easily, come with someone whose sleeve you can hold.</p></div>
+      </details>
+      <details>
+        <summary>How old should a child be before you'll let them in the corn after dark?</summary>
+        <div class="a"><p>The night haunt is meant for teenagers and grown folk. It's dark, loud and full of people whose job is to startle you. For the little ones there is <a href="#little-ones">Kids Day</a> on Saturday the 10th, noon till three, with the lights on and nobody jumping out. Parents know their own children; if in doubt, bring them by day first.</p></div>
+      </details>
+      <details>
+        <summary>What if it rains, or worse?</summary>
+        <div class="a"><p>A scarecrow does not mind weather, and a little rain makes the corn sound better. Dress for a Minnesota October: boots, a coat, a hat you don't mind losing. If the sky turns truly foul, the neighbors will say so on the socials that afternoon. Check there before you set out.</p></div>
+      </details>
+      <details>
+        <summary>Where do I leave my wagon (or, as you call it, my car)?</summary>
+        <div class="a"><p>Follow Harff Road to the lanterns and the folk in vests; they'll point you where to park at the field. Come a little early on Saturdays, when the line is longest, and bring your tithe in from the car so you don't have to walk back for it.</p></div>
+      </details>
+      <details>
+        <summary>How long does the trail take?</summary>
+        <div class="a"><p>That depends on the crowd ahead of you and how fast you run. Plan on the better part of an hour from the moment the hayride leaves, and don't arrive at the last minute: the gate admits nobody after ten o'clock.</p></div>
+      </details>
+      <details>
+        <summary>Will the actors touch me? May I touch them?</summary>
+        <div class="a"><p>Our actors won't lay hands on you. We ask the same courtesy of you: they're neighbors under those masks, and a scarecrow keeps a list. Keep your hands to yourself, leave the props where they are, and let the corn do its work.</p></div>
+      </details>
+      <details>
+        <summary>Can a wheelchair or a stroller manage the trail?</summary>
+        <div class="a"><p>I'll tell you true: the trail is dirt, roots and dark, winding through forest and corn, with tunnels and narrow paths. It's not friendly to wheels after dark. Kids Day, with the lights on, is the gentler afternoon. Write to the neighbors through the socials before you come and they'll tell you honestly what can be managed.</p></div>
+      </details>
+      <details>
+        <summary>Is there anything to eat, or must I bring my own?</summary>
+        <div class="a"><p>Two food trucks keep wagons at the field: <strong>Just in Time Concessions</strong> and <strong>Burger Box</strong>. Eat before the hayride or after; eating in the corn is not advised, for reasons the corn would rather show you.</p></div>
+      </details>
+    </div>
+    <svg class="divider" viewBox="0 0 520 24" aria-hidden="true"><line x1="0" y1="12" x2="228" y2="12" stroke="#1a1612" stroke-width="2"/><line x1="292" y1="12" x2="520" y2="12" stroke="#1a1612" stroke-width="2"/><use href="#fleuron" x="230" y="0" width="60" height="24"/></svg>
+  </section>
+
+  <!-- ========================================================================
+       IX. HOW TO FIND THE FIELD — directions
+       ======================================================================== -->
+  <section class="section" id="field" aria-labelledby="field-title">
+    <div class="hd-wrap">
+      <h2 class="hd" id="field-title">IX. How to Find the Field<span class="hd-crow" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></h2>
+      <p class="hd-sub">West of the Cities, on the far side of the Crow River.</p>
+    </div>
+    <div class="cols">
+      <div>
+        <p class="label" style="margin:0">The field lies at</p>
+        <p class="addr">6470 Harff Road<br>Greenfield, MN 55373</p>
+        <ol class="steps">
+          <li>Leave Minneapolis heading west; the drive is about thirty-five minutes, less if you're eager.</li>
+          <li>Make for Greenfield, out in the west metro, near the Crow River. The river gave the haunt its name and the crows their opinions.</li>
+          <li>Find Harff Road. Watch for the lanterns, the folk in vests and the line of cars that appears in October and nowhere else.</li>
+          <li>Park where you're pointed. Bring your tithe. Get on the wagon. It all begins with a hayride.</li>
+        </ol>
+        <p><a class="btn ghost" href="https://www.google.com/maps/search/?api=1&amp;query=6470+Harff+Road+Greenfield+MN+55373" target="_blank" rel="noopener">Open in Maps</a></p>
+        <div class="victuals">
+          <p class="label" style="margin:0 0 .2rem">Victuals on the field</p>
+          <p style="margin:0"><strong>Just in Time Concessions</strong> and <strong>Burger Box</strong> keep their trucks by the gate every haunt night.</p>
+        </div>
+      </div>
+      <figure class="plate-ph" style="margin:0">
+        <div class="ph"><span>MAP: Harff Road, Greenfield, with the Crow River and the route west from Minneapolis</span></div>
+        <figcaption>Plate IV. The way to the field. Embed a live map here in production.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+</main>
+
+<!-- ==========================================================================
+     COLOPHON / FOOTER
+     ========================================================================== -->
+<footer class="colophon" aria-label="Colophon">
+  <div class="in">
+    <div>
+      <h3>Nightmare on the Crow</h3>
+      <p>6470 Harff Road<br>Greenfield, MN 55373</p>
+      <p class="small">A haunted trail built by three neighbors. Four nights in October: 9, 10, 16, 17 — 7:30 to 10 PM.</p>
+      <a class="btn" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
+    </div>
+    <div>
+      <h3>Follow the Crows</h3>
+      <ul class="socials">
+        <li><a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3l1-4h-4V9c0-.6.4-1 1-1z"/></svg>Facebook</a></li>
+        <li><a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM17.5 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>Instagram</a></li>
+        <li><a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2h3c.3 2.4 1.8 4 4 4.3v3c-1.5 0-2.9-.5-4-1.3V15a6 6 0 1 1-6-6v3a3 3 0 1 0 3 3V2z"/></svg>TikTok</a></li>
+      </ul>
+      <p class="small" style="margin-top:1rem"><a href="#">Actor login</a> · <a href="#hands">Join the crew</a></p>
+    </div>
+    <div>
+      <h3>Contents</h3>
+      <p class="small"><a href="#calendar">Calendar of Nights</a> · <a href="#omens">Signs &amp; Omens</a> · <a href="#tithes">Prices &amp; Tithes</a> · <a href="#little-ones">For the Little Ones</a> · <a href="#neighbors">The Three Neighbors</a> · <a href="#hands">Hands Wanted</a> · <a href="#questions">Questions</a> · <a href="#field">How to Find the Field</a></p>
+    </div>
+    <p class="fine">Printed in Greenfield, Minn., for the Fourth Season, <span id="yr">2026</span>. The scarecrow is not responsible for what follows you home. © Nightmare on the Crow.</p>
+  </div>
+</footer>
+
+<script>
+/* ==========================================================================
+   Almanac scripts: countdown, nav toggle, scarecrow head-tracking,
+   crows landing on headings. Everything guarded so nothing throws.
+   ========================================================================== */
+(function () {
+  'use strict';
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  /* ---------- Countdown: first lantern, Fri Oct 9 2026, 7:30 PM Central ---------- */
+  var target = new Date('2026-10-09T19:30:00-05:00');
+  var seasonEnd = new Date('2026-10-17T22:00:00-05:00');
+  var cd = {
+    d: document.getElementById('cd-d'),
+    h: document.getElementById('cd-h'),
+    m: document.getElementById('cd-m'),
+    s: document.getElementById('cd-s'),
+    note: document.getElementById('cd-note')
+  };
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function tick() {
+    if (!cd.d || !cd.h || !cd.m || !cd.s) { return; }
+    var now = Date.now();
+    var diff = target.getTime() - now;
+    if (isNaN(diff)) { return; }
+    if (diff <= 0) {
+      cd.d.textContent = '00'; cd.h.textContent = '00'; cd.m.textContent = '00'; cd.s.textContent = '00';
+      if (cd.note) {
+        cd.note.textContent = now > seasonEnd.getTime()
+          ? 'The last lantern is out. The scarecrow sleeps till next October.'
+          : 'The lanterns are lit. Come to the field.';
+      }
+      return true;
+    }
+    var days = Math.floor(diff / 86400000);
+    var hours = Math.floor((diff % 86400000) / 3600000);
+    var mins = Math.floor((diff % 3600000) / 60000);
+    var secs = Math.floor((diff % 60000) / 1000);
+    cd.d.textContent = pad(days);
+    cd.h.textContent = pad(hours);
+    cd.m.textContent = pad(mins);
+    cd.s.textContent = pad(secs);
+    return false;
+  }
+  if (!tick()) {
+    var cdTimer = setInterval(function () { if (tick()) { clearInterval(cdTimer); } }, 1000);
+  }
+
+  /* ---------- Mobile nav toggle ---------- */
+  var toggle = document.querySelector('.nav-toggle');
+  var list = document.getElementById('nav-list');
+  if (toggle && list) {
+    toggle.addEventListener('click', function () {
+      var open = list.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    list.addEventListener('click', function (e) {
+      if (e.target && e.target.tagName === 'A') {
+        list.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && list.classList.contains('open')) {
+        list.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.focus();
+      }
+    });
+  }
+
+  /* ---------- Scarecrow head follows the cursor (fine pointers only) ---------- */
+  var head = document.getElementById('sc-head');
+  var stage = document.getElementById('scarecrow');
+  var finePointer = window.matchMedia('(pointer: fine)').matches;
+  if (head && stage && finePointer && !reduced.matches) {
+    var targetRot = 0, targetX = 0, targetY = 0;
+    var curRot = 0, curX = 0, curY = 0;
+    var raf = null;
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+    function ease() {
+      raf = null;
+      curRot += (targetRot - curRot) * 0.14;
+      curX += (targetX - curX) * 0.14;
+      curY += (targetY - curY) * 0.14;
+      head.style.transform = 'translate(' + curX.toFixed(2) + 'px,' + curY.toFixed(2) + 'px) rotate(' + curRot.toFixed(2) + 'deg)';
+      if (Math.abs(targetRot - curRot) > 0.05 || Math.abs(targetX - curX) > 0.05 || Math.abs(targetY - curY) > 0.05) {
+        raf = requestAnimationFrame(ease);
+      }
+    }
+    document.addEventListener('mousemove', function (e) {
+      var r = stage.getBoundingClientRect();
+      if (r.width === 0) { return; }
+      // the head sits roughly a fifth of the way down the illustration
+      var hx = r.left + r.width * 0.5;
+      var hy = r.top + r.height * 0.2;
+      var dx = e.clientX - hx;
+      var dy = e.clientY - hy;
+      var reach = Math.min(1, Math.hypot(dx, dy) / 700);
+      targetRot = clamp(dx / 55, -10, 10);
+      targetX = clamp(dx / 90, -7, 7) * reach;
+      targetY = clamp(dy / 120, -4, 5) * reach;
+      if (!raf) { raf = requestAnimationFrame(ease); }
+    }, { passive: true });
+    document.addEventListener('mouseleave', function () {
+      targetRot = 0; targetX = 0; targetY = 0;
+      if (!raf) { raf = requestAnimationFrame(ease); }
+    });
+    reduced.addEventListener && reduced.addEventListener('change', function (ev) {
+      if (ev.matches) { head.style.transform = ''; targetRot = targetX = targetY = 0; }
+    });
+  }
+
+  /* ---------- Crows land on section headings as they scroll into view ---------- */
+  var heads = document.querySelectorAll('.hd');
+  if ('IntersectionObserver' in window && !reduced.matches) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          // a short, uneven delay so the flock doesn't land in unison
+          var delay = 120 + Math.floor(Math.random() * 380);
+          setTimeout(function () { en.target.classList.add('landed'); }, delay);
+          io.unobserve(en.target);
+        }
+      });
+    }, { threshold: 0.6, rootMargin: '0px 0px -8% 0px' });
+    Array.prototype.forEach.call(heads, function (h) { io.observe(h); });
+  } else {
+    Array.prototype.forEach.call(heads, function (h) { h.classList.add('landed'); });
+  }
+
+  /* ---------- Footer year (kept at 2026 unless the page outlives the season) ---------- */
+  var yr = document.getElementById('yr');
+  if (yr) {
+    var y = new Date().getFullYear();
+    if (y > 2026) { yr.textContent = String(y); }
+  }
+})();
+</script>
+</body>
+</html>

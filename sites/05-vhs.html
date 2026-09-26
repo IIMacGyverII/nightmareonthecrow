@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TAPE 09 — Nightmare on the Crow | Haunted Trail, Greenfield MN</title>
+<meta name="description" content="Recovered footage from Harff Road. Nightmare on the Crow is a neighbor-built haunted trail in Greenfield, MN — Oct 9, 10, 16, 17 · 7:30–10 PM · $20, or $15 with a food-shelf donation. Kids Day Sat Oct 10, $5.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=VT323&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CONCEPT #5 — "TAPE 09"  ·  VHS / analog-horror treatment
+   Palette: black · VHS-white · signal blue · REC red-orange
+   ============================================================ */
+:root{
+  --black:#050505; --ink:#0d0d0d; --white:#e6e6e6; --mute:#9a9a9a;
+  --blue:#2b6cff; --rec:#ff5a1f; --line:rgba(230,230,230,.16);
+  --hud:'VT323','Share Tech Mono',ui-monospace,monospace;
+  --title:'Anton',Impact,'Arial Narrow',sans-serif;
+  --body:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;padding-top:30px;background:var(--black);color:var(--white);font-family:var(--body);line-height:1.55;overflow-x:hidden}
+main{position:relative}
+a{color:var(--blue)}
+:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.skip{position:absolute;left:-999px;top:36px;z-index:200;background:var(--rec);color:#000;padding:8px 12px;font-family:var(--hud);font-size:20px;text-decoration:none}
+.skip:focus{left:12px}
+
+/* ---------- CRT overlays (scanlines, vignette, tracking bands) ---------- */
+.fx{position:fixed;inset:0;pointer-events:none;z-index:90}
+.fx-scan{background:repeating-linear-gradient(0deg,rgba(0,0,0,.24) 0 1px,transparent 1px 3px);mix-blend-mode:multiply}
+.fx-vig{background:radial-gradient(ellipse 72% 64% at 50% 50%,transparent 58%,rgba(0,0,0,.6) 100%);box-shadow:inset 0 0 90px 18px rgba(0,0,0,.75);border-radius:22px}
+.track{position:fixed;left:0;right:0;top:100%;height:70px;pointer-events:none;z-index:91;opacity:0;mix-blend-mode:screen;
+  background:linear-gradient(to bottom,transparent,rgba(230,230,230,.06) 25%,rgba(230,230,230,.17) 48%,rgba(43,108,255,.16) 62%,rgba(255,90,31,.07) 76%,transparent);
+  animation:track 13s linear infinite}
+.track.t2{height:24px;animation-duration:19s;animation-delay:7s}
+@keyframes track{
+  0%{transform:translateY(0);opacity:0}
+  1%{opacity:1}
+  11%{transform:translateY(calc(-100vh - 90px));opacity:1}
+  11.5%{opacity:0;transform:translateY(0)}
+  100%{opacity:0;transform:translateY(0)}
+}
+body.rewinding .track{animation-duration:.55s;animation-delay:0s}
+body.rewinding main{filter:contrast(1.18) saturate(.6)}
+
+/* ---------- Chromatic aberration on headings (short jitter every ~7s) ---------- */
+.chroma{--r:rgba(255,40,40,.55);--c:rgba(43,220,255,.55);
+  text-shadow:-1.5px 0 var(--r),1.5px 0 var(--c);
+  animation:chroma 7s steps(1,end) infinite;animation-delay:var(--d,0s)}
+@keyframes chroma{
+  0%,93%{text-shadow:-1.5px 0 var(--r),1.5px 0 var(--c);transform:none}
+  93.5%{text-shadow:-7px 0 var(--r),7px 0 var(--c);transform:translateX(3px)}
+  95%{text-shadow:5px -1px var(--r),-5px 1px var(--c);transform:translateX(-2px)}
+  96.5%{text-shadow:-3px 0 var(--r),3px 0 var(--c);transform:none}
+  98%,100%{text-shadow:-1.5px 0 var(--r),1.5px 0 var(--c);transform:none}
+}
+
+/* ---------- Static intro (canvas noise, then the picture tunes in) ---------- */
+#intro{position:fixed;inset:0;z-index:100;background:#000;display:grid;place-items:center;animation:failsafe .1s linear 3s forwards}
+#intro canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;opacity:.85}
+#intro .tune-label{position:relative;font-family:var(--hud);font-size:30px;letter-spacing:.3em;color:var(--white);text-shadow:0 0 8px #fff,0 0 2px #000;animation:blink .6s steps(1,end) infinite}
+#intro.tune{animation:tuneout .5s steps(4,end) forwards}
+@keyframes tuneout{0%{opacity:1}25%{opacity:.8;transform:translateY(-6%)}50%{opacity:.5;transform:translateY(4%)}75%{opacity:.25;transform:none}100%{opacity:0;visibility:hidden}}
+@keyframes failsafe{to{opacity:0;visibility:hidden}}
+body.tuned main{animation:tunein .75s ease-out}
+@keyframes tunein{
+  0%{filter:contrast(2.2) brightness(1.7) blur(2px);transform:translateX(-8px) skewX(-1.5deg)}
+  40%{filter:contrast(1.3) brightness(1.1) blur(0);transform:translateX(5px)}
+  70%{transform:translateX(-2px)}
+  100%{filter:none;transform:none}
+}
+
+/* ---------- Camcorder HUD ---------- */
+.hud{position:fixed;z-index:80;font-family:var(--hud);font-size:20px;letter-spacing:.04em;color:var(--white);text-shadow:0 0 6px rgba(230,230,230,.35),0 0 2px #000;pointer-events:none}
+.hud-top{top:0;left:0;right:0;height:30px;display:flex;justify-content:space-between;align-items:center;padding:0 12px;background:rgba(5,5,5,.94);border-bottom:1px solid var(--line)}
+.hud-top .grp{display:flex;align-items:center;gap:14px;white-space:nowrap}
+.rec{color:var(--rec)}
+.rec .dot{display:inline-block;animation:blink 1.1s steps(1,end) infinite}
+@keyframes blink{50%{opacity:0}}
+.batt svg{width:28px;height:13px;vertical-align:-1px;overflow:visible}
+.hud-bot{left:12px;right:12px;bottom:10px;display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+.hud-state{background:rgba(5,5,5,.78);padding:2px 8px;white-space:nowrap}
+.st-pause{animation:blink 1.2s steps(1,end) infinite}
+.st-rew{color:var(--blue)}
+.hud-btn{pointer-events:auto;font:inherit;letter-spacing:.06em;color:var(--white);background:rgba(5,5,5,.85);border:1px solid rgba(230,230,230,.5);padding:2px 10px;cursor:pointer;text-shadow:none;white-space:nowrap}
+.hud-btn:hover{border-color:var(--white);background:#151515}
+.hud-btn[aria-pressed="true"]{color:var(--rec);border-color:var(--rec)}
+.concept-badge{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);z-index:80;font-family:var(--hud);font-size:16px;letter-spacing:.1em;color:#000;background:var(--white);padding:3px 10px;pointer-events:none;white-space:nowrap}
+@media (max-width:640px){
+  .hud{font-size:17px}
+  .hud-top .clock{font-size:15px}
+  .hud-top .tapeid{display:none}
+  .concept-badge{bottom:46px;font-size:14px}
+}
+
+/* ---------- Nav ---------- */
+.nav{position:sticky;top:30px;z-index:70;background:rgba(5,5,5,.9);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.nav-in{position:relative;max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:18px;padding:10px 16px}
+.brand{display:flex;align-items:center;gap:10px;color:var(--white);text-decoration:none;font-family:var(--hud);font-size:24px;letter-spacing:.06em;white-space:nowrap}
+.brand svg{width:34px;height:34px;fill:var(--white);flex:none}
+.brand small{color:var(--blue);font-size:15px;letter-spacing:.14em}
+.nav-links{list-style:none;margin:0 0 0 auto;padding:0;display:flex;gap:18px;font-family:var(--hud);font-size:19px;letter-spacing:.05em;text-transform:uppercase}
+.nav-links a{color:var(--white);text-decoration:none;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--blue);border-color:var(--blue)}
+.nav .btn{font-size:19px;padding:7px 14px}
+.nav-toggle{display:none;background:none;border:1px solid rgba(230,230,230,.45);color:var(--white);font-family:var(--hud);font-size:19px;letter-spacing:.06em;padding:5px 10px;cursor:pointer}
+@media (max-width:1000px){
+  .nav-links{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;gap:0;background:rgba(5,5,5,.97);border-bottom:1px solid var(--line);padding:6px 0}
+  .nav-links li a{display:block;padding:12px 20px;border:0}
+  body.nav-open .nav-links{display:flex}
+  .nav-toggle{display:block;margin-left:auto}
+}
+@media (max-width:520px){
+  .brand{font-size:20px}
+  .brand small{display:none}
+  .nav-in{gap:10px;padding:10px 12px}
+  .nav .btn{font-size:15px;padding:6px 8px;letter-spacing:.04em}
+  .brand{font-size:17px;gap:6px}
+  .brand svg{width:26px;height:26px}
+  .nav-toggle{font-size:15px;padding:5px 7px}
+  .nav-in{gap:8px;padding:10px 10px}
+}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--hud);font-size:22px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;padding:10px 22px;border:2px solid var(--white);color:var(--white);background:transparent;cursor:pointer;line-height:1;transition:background .15s,color .15s}
+.btn:hover{background:var(--white);color:#000}
+.btn-rec{background:var(--rec);border-color:var(--rec);color:#000}
+.btn-rec:hover{background:#000;color:var(--rec)}
+.btn-blue{border-color:var(--blue);color:var(--blue)}
+.btn-blue:hover{background:var(--blue);color:#000}
+.btn-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:22px}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;min-height:calc(100vh - 30px);display:grid;place-items:center;text-align:center;padding:70px 16px 96px;overflow:hidden;isolation:isolate}
+.hero-bg{position:absolute;inset:0;z-index:-1;
+  background:
+    repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 4px),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0 2px,transparent 2px 9px),
+    radial-gradient(ellipse at 50% 38%,#202026 0%,#0a0a0b 55%,#000 100%)}
+.hero-bg svg{position:absolute;left:0;right:0;bottom:0;width:100%;height:44%;fill:#050505}
+.ph-label{position:absolute;left:12px;bottom:12px;z-index:2;font-family:var(--hud);font-size:15px;letter-spacing:.06em;line-height:1.2;color:#c9c9c9;background:rgba(0,0,0,.74);border:1px dashed rgba(230,230,230,.5);padding:3px 8px;text-transform:uppercase;max-width:calc(100% - 24px)}
+.hero .ph-label{left:auto;right:14px;bottom:14px}
+.kicker{font-family:var(--hud);font-size:clamp(17px,2.4vw,24px);letter-spacing:.16em;color:var(--blue);text-transform:uppercase;margin:0 0 14px}
+.hero h1{font-family:var(--title);font-size:clamp(3.4rem,11.5vw,8.6rem);line-height:.92;margin:0 0 18px;text-transform:uppercase;letter-spacing:.01em;font-weight:400}
+.hero .lede{max-width:640px;margin:0 auto 34px;font-size:clamp(1rem,1.6vw,1.2rem);color:#d2d2d2}
+.hero .lede em{color:var(--white);font-style:italic}
+.hero-ctas{display:flex;align-items:center;justify-content:center;gap:30px;flex-wrap:wrap;margin-bottom:40px}
+.play{display:inline-flex;flex-direction:column;align-items:center;gap:8px;background:none;border:0;color:var(--white);cursor:pointer;font-family:var(--hud);font-size:22px;letter-spacing:.16em;padding:0}
+.play .ring{width:108px;height:108px;border-radius:50%;border:3px solid var(--white);display:grid;place-items:center;font-size:44px;padding-left:8px;box-shadow:0 0 0 7px rgba(230,230,230,.08),0 0 34px rgba(43,108,255,.38);transition:transform .2s,background .2s,color .2s}
+.play:hover .ring,.play:focus-visible .ring{background:var(--white);color:#000;transform:scale(1.05)}
+.counter{display:inline-block;font-family:var(--hud);font-size:clamp(20px,3.4vw,30px);letter-spacing:.1em;color:var(--white);border:1px solid rgba(230,230,230,.35);background:rgba(0,0,0,.62);padding:10px 20px 8px;line-height:1.15}
+.counter b{font-weight:400;color:var(--blue);text-shadow:0 0 8px rgba(43,108,255,.65);white-space:nowrap}
+.counter small{display:block;font-size:14px;letter-spacing:.32em;color:var(--mute);margin-top:4px}
+.counter .meta{display:block;font-size:.72em;color:#cfcfcf;letter-spacing:.14em;margin-top:6px}
+
+/* ---------- Section scaffolding ---------- */
+.sec{padding:76px 16px}
+.sec+.sec{border-top:1px solid var(--line)}
+.wrap{max-width:1140px;margin:0 auto}
+.sec-label{font-family:var(--hud);font-size:19px;letter-spacing:.22em;color:var(--blue);text-transform:uppercase;margin:0 0 6px}
+.sec-label::before{content:'▶ ';color:var(--rec)}
+.sec h2{font-family:var(--title);font-size:clamp(2.1rem,5.4vw,4.2rem);line-height:.96;margin:0 0 14px;text-transform:uppercase;font-weight:400;overflow-wrap:anywhere}
+.lead{max-width:700px;color:#d2d2d2;font-size:1.05rem;margin:0 0 34px}
+.lead b{color:var(--white)}
+
+/* ---------- Scene select (tape stills) ---------- */
+.scenes{display:grid;grid-template-columns:repeat(6,1fr);gap:18px}
+.scene{grid-column:span 2;border:1px solid var(--line);background:var(--ink)}
+.scene:nth-child(1),.scene:nth-child(2){grid-column:span 3}
+@media (max-width:900px){.scene,.scene:nth-child(1),.scene:nth-child(2){grid-column:span 3}}
+@media (max-width:560px){.scene,.scene:nth-child(1),.scene:nth-child(2){grid-column:span 6}}
+.still{position:relative;aspect-ratio:4/3;overflow:hidden;background:radial-gradient(ellipse at 50% 35%,var(--tint,#2b2b30) 0%,#0b0b0c 62%,#000 100%)}
+.still::before{content:'';position:absolute;inset:-6px;z-index:1;opacity:.9;
+  background:
+    repeating-linear-gradient(0deg,rgba(255,255,255,.07) 0 1px,transparent 1px 3px),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 1px,transparent 1px 5px),
+    repeating-linear-gradient(37deg,rgba(0,0,0,.42) 0 2px,transparent 2px 9px);
+  animation:noise .3s steps(2,end) infinite}
+@keyframes noise{0%{background-position:0 0,0 0,0 0}50%{background-position:2px -3px,-4px 1px,3px 2px}100%{background-position:-1px 2px,2px -2px,-3px 1px}}
+.still svg{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:72%;height:72%;fill:#050505;opacity:.94}
+.tc{position:absolute;top:10px;left:10px;z-index:2;font-family:var(--hud);font-size:17px;letter-spacing:.08em;color:var(--white);background:rgba(0,0,0,.66);padding:1px 6px;white-space:nowrap}
+.tc b{color:var(--rec);font-weight:400}
+.scene-body{padding:16px 18px 20px}
+.scene h3{font-family:var(--hud);font-size:26px;letter-spacing:.06em;margin:0 0 6px;text-transform:uppercase;font-weight:400}
+.scene h3 span{color:var(--blue)}
+.scene p{margin:0;color:#cbcbcb;font-size:.95rem}
+
+/* ---------- Recording schedule ---------- */
+.log{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.log-row{position:relative;border:1px solid var(--line);padding:18px;font-family:var(--hud);background:var(--ink)}
+.log-row .n{position:absolute;top:8px;right:12px;color:var(--mute);font-size:16px;letter-spacing:.14em}
+.log-row .day{font-size:20px;letter-spacing:.16em;color:var(--blue)}
+.log-row .date{font-family:var(--title);font-size:2.4rem;line-height:1;margin:6px 0 8px}
+.log-row .hrs{font-size:21px;color:#d2d2d2;letter-spacing:.06em}
+.log-row .hrs b{color:var(--white);font-weight:400}
+.note{font-family:var(--hud);font-size:19px;color:var(--mute);letter-spacing:.06em;margin-top:18px}
+.note b{color:var(--white);font-weight:400}
+
+/* ---------- Admission (on-screen menu) ---------- */
+.price-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:start}
+@media (max-width:860px){.price-grid{grid-template-columns:1fr}}
+.menu{border:2px solid var(--blue);background:#04091a;padding:24px 22px;font-family:var(--hud);font-size:clamp(19px,2.6vw,27px);letter-spacing:.05em;box-shadow:0 0 0 6px rgba(43,108,255,.12),inset 0 0 70px rgba(43,108,255,.14)}
+.menu .mh{color:var(--blue);border-bottom:1px dashed rgba(43,108,255,.5);padding-bottom:8px;margin-bottom:12px;font-size:.82em;letter-spacing:.18em}
+.menu ul{list-style:none;margin:0;padding:0}
+.menu li{display:flex;gap:10px;align-items:baseline;padding:6px 0}
+.menu li .cur{width:1.1em;flex:none;color:var(--rec)}
+.menu li .cur.blink{animation:blink 1s steps(1,end) infinite}
+.menu li .dots{flex:1;border-bottom:2px dotted rgba(230,230,230,.35);transform:translateY(-.3em);min-width:16px}
+.menu li .px{color:var(--white);white-space:nowrap}
+.menu li.hot .px{color:var(--rec);text-shadow:0 0 10px rgba(255,90,31,.5)}
+.menu .mf{margin-top:14px;font-size:.72em;color:var(--mute);letter-spacing:.14em}
+.big-price{font-family:var(--title);font-size:clamp(4.4rem,10vw,7.2rem);line-height:.9;color:var(--rec);margin:0}
+.big-price small{display:block;font-family:var(--hud);font-size:20px;letter-spacing:.2em;color:var(--white);margin-top:6px}
+.donate{color:#d2d2d2;font-size:1rem}
+.donate ul{padding-left:20px;margin:10px 0 0}
+.donate li{margin-bottom:4px}
+
+/* ---------- Kids day ---------- */
+.kids{display:grid;grid-template-columns:1.05fr .95fr;gap:36px;align-items:center}
+@media (max-width:860px){.kids{grid-template-columns:1fr}}
+.tag{display:inline-block;font-family:var(--hud);font-size:19px;letter-spacing:.14em;border:1px solid var(--white);padding:3px 10px;margin:0 6px 8px 0;text-transform:uppercase}
+.tag.orange{border-color:var(--rec);color:var(--rec)}
+.tag.blue{border-color:var(--blue);color:var(--blue)}
+.kids .still{--tint:#3e4252;border:1px solid var(--line)}
+.kids .facts{font-family:var(--hud);font-size:22px;letter-spacing:.06em;list-style:none;padding:0;margin:18px 0}
+.kids .facts li{padding:6px 0;border-bottom:1px solid var(--line)}
+.kids .facts li b{color:var(--blue);font-weight:400}
+
+/* ---------- Special features ---------- */
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media (max-width:820px){.tiles{grid-template-columns:1fr}}
+.tile{border:1px solid var(--line);background:var(--ink);padding:24px 22px}
+.tile .num{font-family:var(--title);font-size:3.8rem;line-height:1;color:var(--rec)}
+.tile h3{font-family:var(--hud);font-size:24px;letter-spacing:.12em;margin:8px 0;text-transform:uppercase;font-weight:400}
+.tile p{margin:0;color:#cbcbcb;font-size:.95rem}
+.trucks{margin-top:26px;font-family:var(--hud);font-size:21px;letter-spacing:.06em;color:#d2d2d2}
+.trucks b{color:var(--blue);font-weight:400}
+
+/* ---------- Casting call ---------- */
+.cast{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start}
+@media (max-width:860px){.cast{grid-template-columns:1fr}}
+.cast .body{color:#d2d2d2}
+.credits{border:1px solid var(--line);background:var(--ink);padding:22px;font-family:var(--hud);font-size:20px;letter-spacing:.06em}
+.credits .ch{color:var(--mute);font-size:16px;letter-spacing:.24em}
+.credits dl{margin:0}
+.credits dt{color:var(--blue);margin-top:14px;font-size:24px}
+.credits dd{margin:2px 0 0;color:#d2d2d2}
+.credits dt.you{color:var(--rec)}
+
+/* ---------- Tracking / troubleshooting (FAQ) ---------- */
+.faq{max-width:820px}
+.faq details{border:1px solid var(--line);background:var(--ink);margin-bottom:10px}
+.faq summary{cursor:pointer;padding:14px 18px;font-family:var(--hud);font-size:21px;letter-spacing:.06em;list-style:none;display:flex;gap:12px;align-items:baseline}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary .k{color:var(--mute);font-size:16px;letter-spacing:.14em;flex:none}
+.faq summary::after{content:'+';margin-left:auto;color:var(--blue);font-size:24px;flex:none}
+.faq details[open] summary::after{content:'–'}
+.faq details p{margin:0;padding:0 18px 18px;color:#d2d2d2;font-size:.98rem}
+
+/* ---------- Location ---------- */
+.loc{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center}
+@media (max-width:860px){.loc{grid-template-columns:1fr}}
+.addr{font-family:var(--hud);font-size:27px;letter-spacing:.06em;margin:0 0 10px;font-style:normal;line-height:1.3}
+.addr b{color:var(--blue);font-weight:400}
+.map{position:relative;aspect-ratio:4/3;border:1px solid var(--line);background:#0b0d12;overflow:hidden}
+.map svg{width:100%;height:100%;display:block}
+
+/* ---------- Viewer comments (sample) ---------- */
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.q{border-left:3px solid var(--blue);padding:10px 16px;font-family:var(--hud);font-size:21px;color:#dadada;margin:0}
+.q small{display:block;color:var(--mute);font-size:14px;letter-spacing:.22em;margin-top:6px}
+
+/* ---------- Footer ---------- */
+footer{border-top:1px solid var(--line);padding:56px 16px 110px;background:#020202}
+.foot{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:28px;align-items:start}
+@media (max-width:820px){.foot{grid-template-columns:1fr}}
+footer h4{font-family:var(--hud);font-size:19px;letter-spacing:.22em;color:var(--blue);margin:0 0 10px;text-transform:uppercase}
+footer ul{list-style:none;padding:0;margin:0;font-family:var(--hud);font-size:21px;letter-spacing:.04em}
+footer li{padding:3px 0}
+footer a{color:var(--white);text-decoration:none}
+footer a:hover{color:var(--rec)}
+footer .brand{margin-bottom:12px}
+footer .fp{font-family:var(--hud);font-size:20px;color:#d2d2d2;margin:0 0 6px}
+.rewind{margin-top:22px}
+.copy{max-width:1140px;margin:34px auto 0;font-family:var(--hud);font-size:16px;color:var(--mute);letter-spacing:.08em;line-height:1.5}
+
+/* ---------- Effects off / reduced motion ---------- */
+body.fx-off .fx,body.fx-off .track{display:none}
+body.fx-off .chroma{text-shadow:none;animation:none}
+body.fx-off .still::before,body.fx-off .rec .dot,body.fx-off .st-pause,body.fx-off .menu .blink{animation:none}
+body.fx-off main{filter:none!important;animation:none!important}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .track,#intro{display:none}
+  .chroma,.rec .dot,.st-pause,.still::before,.menu .blink,#intro .tune-label,.btn,.play .ring{animation:none!important;transition:none!important}
+  .chroma{text-shadow:-1.5px 0 var(--r),1.5px 0 var(--c)}
+  body.tuned main{animation:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#scenes">Skip to content</a>
+
+<!-- ===== Static intro (removed by JS after 1.2s; hidden under reduced-motion) ===== -->
+<div id="intro" aria-hidden="true">
+  <canvas id="static"></canvas>
+  <div class="tune-label">TRACKING…</div>
+</div>
+<noscript><style>#intro{display:none}</style></noscript>
+
+<!-- ===== CRT overlay layers ===== -->
+<div class="fx fx-scan" aria-hidden="true"></div>
+<div class="fx fx-vig" aria-hidden="true"></div>
+<div class="track" aria-hidden="true"></div>
+<div class="track t2" aria-hidden="true"></div>
+
+<!-- ===== Camcorder HUD: top strip ===== -->
+<div class="hud hud-top" aria-hidden="true">
+  <div class="grp">
+    <span class="rec"><span class="dot">●</span> REC</span>
+    <span>SP</span>
+    <span class="tapeid">TAPE 09</span>
+  </div>
+  <div class="grp">
+    <span class="batt"><svg viewBox="0 0 28 13" aria-hidden="true"><rect x=".5" y=".5" width="24" height="12" fill="none" stroke="#e6e6e6"/><rect x="25" y="3.5" width="2.5" height="6" fill="#e6e6e6"/><rect x="2.5" y="2.5" width="5.5" height="8" fill="#e6e6e6"/><rect x="9.5" y="2.5" width="5.5" height="8" fill="#e6e6e6"/><rect x="16.5" y="2.5" width="5.5" height="8" fill="#e6e6e6" opacity=".35"/></svg></span>
+    <span class="clock" id="hudClock">OCT 09 1989 07:30:00 PM</span>
+  </div>
+</div>
+
+<!-- ===== Camcorder HUD: bottom corners ===== -->
+<div class="hud hud-bot">
+  <span id="hudState" class="hud-state st-stop" aria-live="off">■ STOP</span>
+  <button id="fxToggle" class="hud-btn" type="button" aria-pressed="false" title="Toggle CRT/glitch effects">EFFECTS: ON</button>
+</div>
+<div class="concept-badge" aria-label="Concept 5, Tape 09">CONCEPT #5 — TAPE 09</div>
+
+<!-- ===== Nav ===== -->
+<nav class="nav" aria-label="Main">
+  <div class="nav-in">
+    <a class="brand" href="#top" aria-label="Nightmare on the Crow — home">
+      <svg viewBox="0 0 64 64" role="img" aria-label="Crow silhouette"><path d="M10 44c6-1 10-6 13-12 3-7 8-12 15-12 4 0 7 2 9 5l13-1-11 6c1 4 0 8-2 11-3 5-9 8-16 8h-3l-7 8v-8c-4 0-8-2-11-5z"/><circle cx="41" cy="24" r="1.4" fill="#050505"/></svg>
+      <span>NIGHTMARE ON THE CROW <small>TAPE 09</small></span>
+    </a>
+    <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="navLinks">MENU ≡</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#scenes">Scenes</a></li>
+      <li><a href="#showtimes">Showtimes</a></li>
+      <li><a href="#admission">Admission</a></li>
+      <li><a href="#kids">Kids Day</a></li>
+      <li><a href="#features">Special Features</a></li>
+      <li><a href="#casting">Casting</a></li>
+      <li><a href="#troubleshooting">Troubleshooting</a></li>
+      <li><a href="#location">Location</a></li>
+    </ul>
+    <a class="btn btn-rec" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Tickets</a>
+  </div>
+</nav>
+
+<main id="top">
+
+<!-- ===== Hero ===== -->
+<header class="hero" id="hero">
+  <div class="hero-bg" aria-hidden="true">
+    <svg viewBox="0 0 1200 220" preserveAspectRatio="xMidYMax slice">
+      <circle cx="930" cy="46" r="30" fill="#d9d9d9" opacity=".55"/>
+      <path d="M0 220V120l34-80 34 80v100z"/>
+      <path d="M60 220V150l40-100 40 100v70z"/>
+      <path d="M140 220V130l30-70 30 70v90z"/>
+      <path d="M200 220V160l44-120 44 120v60z"/>
+      <path d="M290 220V140l32-80 32 80v80z"/>
+      <path d="M350 220V170l36-90 36 90v50z"/>
+      <path d="M430 220V125l38-95 38 95v95z"/>
+      <path d="M510 220V160l30-70 30 70v60z"/>
+      <path d="M570 220V145l42-110 42 110v75z"/>
+      <path d="M660 220V165l34-80 34 80v55z"/>
+      <path d="M730 220V135l40-95 40 95v85z"/>
+      <path d="M810 220V160l30-75 30 75v60z"/>
+      <path d="M870 220V150l44-105 44 105v70z"/>
+      <path d="M960 220V170l36-85 36 85v50z"/>
+      <path d="M1030 220V140l40-100 40 100v80z"/>
+      <path d="M1110 220V160l45-110 45 110v60z"/>
+      <rect x="0" y="200" width="1200" height="20"/>
+    </svg>
+    <span class="ph-label">Video: camcorder footage — trail entrance at dusk</span>
+  </div>
+
+  <div>
+    <p class="kicker">Recovered footage — Harff Road, Greenfield MN</p>
+    <h1 class="chroma">Nightmare<br>on the Crow</h1>
+    <p class="lede">Someone dropped a camcorder on the trail. This is what was on the tape. <em>"This isn't just a haunt. It's an experience designed to crawl under your skin."</em></p>
+
+    <div class="hero-ctas">
+      <button class="play" id="playBtn" type="button" aria-label="Play — scroll to scene select">
+        <span class="ring" aria-hidden="true">▶</span>
+        <span>PLAY</span>
+      </button>
+      <a class="btn btn-rec" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Get Tickets — $20</a>
+    </div>
+
+    <div class="counter" role="timer" aria-live="off">
+      TAPE ENDS IN <b data-countdown>---:--:--:--</b>
+      <small>DAYS · HRS · MIN · SEC</small>
+      <span class="meta">THEN THE SHOW STARTS · FRI OCT 9 · 7:30 PM</span>
+    </div>
+  </div>
+</header>
+
+<!-- ===== Scene select / attractions ===== -->
+<section class="sec" id="scenes" aria-labelledby="scenes-h">
+  <div class="wrap">
+    <p class="sec-label">Scene select</p>
+    <h2 class="chroma" id="scenes-h" style="--d:1.3s">What's on the tape</h2>
+    <p class="lead">Five scenes. One trail through the forest. <b>It all begins with a hayride</b> — then tunnels, winding paths, haunted buildings full of live actors, and a corn maze that doesn't want you to leave.</p>
+
+    <div class="scenes">
+      <article class="scene">
+        <div class="still" style="--tint:#2c2a26">
+          <span class="tc"><b>SCENE 01</b> 00:00:00:00</span>
+          <svg viewBox="0 0 100 80" role="img" aria-label="Silhouette of a hay wagon pulled by a tractor"><rect x="0" y="64" width="100" height="16"/><circle cx="34" cy="38" r="8"/><circle cx="48" cy="35" r="9"/><circle cx="62" cy="38" r="8"/><rect x="22" y="38" width="52" height="20"/><circle cx="34" cy="62" r="7"/><circle cx="64" cy="62" r="7"/><rect x="76" y="44" width="16" height="14"/><rect x="82" y="34" width="8" height="10"/><circle cx="85" cy="62" r="6"/></svg>
+          <span class="ph-label">Photo: hay wagon leaving the barn at dusk</span>
+        </div>
+        <div class="scene-body">
+          <h3><span>01</span> The Hayride</h3>
+          <p>It all begins with a hayride. The wagon pulls out of the lights, into the trees, and drops you at the trailhead. From here you walk.</p>
+        </div>
+      </article>
+
+      <article class="scene">
+        <div class="still" style="--tint:#22282a">
+          <span class="tc"><b>SCENE 02</b> 00:04:12:07</span>
+          <svg viewBox="0 0 100 80" role="img" aria-label="Silhouette of pine trees with a narrow path between them"><path d="M0 80V50l12-30 12 30v30zM26 80V56l10-26 10 26v24zM50 80V44l14-34 14 34v36zM78 80V54l11-28 11 28v26z"/><path d="M40 80l7-30h6l7 30z" fill="#141414"/></svg>
+          <span class="ph-label">Photo: trail entrance, fog, one flashlight beam</span>
+        </div>
+        <div class="scene-body">
+          <h3><span>02</span> The Haunted Trail</h3>
+          <p>A winding path through the forest. The trees close in, the path narrows, and something keeps pace with you just outside the beam.</p>
+        </div>
+      </article>
+
+      <article class="scene">
+        <div class="still" style="--tint:#1f2330">
+          <span class="tc"><b>SCENE 03</b> 00:09:48:19</span>
+          <svg viewBox="0 0 100 80" role="img" aria-label="Silhouette of a tunnel mouth"><path d="M0 80V22h100v58z" fill="#101010"/><path d="M20 80V52a30 30 0 0 1 60 0v28z" fill="#000"/><path d="M0 74h100v6H0z"/></svg>
+          <span class="ph-label">Photo: tunnel mouth, single work light</span>
+        </div>
+        <div class="scene-body">
+          <h3><span>03</span> The Tunnels</h3>
+          <p>Low, tight, dark. Tunnels and twisting paths that feel a lot longer on the way through than they looked from the outside.</p>
+        </div>
+      </article>
+
+      <article class="scene">
+        <div class="still" style="--tint:#2e2424">
+          <span class="tc"><b>SCENE 04</b> 00:13:03:22</span>
+          <svg viewBox="0 0 100 80" role="img" aria-label="Silhouette of a haunted house with lit windows"><rect x="0" y="70" width="100" height="10"/><path d="M8 70V42L38 18l30 24v28z"/><rect x="74" y="34" width="22" height="36"/><rect x="26" y="48" width="8" height="10" fill="#ff5a1f" opacity=".85"/><rect x="42" y="48" width="8" height="10" fill="#ff5a1f" opacity=".55"/><rect x="82" y="42" width="6" height="8" fill="#ff5a1f" opacity=".4"/></svg>
+          <span class="ph-label">Photo: building interior, actor in the doorway</span>
+        </div>
+        <div class="scene-body">
+          <h3><span>04</span> The Haunted Buildings</h3>
+          <p>Rooms packed with live actors and displays. The skeleton is still in the cage. The zombie graveyard is still… occupied.</p>
+        </div>
+      </article>
+
+      <article class="scene">
+        <div class="still" style="--tint:#2a2c1f">
+          <span class="tc"><b>SCENE 05</b> 00:17:31:04</span>
+          <svg viewBox="0 0 100 80" role="img" aria-label="Silhouette of tall corn stalks"><path d="M10 80V30M22 80V22M34 80V34M46 80V18M58 80V28M70 80V20M82 80V32M94 80V26" stroke="#050505" stroke-width="3.5" fill="none"/><path d="M10 52l-9-9M22 44l9-9M34 54l-9-9M46 40l-9-9M58 50l9-9M70 46l9-9M82 54l-9-9M94 48l-9-9" stroke="#050505" stroke-width="3" fill="none"/><rect x="0" y="76" width="100" height="4"/></svg>
+          <span class="ph-label">Photo: corn rows at night, one lantern</span>
+        </div>
+        <div class="scene-body">
+          <h3><span>05</span> The Corn Maze</h3>
+          <p>An eerie corn maze with interactive scares. Every row looks like the way out. Every row is wrong.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Dates & hours ===== -->
+<section class="sec" id="showtimes" aria-labelledby="show-h">
+  <div class="wrap">
+    <p class="sec-label">Recording schedule</p>
+    <h2 class="chroma" id="show-h" style="--d:2.6s">Four nights on tape</h2>
+    <p class="lead">October 2026. Two weekends. The trail opens at <b>7:30 PM</b> and the last entry is <b>10:00 PM</b>. Miss it and you wait a year.</p>
+
+    <div class="log">
+      <div class="log-row"><span class="n">NIGHT 1/4</span><div class="day">FRIDAY</div><div class="date">OCT 09</div><div class="hrs"><b>7:30 PM</b> → 10:00 PM</div></div>
+      <div class="log-row"><span class="n">NIGHT 2/4</span><div class="day">SATURDAY</div><div class="date">OCT 10</div><div class="hrs"><b>7:30 PM</b> → 10:00 PM</div></div>
+      <div class="log-row"><span class="n">NIGHT 3/4</span><div class="day">FRIDAY</div><div class="date">OCT 16</div><div class="hrs"><b>7:30 PM</b> → 10:00 PM</div></div>
+      <div class="log-row"><span class="n">NIGHT 4/4</span><div class="day">SATURDAY</div><div class="date">OCT 17</div><div class="hrs"><b>7:30 PM</b> → 10:00 PM</div></div>
+    </div>
+    <p class="note">LAST ENTRY <b>10:00 PM</b> EVERY NIGHT · DAYTIME TAPE (KIDS DAY) SAT OCT 10, NOON–3 PM · NEXT TAPE STARTS IN <b data-countdown>---:--:--:--</b></p>
+    <div class="btn-row">
+      <a class="btn btn-rec" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Get Tickets</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Pricing ===== -->
+<section class="sec" id="admission" aria-labelledby="adm-h">
+  <div class="wrap">
+    <p class="sec-label">Admission</p>
+    <h2 class="chroma" id="adm-h" style="--d:4.1s">Insert $20 — or $15 w/ food shelf donation</h2>
+    <p class="lead">No hidden fees, no "starting at." Most big metro haunts run $30–$50. We charge <b>$20</b> — and honestly, we'd rather you paid <b>$15</b>.</p>
+
+    <div class="price-grid">
+      <div class="menu">
+        <div class="mh">MENU ▸ ADMISSION</div>
+        <ul aria-label="Admission prices">
+          <li><span class="cur blink" aria-hidden="true">▶</span><span>HAUNTED TRAIL</span><span class="dots"></span><span class="px">$20</span></li>
+          <li class="hot"><span class="cur" aria-hidden="true">▶</span><span>W/ FOOD SHELF DONATION</span><span class="dots"></span><span class="px">$15</span></li>
+          <li class="hot"><span class="cur" aria-hidden="true">▶</span><span>W/ WINTER CLOTHING ITEM</span><span class="dots"></span><span class="px">$15</span></li>
+          <li><span class="cur" aria-hidden="true"> </span><span>KIDS DAY · SAT OCT 10</span><span class="dots"></span><span class="px">$5</span></li>
+          <li><span class="cur" aria-hidden="true"> </span><span>KIDS DAY TICKET → EVENING</span><span class="dots"></span><span class="px">−$5</span></li>
+        </ul>
+        <div class="mf">PRESS ▶ TO CONTINUE · TICKETS VIA HAUNTPAY</div>
+      </div>
+
+      <div class="donate">
+        <p class="big-price">$15<small>BRING A CAN, SAVE FIVE</small></p>
+        <p>Hand a donation to the crew at the gate and your ticket drops from $20 to $15. Everything collected goes to the food shelf drive and the winter clothing drive. We take:</p>
+        <ul>
+          <li>Non-perishable food for the food shelf</li>
+          <li>Winter clothing: hats, gloves, coats</li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn btn-rec" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Get Tickets</a>
+          <a class="btn btn-blue" href="#features">Where it goes</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Kids Day ===== -->
+<section class="sec" id="kids" aria-labelledby="kids-h">
+  <div class="wrap">
+    <p class="sec-label">Daytime tape</p>
+    <h2 class="chroma" id="kids-h" style="--d:5.2s">Lights on — no scares — $5</h2>
+    <div class="kids">
+      <div>
+        <p><span class="tag orange">Sat Oct 10</span><span class="tag">Noon – 3 PM</span><span class="tag blue">$5</span></p>
+        <p class="lead" style="margin-bottom:0">Same trail, different tape. We flip the lights on, send the monsters home, and hand the whole thing over to the kids: a lights-on walk through the trail, trick-or-treating, and family activities. Costumes strongly encouraged.</p>
+        <ul class="facts">
+          <li><b>WHEN</b> — Saturday, October 10 · Noon to 3 PM</li>
+          <li><b>COST</b> — $5 per ticket</li>
+          <li><b>SCARES</b> — None. Lights on. Monsters off.</li>
+          <li><b>BONUS</b> — Your Kids Day ticket is good for <b>$5 off</b> an evening haunt ticket</li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn btn-rec" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Kids Day Tickets</a>
+        </div>
+      </div>
+      <div class="still" aria-hidden="true">
+        <span class="tc"><b>DAY 01</b> 12:00:00:00</span>
+        <svg viewBox="0 0 100 80"><circle cx="82" cy="16" r="9" fill="#e6e6e6" opacity=".8"/><rect x="0" y="70" width="100" height="10"/><path d="M0 70V52l10-24 10 24v18zM80 70V56l9-22 9 22v14z"/><circle cx="34" cy="46" r="5"/><rect x="30" y="51" width="8" height="19"/><circle cx="50" cy="50" r="4"/><rect x="47" y="54" width="6" height="16"/><path d="M56 62h8l-2-8h-4z"/></svg>
+        <span class="ph-label">Photo: kids trick-or-treating on the lit trail</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Community give-back ===== -->
+<section class="sec" id="features" aria-labelledby="feat-h">
+  <div class="wrap">
+    <p class="sec-label">Special features</p>
+    <h2 class="chroma" id="feat-h" style="--d:.7s">3 neighbors, 1 fire dept, hundreds of cans</h2>
+    <p class="lead">This isn't a franchise. It's a few people in Greenfield who love Halloween and like giving back — and a whole lot of people who show up to help.</p>
+
+    <div class="tiles">
+      <div class="tile">
+        <div class="num">3</div>
+        <h3>Neighbors</h3>
+        <p>Nightmare on the Crow started with three neighbors who loved Halloween and wanted to do something for the community. It's still neighbor-built, hand-built, and run by people who live down the road.</p>
+      </div>
+      <div class="tile">
+        <div class="num">1</div>
+        <h3>Fire Department</h3>
+        <p>We partner with the <strong>Hanover Fire Department</strong>. If you see them on site, say thanks — they are a big part of why this thing happens at all.</p>
+      </div>
+      <div class="tile">
+        <div class="num">100s</div>
+        <h3>Of cans &amp; coats</h3>
+        <p>Every $15 ticket is a can of food or a warm coat headed to someone nearby who needs it. The food shelf drive and winter clothing drive run all four nights. Fill the truck.</p>
+      </div>
+    </div>
+    <p class="trucks">CONCESSIONS ON SITE: <b>Just in Time Concessions</b> · <b>Burger Box</b></p>
+  </div>
+</section>
+
+<!-- ===== Join the Crew ===== -->
+<section class="sec" id="casting" aria-labelledby="cast-h">
+  <div class="wrap">
+    <p class="sec-label">Casting call</p>
+    <h2 class="chroma" id="cast-h" style="--d:3.3s">Join the crew</h2>
+    <div class="cast">
+      <div class="body">
+        <p class="lead" style="margin-bottom:16px">We run on volunteer actors. No experience required — just show up, get in makeup, and commit to the bit. If you've ever wanted to be the reason someone screams in a corn field, this is your tape.</p>
+        <p>Actors, set builders, hayride help, gate crew, makeup — there's a spot for every kind of weird. Already on the cast? Your login is below.</p>
+        <div class="btn-row">
+          <a class="btn btn-rec" href="#">Apply to the cast</a>
+          <a class="btn" href="#">Actor login</a>
+        </div>
+      </div>
+      <div class="credits">
+        <div class="ch">CAST &amp; CREW (PARTIAL)</div>
+        <dl>
+          <dt>EVAN</dt>
+          <dd>"Beetlejuice" · social &amp; tech</dd>
+          <dt>BEN</dt>
+          <dd>Set designer · the skeleton trapped in the cage · zombie graveyard</dd>
+          <dt class="you">YOU</dt>
+          <dd>??? · to be recorded</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="sec" id="troubleshooting" aria-labelledby="faq-h">
+  <div class="wrap">
+    <p class="sec-label">Tracking / troubleshooting</p>
+    <h2 class="chroma" id="faq-h" style="--d:6s">Before you press play</h2>
+    <div class="faq">
+      <details>
+        <summary><span class="k">TRK 01</span>How scary is it?</summary>
+        <p>Scary. It's a haunted trail through dark woods with live actors, tunnels, haunted buildings and a corn maze — built to crawl under your skin. If you want the no-scare version, come to Kids Day on Saturday, Oct 10 (lights on, noon–3 PM).</p>
+      </details>
+      <details>
+        <summary><span class="k">TRK 02</span>What age is it for?</summary>
+        <p>There's no hard age minimum, but the evening haunt is built for teens and adults. You know your kid. Little ones (and nervous grown-ups) will love Kids Day — and that $5 ticket is good for $5 off an evening ticket if they decide they're brave.</p>
+      </details>
+      <details>
+        <summary><span class="k">TRK 03</span>What if it rains?</summary>
+        <p>It's Minnesota in October: dress for it. Light rain doesn't stop the tape. If severe weather forces a change, we'll post it on Facebook and Instagram before doors — check before you drive out.</p>
+      </details>
+      <details>
+        <summary><span class="k">TRK 04</span>Where do I park?</summary>
+        <p>Parking is on site at 6470 Harff Road. Follow the crew's lights when you pull in, and give yourself a few extra minutes on Saturday nights.</p>
+      </details>
+      <details>
+        <summary><span class="k">TRK 05</span>How long does it take?</summary>
+        <p>Depends how fast you run. Between the hayride, the trail, the tunnels, the buildings and the maze, plan on a good chunk of your evening — and arrive before the 10 PM last entry.</p>
+      </details>
+      <details>
+        <summary><span class="k">TRK 06</span>Will the actors touch me?</summary>
+        <p>No. Our actors won't touch you, and we ask that you don't touch them, the sets or the props. Keep your hands to yourself, keep moving, and everybody goes home happy.</p>
+      </details>
+      <details>
+        <summary><span class="k">TRK 07</span>Is it wheelchair accessible?</summary>
+        <p>Honestly: it's a forest trail with tunnels, hills and uneven, unpaved ground, so much of the route isn't wheelchair-friendly. Message us before you come and we'll tell you exactly what's doable and do our best to help.</p>
+      </details>
+      <details>
+        <summary><span class="k">TRK 08</span>Is there food?</summary>
+        <p>Yes — food trucks on site. Just in Time Concessions and Burger Box are both here, so eat before you walk in or reward yourself after.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Location ===== -->
+<section class="sec" id="location" aria-labelledby="loc-h">
+  <div class="wrap">
+    <p class="sec-label">Location</p>
+    <h2 class="chroma" id="loc-h" style="--d:2s">Where the tape was found</h2>
+    <div class="loc">
+      <div>
+        <address class="addr">6470 HARFF ROAD<br>GREENFIELD, MN 55373<br><b>WEST METRO · ~35 MIN FROM MINNEAPOLIS</b></address>
+        <p style="color:#d2d2d2">Out past the suburbs, near the Crow River, where the streetlights stop. Put the address in your phone before you lose signal — it's dark out here, and that's the point.</p>
+        <div class="btn-row">
+          <a class="btn btn-blue" href="https://www.google.com/maps/search/?api=1&amp;query=6470+Harff+Road+Greenfield+MN+55373" target="_blank" rel="noopener">Open in maps</a>
+          <a class="btn btn-rec" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Get Tickets</a>
+        </div>
+      </div>
+      <div class="map">
+        <svg viewBox="0 0 400 300" role="img" aria-label="Stylized map: 6470 Harff Road, Greenfield, near the Crow River, with Minneapolis to the southeast">
+          <rect width="400" height="300" fill="#0b0d12"/>
+          <g stroke="#161a24" stroke-width="1">
+            <path d="M0 50H400M0 100H400M0 150H400M0 200H400M0 250H400M50 0V300M100 0V300M150 0V300M200 0V300M250 0V300M300 0V300M350 0V300"/>
+          </g>
+          <path d="M-10 230C70 200 110 270 190 240S320 180 410 210" stroke="#2b6cff" stroke-width="12" fill="none" opacity=".55" stroke-linecap="round"/>
+          <text x="236" y="262" fill="#2b6cff" font-family="VT323,monospace" font-size="16" letter-spacing="3">CROW RIVER</text>
+          <path d="M60 0V300" stroke="#3a3a3a" stroke-width="6"/>
+          <path d="M0 120H400" stroke="#2e2e2e" stroke-width="5"/>
+          <text x="70" y="24" fill="#9a9a9a" font-family="VT323,monospace" font-size="15" letter-spacing="2">HARFF RD</text>
+          <circle cx="150" cy="120" r="16" fill="none" stroke="#ff5a1f" stroke-width="2" opacity=".6"/>
+          <circle cx="150" cy="120" r="7" fill="#ff5a1f"/>
+          <text x="172" y="112" fill="#e6e6e6" font-family="VT323,monospace" font-size="18" letter-spacing="2">6470 HARFF RD</text>
+          <text x="172" y="132" fill="#9a9a9a" font-family="VT323,monospace" font-size="15" letter-spacing="2">GREENFIELD, MN</text>
+          <text x="290" y="290" fill="#9a9a9a" font-family="VT323,monospace" font-size="15" letter-spacing="2">MPLS ~35 MIN ↘</text>
+        </svg>
+        <span class="ph-label">Map: 6470 Harff Road (embed goes here)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Viewer comments (sample) ===== -->
+<section class="sec" id="comments" aria-labelledby="com-h">
+  <div class="wrap">
+    <p class="sec-label">Viewer comments</p>
+    <h2 class="chroma" id="com-h" style="--d:4.8s">What the audience said</h2>
+    <p class="lead">Sample quotes for layout only — swap in real guest reviews.</p>
+    <div class="quotes">
+      <blockquote class="q">"I paid $15 and a bag of canned corn to have my soul leave my body."<small>SAMPLE · ANONYMOUS</small></blockquote>
+      <blockquote class="q">"The hayride lulls you into thinking it's cute. It is not cute."<small>SAMPLE · ANONYMOUS</small></blockquote>
+      <blockquote class="q">"Twenty bucks. Real actors. Real woods. Nothing else in the metro comes close."<small>SAMPLE · ANONYMOUS</small></blockquote>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ===== Footer ===== -->
+<footer>
+  <div class="foot">
+    <div>
+      <a class="brand" href="#top">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10 44c6-1 10-6 13-12 3-7 8-12 15-12 4 0 7 2 9 5l13-1-11 6c1 4 0 8-2 11-3 5-9 8-16 8h-3l-7 8v-8c-4 0-8-2-11-5z"/><circle cx="41" cy="24" r="1.4" fill="#050505"/></svg>
+        <span>NIGHTMARE ON THE CROW</span>
+      </a>
+      <p class="fp">6470 Harff Road · Greenfield, MN 55373</p>
+      <p class="fp">Oct 9 · 10 · 16 · 17 — 7:30 to 10:00 PM</p>
+      <p class="fp">Kids Day — Sat Oct 10 · Noon–3 PM · $5</p>
+      <button class="btn btn-blue rewind" id="rewindBtn" type="button">◀◀ Rewind tape</button>
+    </div>
+    <div>
+      <h4>Channels</h4>
+      <ul>
+        <li><a href="#">Facebook</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">TikTok</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Tape index</h4>
+      <ul>
+        <li><a href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail">Get Tickets</a></li>
+        <li><a href="#admission">Admission — $20 / $15</a></li>
+        <li><a href="#kids">Kids Day</a></li>
+        <li><a href="#casting">Join the Crew</a></li>
+        <li><a href="#">Actor login</a></li>
+      </ul>
+    </div>
+  </div>
+  <p class="copy">© 2026 Nightmare on the Crow · Greenfield, MN · Concept mockup "TAPE 09" — dashed-border blocks mark where real photos, video and the map embed go. The year on the HUD clock is intentionally stuck in 1989.</p>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var body = document.body;
+  var reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  function pad(n, len) { n = String(n); len = len || 2; while (n.length < len) n = '0' + n; return n; }
+
+  /* ---------- HUD transport state (STOP / PLAY / PAUSE / REW) ---------- */
+  var stateEl = document.getElementById('hudState');
+  var state = 'STOP';
+  var labels = { STOP: '■ STOP', PLAY: '▶ PLAY', PAUSE: '❚❚ PAUSE', REW: '◀◀ REW' };
+  var introEl = document.getElementById('intro');
+  var idleTimer = null;
+
+  function setState(s) {
+    state = s;
+    stateEl.textContent = labels[s];
+    stateEl.className = 'hud-state st-' + s.toLowerCase();
+  }
+  /* Any interaction = PLAY; 8s of nothing = PAUSE (never overrides REW or the intro). */
+  function active() {
+    if (state === 'REW' || introEl) return;
+    if (state !== 'PLAY') setState('PLAY');
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(function () { if (state === 'PLAY') setState('PAUSE'); }, 8000);
+  }
+  ['scroll', 'mousemove', 'keydown', 'touchstart', 'click'].forEach(function (ev) {
+    window.addEventListener(ev, active, { passive: true });
+  });
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) { if (state === 'PLAY') setState('PAUSE'); } else { active(); }
+  });
+
+  /* ---------- EFFECTS ON/OFF toggle (persisted) ---------- */
+  var fxBtn = document.getElementById('fxToggle');
+  var fxOff = false;
+  try { fxOff = localStorage.getItem('tape09-fx') === 'off'; } catch (e) { /* storage blocked: ignore */ }
+  function applyFx() {
+    body.classList.toggle('fx-off', fxOff);
+    fxBtn.textContent = fxOff ? 'EFFECTS: OFF' : 'EFFECTS: ON';
+    fxBtn.setAttribute('aria-pressed', fxOff ? 'true' : 'false');
+  }
+  applyFx();
+  fxBtn.addEventListener('click', function () {
+    fxOff = !fxOff;
+    try { localStorage.setItem('tape09-fx', fxOff ? 'off' : 'on'); } catch (e) { /* ignore */ }
+    applyFx();
+  });
+
+  /* ---------- Static intro: 1.2s of canvas noise, then the picture tunes in ---------- */
+  function removeIntro() {
+    if (introEl && introEl.parentNode) introEl.parentNode.removeChild(introEl);
+    introEl = null;
+    setState('PLAY');
+    active();
+  }
+  function endIntro() {
+    if (!introEl || introEl.classList.contains('tune')) return;
+    introEl.classList.add('tune');
+    body.classList.add('tuned');
+    setTimeout(removeIntro, 520);
+  }
+  var canvas = document.getElementById('static');
+  if (reduce || fxOff || !canvas || !canvas.getContext) {
+    removeIntro();
+  } else {
+    var ctx = canvas.getContext('2d');
+    var W = 160, H = 120;
+    canvas.width = W; canvas.height = H;
+    var img = ctx.createImageData(W, H);
+    var d = img.data;
+    var start = performance.now();
+    var raf = 0;
+    var frame = function (t) {
+      for (var i = 0; i < d.length; i += 4) {
+        var v = (Math.random() * 255) | 0;
+        d[i] = v; d[i + 1] = v; d[i + 2] = v; d[i + 3] = 255;
+      }
+      ctx.putImageData(img, 0, 0);
+      if (t - start < 1200) raf = requestAnimationFrame(frame); else endIntro();
+    };
+    raf = requestAnimationFrame(frame);
+    /* Safety net: never leave the intro up longer than 2s. */
+    setTimeout(function () { cancelAnimationFrame(raf); endIntro(); }, 2000);
+  }
+
+  /* ---------- HUD clock: real time, year forced to 1989 ---------- */
+  var months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+  var clockEl = document.getElementById('hudClock');
+  function tickClock() {
+    var n = new Date();
+    var h = n.getHours();
+    var ap = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    clockEl.textContent = months[n.getMonth()] + ' ' + pad(n.getDate()) + ' 1989 ' +
+      pad(h) + ':' + pad(n.getMinutes()) + ':' + pad(n.getSeconds()) + ' ' + ap;
+  }
+
+  /* ---------- Tape counter countdown to opening night ---------- */
+  var target = new Date('2026-10-09T19:30:00-05:00');
+  var cdEls = document.querySelectorAll('[data-countdown]');
+  function tickCountdown() {
+    var diff = target.getTime() - Date.now();
+    var txt;
+    if (isNaN(diff)) {
+      txt = '---:--:--:--';
+    } else if (diff <= 0) {
+      txt = 'TAPE ROLLING — NOW PLAYING';
+    } else {
+      var s = Math.floor(diff / 1000);
+      var days = Math.floor(s / 86400); s -= days * 86400;
+      var hrs = Math.floor(s / 3600); s -= hrs * 3600;
+      var min = Math.floor(s / 60); s -= min * 60;
+      txt = pad(days, 3) + ':' + pad(hrs) + ':' + pad(min) + ':' + pad(s);
+    }
+    for (var i = 0; i < cdEls.length; i++) cdEls[i].textContent = txt;
+  }
+  tickClock(); tickCountdown();
+  setInterval(function () { tickClock(); tickCountdown(); }, 1000);
+
+  /* ---------- Mobile nav ---------- */
+  var navBtn = document.getElementById('navToggle');
+  var navList = document.getElementById('navLinks');
+  navBtn.addEventListener('click', function () {
+    var open = body.classList.toggle('nav-open');
+    navBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  navList.addEventListener('click', function (e) {
+    if (e.target && e.target.tagName === 'A') {
+      body.classList.remove('nav-open');
+      navBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  /* ---------- Big PLAY button: scroll to Scene Select ---------- */
+  document.getElementById('playBtn').addEventListener('click', function () {
+    var t = document.getElementById('scenes');
+    if (t) t.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    active();
+  });
+
+  /* ---------- REWIND: animated scroll to top with fast tracking bands ---------- */
+  var rwBtn = document.getElementById('rewindBtn');
+  var rewinding = false;
+  rwBtn.addEventListener('click', function () {
+    if (rewinding) return;
+    if (reduce || fxOff) { window.scrollTo(0, 0); return; }
+    rewinding = true;
+    body.classList.add('rewinding');
+    setState('REW');
+    var root = document.documentElement;
+    var prevBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    var startY = window.pageYOffset || root.scrollTop || 0;
+    var dur = Math.min(1400, 450 + startY * 0.2);
+    var t0 = performance.now();
+    /* Tape counter spins while rewinding, then snaps back to the real countdown. */
+    var scramble = setInterval(function () {
+      var fake = pad((Math.random() * 999) | 0, 3) + ':' + pad((Math.random() * 24) | 0) + ':' +
+        pad((Math.random() * 60) | 0) + ':' + pad((Math.random() * 60) | 0);
+      for (var i = 0; i < cdEls.length; i++) cdEls[i].textContent = fake;
+    }, 60);
+    var step = function (t) {
+      var p = Math.min(1, (t - t0) / dur);
+      var e = 1 - Math.pow(1 - p, 3);
+      window.scrollTo(0, Math.round(startY * (1 - e)));
+      if (p < 1) {
+        requestAnimationFrame(step);
+      } else {
+        clearInterval(scramble);
+        tickCountdown();
+        body.classList.remove('rewinding');
+        root.style.scrollBehavior = prevBehavior;
+        rewinding = false;
+        setState('PLAY');
+        active();
+      }
+    };
+    requestAnimationFrame(step);
+  });
+})();
+</script>
+</body>
+</html>
