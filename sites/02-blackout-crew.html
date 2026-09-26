@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crew Portal — Nightmare on the Crow</title>
+<meta name="description" content="Volunteer crew portal for Nightmare on the Crow, Greenfield MN. Message board, station board for all four nights, one-step signup and the volunteer agreement.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#000000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Decide gate + lights state before first paint so nothing flashes.
+     - `open`  : the gate has been passed this session, or ?crew=open is in the URL (launcher preview).
+     - `lit`   : inside the portal the lights are ON by default (crew need to read). The gate ignores
+                 this and is always dark with the flashlight locked on the password input. -->
+<script>
+(function(){
+  var open = false, lit = true;
+  try { if (/[?&]crew=open(&|$)/.test(window.location.search)) open = true; } catch(e){}
+  try {
+    if (sessionStorage.getItem('notc-crew') === 'open') open = true;
+    if (sessionStorage.getItem('notc-crew-lights') === 'off') lit = false;
+  } catch(e){}
+  var c = document.documentElement.classList;
+  if (open) c.add('open');
+  if (lit) c.add('lit');
+})();
+</script>
+
+<style>
+/* =============================================================
+   CONCEPT #2 — BLACKOUT · CREW PORTAL
+   Same language as the public page: near-black, off-white, one
+   orange (#ff6a00), Bebas Neue at enormous sizes, Inter for body.
+   The gate is pitch black with the flashlight beam locked on a
+   single huge password input. Inside, the lights are on.
+   ============================================================= */
+
+:root{
+  --bg:#070707;
+  --ink:#f2f2f2;
+  --body:#c9c9c9;
+  --mute:#8f8f8f;
+  --orange:#ff6a00;
+  --line:#1f1f1f;
+  --sil:#1e1e1e;
+  --display:'Bebas Neue','Anton',Impact,'Arial Narrow Bold','Arial Narrow',sans-serif;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  --nav-h:64px;
+  --beam:260px;
+  --gutter:clamp(1.25rem,5vw,4.5rem);
+}
+@media (max-width:640px){ :root{ --beam:170px; } }
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ background:var(--bg); color:var(--ink); scroll-padding-top:calc(var(--nav-h) + 1rem); -webkit-text-size-adjust:100%; }
+@media (prefers-reduced-motion: no-preference){ html{ scroll-behavior:smooth; } }
+body{
+  margin:0; font-family:var(--sans); font-size:1.0625rem; line-height:1.6; color:var(--body);
+  background:var(--bg); overflow-x:hidden; min-height:100vh;
+}
+h1,h2,h3,.display{ font-family:var(--display); font-weight:400; color:var(--ink); line-height:.92; letter-spacing:.01em; margin:0; text-transform:uppercase; }
+p{ margin:0 0 1rem; max-width:62ch; }
+a{ color:var(--orange); text-decoration-thickness:1px; text-underline-offset:.2em; }
+a:hover{ text-decoration-thickness:2px; }
+button{ font:inherit; }
+:focus-visible{ outline:3px solid var(--orange); outline-offset:4px; }
+::selection{ background:var(--orange); color:#000; }
+.vh{ position:absolute !important; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+
+.skip{ position:fixed; top:-100px; left:1rem; z-index:100; background:var(--orange); color:#000; padding:.6rem 1rem; font-weight:600; border-radius:4px; }
+.skip:focus{ top:.75rem; }
+
+/* ---------- layout helpers ---------- */
+.wrap{ width:100%; max-width:1280px; margin:0 auto; padding-left:var(--gutter); padding-right:var(--gutter); }
+section{ position:relative; overflow:hidden; padding:clamp(4rem,10vh,7rem) 0; border-top:1px solid var(--line); }
+.eyebrow{ font-family:var(--sans); font-size:.75rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--orange); margin:0 0 1.25rem; }
+.h2{ font-size:clamp(3rem,9vw,7.5rem); margin-bottom:1.5rem; }
+.lead{ font-size:clamp(1.125rem,1.5vw,1.375rem); color:var(--ink); max-width:48ch; }
+.mute{ color:var(--mute); }
+.orange{ color:var(--orange); }
+.nowrap{ white-space:nowrap; }
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:.6rem;
+  font-family:var(--display); font-size:1.5rem; letter-spacing:.06em; line-height:1; text-transform:uppercase; text-decoration:none;
+  padding:1rem 1.75rem .85rem; border-radius:4px; border:2px solid var(--orange); cursor:pointer; user-select:none;
+  transition:transform .15s ease, background .15s ease, color .15s ease;
+}
+.btn-solid{ background:var(--orange); color:#000; }
+.btn-solid:hover{ background:#ff8b3a; }
+.btn-ghost{ background:transparent; color:var(--ink); border-color:#3a3a3a; }
+.btn-ghost:hover{ border-color:var(--orange); color:var(--orange); }
+.btn:active{ transform:translateY(1px); }
+.btn-row{ display:flex; flex-wrap:wrap; gap:.85rem; margin-top:2.25rem; }
+
+/* ============================================================
+   NAV — same treatment as the public page, plus a CREW tag,
+   a Log out link and a "Sign up" CTA in place of tickets.
+   ============================================================ */
+.nav{
+  position:fixed; inset:0 0 auto 0; z-index:80; height:var(--nav-h);
+  background:rgba(7,7,7,.82); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.nav .wrap{ height:100%; display:flex; align-items:center; gap:1.25rem; }
+.brand{ display:flex; align-items:center; gap:.6rem; color:var(--ink); text-decoration:none; font-family:var(--display); font-size:1.35rem; letter-spacing:.08em; line-height:1; white-space:nowrap; }
+.brand svg{ width:30px; height:20px; color:var(--orange); }
+.brand .crewtag{ font-size:.7rem; font-family:var(--sans); font-weight:600; letter-spacing:.18em; background:var(--orange); color:#000; padding:.25rem .45rem .2rem; border-radius:3px; margin-left:.25rem; }
+.links{ display:flex; flex-wrap:nowrap; gap:1.5rem; margin-left:auto; list-style:none; padding:0; margin-top:0; margin-bottom:0; }
+.links a{ color:var(--body); text-decoration:none; font-size:.8125rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; white-space:nowrap; }
+.links a:hover{ color:var(--orange); }
+.links a.logout{ color:var(--mute); }
+.nav-actions{ display:flex; align-items:center; gap:.6rem; margin-left:auto; }
+.links + .nav-actions{ margin-left:0; }
+.lights{
+  display:inline-flex; align-items:center; gap:.5rem; background:transparent; color:var(--ink); border:1px solid #3a3a3a; border-radius:999px;
+  padding:.45rem .9rem .45rem .7rem; font-size:.8125rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; white-space:nowrap;
+}
+.lights svg{ width:16px; height:16px; }
+.lights:hover{ border-color:var(--orange); }
+.lights[aria-pressed="true"]{ background:var(--orange); color:#000; border-color:var(--orange); }
+.nav .btn{ font-size:1.15rem; padding:.7rem 1.1rem .55rem; white-space:nowrap; }
+.menu-btn{ display:none; background:none; border:1px solid #3a3a3a; color:var(--ink); border-radius:4px; width:42px; height:42px; cursor:pointer; align-items:center; justify-content:center; }
+.menu-btn svg{ width:20px; height:20px; }
+
+@media (max-width:1060px){
+  .links{ display:none; position:absolute; top:var(--nav-h); left:0; right:0; flex-direction:column; gap:0; background:#0b0b0b; border-bottom:1px solid var(--line); padding:.5rem 0 1rem; }
+  .links li{ padding:0 var(--gutter); }
+  .links a{ display:block; padding:.9rem 0; border-bottom:1px solid var(--line); font-size:1rem; }
+  .nav.open .links{ display:flex; }
+  .menu-btn{ display:inline-flex; }
+  .lights span{ display:none; }
+  .lights{ padding:.5rem .6rem; }
+  .brand span:not(.crewtag){ display:none; }
+  .brand svg{ width:34px; height:24px; }
+}
+@media (max-width:400px){ .nav .btn{ font-size:1.05rem; padding:.65rem .8rem .5rem; } }
+
+/* ============================================================
+   THE DARK — same overlay as the public page. On the gate it is
+   always on and the beam sits on the password input. Inside the
+   portal it is off by default (html.lit) — the nav toggle brings
+   the flashlight back for anyone who misses it.
+   ============================================================ */
+#dark{
+  position:fixed; inset:0; z-index:50; pointer-events:none; background:#000;
+  --x:50vw; --y:45vh;
+  -webkit-mask-image:radial-gradient(circle var(--beam) at var(--x) var(--y), transparent 0%, rgba(0,0,0,.18) 38%, rgba(0,0,0,.72) 68%, #000 100%);
+          mask-image:radial-gradient(circle var(--beam) at var(--x) var(--y), transparent 0%, rgba(0,0,0,.18) 38%, rgba(0,0,0,.72) 68%, #000 100%);
+  transition:opacity .4s ease;
+}
+html.lit #dark{ opacity:0; visibility:hidden; }
+html:not(.open) #dark{ opacity:1; visibility:visible; }       /* the gate is always dark */
+html:not(.open){ --beam:340px; }
+@media (max-width:640px){ html:not(.open){ --beam:230px; } }
+
+/* ---------- concept badge ---------- */
+.badge{
+  position:fixed; right:.75rem; bottom:.75rem; z-index:90; font-size:.65rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+  color:#000; background:var(--orange); padding:.4rem .6rem; border-radius:3px; pointer-events:none;
+}
+
+/* ---------- silhouettes (only read when the beam passes over them) ---------- */
+.sil{ position:absolute; color:var(--sil); pointer-events:none; user-select:none; }
+.sil.trees{ left:0; right:0; bottom:-2px; width:100%; height:clamp(90px,14vw,190px); }
+.sil.crow{ width:clamp(56px,7vw,100px); height:auto; }
+.sil.perch{ width:clamp(260px,40vw,560px); height:auto; }
+
+/* ============================================================
+   GATE — one huge input in the dark.
+   ============================================================ */
+#gate{ position:fixed; inset:0; z-index:40; background:var(--bg); display:flex; align-items:center; justify-content:center; padding:var(--gutter); overflow:hidden; }
+html.open #gate{ display:none; }
+html:not(.open) #portal, html:not(.open) .nav, html:not(.open) footer{ display:none; }
+#gate .perch{ top:5vh; right:-4%; }
+#gate .lone{ bottom:24%; left:6%; transform:scaleX(-1); }
+.gate-inner{ position:relative; z-index:2; width:min(640px,100%); text-align:center; }
+.gate-inner .eyebrow{ margin-bottom:.75rem; }
+#gate h1{ font-size:clamp(3.75rem,13vw,9.5rem); margin-bottom:1.25rem; }
+.gate-row{ display:flex; align-items:flex-end; gap:.75rem; }
+#pw{
+  display:block; flex:1 1 auto; min-width:0; background:transparent; border:0; border-bottom:3px solid var(--orange); border-radius:0;
+  color:var(--ink); font:inherit; font-size:clamp(1.75rem,6vw,3.25rem); letter-spacing:.3em; text-align:center; padding:.5rem 0 .4rem;
+  outline:none; caret-color:var(--orange);
+}
+#pw::placeholder{ color:#3a3a3a; letter-spacing:.3em; }
+#pw:focus{ border-bottom-color:var(--ink); box-shadow:0 3px 0 var(--orange); }
+.gate-go{
+  flex:0 0 auto; width:clamp(48px,9vw,64px); height:clamp(48px,9vw,64px); background:var(--orange); color:#000; border:0; border-radius:4px; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center;
+}
+.gate-go svg{ width:55%; height:55%; }
+.gate-go:hover{ background:#ff8b3a; }
+.gate-err{ min-height:1.6em; color:var(--orange); font-family:var(--display); font-size:1.4rem; letter-spacing:.05em; line-height:1.15; margin:1.1rem 0 .35rem; }
+.gate-hint{ font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--mute); margin:0; }
+.gate-hint code{ font-family:inherit; color:var(--ink); }
+.gate-back{ display:inline-block; margin-top:2.5rem; font-size:.75rem; letter-spacing:.14em; text-transform:uppercase; color:var(--mute); text-decoration:none; }
+.gate-back:hover{ color:var(--orange); }
+.shake{ animation:shake .35s ease; }
+@keyframes shake{ 0%,100%{ transform:none; } 20%{ transform:translateX(-8px); } 40%{ transform:translateX(8px); } 60%{ transform:translateX(-5px); } 80%{ transform:translateX(5px); } }
+
+/* ============================================================
+   PORTAL HEADER
+   ============================================================ */
+.hero{ min-height:auto; padding-top:calc(var(--nav-h) + clamp(3rem,9vh,6rem)); padding-bottom:clamp(4rem,10vh,7rem); border-top:0; }
+.hero h1{ font-size:clamp(4.5rem,15vw,13rem); max-width:12ch; }
+.hero h1 .good{ color:var(--orange); }
+.hero h1:focus{ outline:none; }
+.hero .cd-line{ font-family:var(--display); font-size:clamp(1.35rem,2.6vw,2rem); color:var(--ink); letter-spacing:.05em; text-transform:uppercase; line-height:1.15; margin:1.5rem 0 0; }
+.hero .cd-line span{ color:var(--orange); }
+.hero .lone{ top:calc(var(--nav-h) + 2rem); right:6%; }
+
+/* ============================================================
+   MESSAGE BOARD — a stark dated list
+   ============================================================ */
+.posts{ list-style:none; margin:1rem 0 0; padding:0; border-top:1px solid var(--line); max-width:980px; }
+.post{ display:grid; grid-template-columns:11rem 1fr; gap:.75rem 2.5rem; padding:2rem 0; border-bottom:1px solid var(--line); }
+.post .when{ font-family:var(--display); font-size:clamp(1.5rem,3vw,2.25rem); color:var(--orange); letter-spacing:.04em; line-height:1; padding-top:.2rem; }
+.post .when small{ display:block; font-family:var(--sans); font-size:.68rem; font-weight:600; letter-spacing:.18em; color:var(--mute); margin-top:.5rem; }
+.post h3{ font-size:clamp(1.75rem,4vw,3rem); margin-bottom:.6rem; }
+.post p{ margin-bottom:.6rem; }
+.post p:last-child{ margin-bottom:0; }
+.post.pin{ border-left:4px solid var(--orange); padding-left:1.25rem; }
+.post.pin .when{ color:var(--ink); }
+.post ul{ margin:.25rem 0 .5rem; padding-left:1.2rem; }
+.post li{ margin-bottom:.2rem; }
+@media (max-width:640px){ .post{ grid-template-columns:1fr; gap:.4rem; } }
+
+/* ============================================================
+   STATION BOARD — night tabs, giant zone numerals, station rows
+   ============================================================ */
+.tabs{ display:grid; grid-template-columns:repeat(4,1fr); gap:.5rem; margin:1.5rem 0 2.25rem; }
+.tab{
+  font-family:var(--display); font-size:clamp(1.35rem,3.2vw,2.4rem); letter-spacing:.04em; line-height:1; text-transform:uppercase;
+  background:transparent; color:var(--body); border:2px solid #2a2a2a; border-radius:4px; padding:1rem .9rem .8rem; cursor:pointer; text-align:left;
+  transition:border-color .15s ease, background .15s ease, color .15s ease;
+}
+.tab small{ display:block; font-family:var(--sans); font-size:.68rem; font-weight:600; letter-spacing:.16em; color:var(--mute); margin-top:.5rem; text-transform:uppercase; }
+.tab:hover{ border-color:var(--orange); color:var(--ink); }
+.tab[aria-selected="true"]{ background:var(--orange); color:#000; border-color:var(--orange); }
+.tab[aria-selected="true"] small{ color:#000; opacity:.75; }
+@media (max-width:640px){ .tabs{ grid-template-columns:1fr 1fr; } }
+
+.open-count{ font-family:var(--display); font-size:clamp(2.75rem,7vw,5.5rem); line-height:.95; text-transform:uppercase; color:var(--ink); margin:0 0 1rem; }
+.open-count b{ color:var(--orange); font-weight:400; }
+.legend{ display:flex; flex-wrap:wrap; gap:.5rem 1.5rem; font-size:.72rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--mute); margin:0 0 1rem; }
+.legend span{ display:inline-flex; align-items:center; gap:.5rem; }
+
+.zone{ margin-top:3.5rem; }
+.zone-h{ display:flex; align-items:baseline; flex-wrap:wrap; gap:.5rem 1.25rem; margin-bottom:.75rem; }
+.zone-h .num{ font-family:var(--display); font-size:clamp(3.75rem,10vw,8rem); line-height:.85; color:var(--orange); letter-spacing:.02em; }
+.zone-h h3{ font-size:clamp(1.75rem,3.6vw,2.75rem); }
+.zone-h .zc{ margin-left:auto; font-size:.72rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--mute); }
+.zone-h .zc b{ color:var(--orange); font-weight:600; }
+@media (max-width:640px){ .zone-h .zc{ margin-left:0; flex-basis:100%; } }
+
+.stations{ list-style:none; margin:0; padding:0; border-top:1px solid var(--line); }
+.st{ display:flex; align-items:center; flex-wrap:wrap; gap:.6rem 1.25rem; padding:.9rem 0; border-bottom:1px solid var(--line); }
+.st-name{ font-family:var(--display); font-size:clamp(1.6rem,3vw,2.25rem); line-height:1; color:var(--ink); letter-spacing:.02em; }
+.who{ font-size:.66rem; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--mute); border:1px solid #333; border-radius:999px; padding:.2rem .55rem; }
+.pips{ display:flex; flex-wrap:wrap; gap:5px; margin-left:auto; }
+.pip{ width:14px; height:14px; border:1px solid #444; border-radius:2px; }
+.pip.f{ background:var(--orange); border-color:var(--orange); }
+.need{
+  font-family:var(--display); font-size:1.1rem; letter-spacing:.08em; text-transform:uppercase; line-height:1;
+  background:var(--orange); color:#000; border:2px solid var(--orange); border-radius:999px; padding:.5rem .95rem .38rem; cursor:pointer; white-space:nowrap;
+  transition:background .15s ease, color .15s ease;
+}
+.need b{ font-weight:400; opacity:.7; margin-left:.35em; }
+.need:hover{ background:#ff8b3a; border-color:#ff8b3a; }
+.need.help{ background:transparent; color:var(--orange); }
+.need.help:hover{ background:var(--orange); color:#000; }
+.full{ font-size:.68rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--mute); padding:.45rem 0; }
+@media (max-width:640px){
+  .st-name{ flex:1 1 auto; }
+  .who{ order:1; }
+  .need,.full{ order:2; }
+  .pips{ order:3; flex-basis:100%; margin-left:0; }
+}
+
+/* ============================================================
+   SIGNUP — oversized, minimal, orange focus rings
+   ============================================================ */
+.form{ display:grid; grid-template-columns:1fr 1fr; gap:1.75rem 2.5rem; margin-top:2rem; max-width:920px; }
+.f{ display:flex; flex-direction:column; gap:.5rem; min-width:0; }
+.f.wide{ grid-column:1 / -1; }
+.f label,.f .lab{ font-size:.72rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--mute); }
+.f .req{ color:var(--orange); }
+.f input[type="text"],.f input[type="email"],.f input[type="tel"],.f select{
+  width:100%; background:transparent; border:0; border-bottom:2px solid #333; border-radius:0; color:var(--ink); font:inherit; font-size:1.25rem; padding:.6rem 0; outline:none;
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.f input:focus,.f select:focus{ border-bottom-color:var(--orange); box-shadow:0 2px 0 var(--orange); }
+.f input:focus-visible,.f select:focus-visible{ outline:none; }
+.f [aria-invalid="true"]{ border-bottom-color:var(--orange); }
+.f .err{ display:none; font-size:.8rem; color:var(--orange); }
+.f.bad .err{ display:block; }
+.sel{ position:relative; }
+.sel::after{ content:""; position:absolute; right:6px; top:50%; width:10px; height:10px; border-right:2px solid var(--orange); border-bottom:2px solid var(--orange); transform:translateY(-70%) rotate(45deg); pointer-events:none; }
+.f select{ appearance:none; -webkit-appearance:none; padding-right:1.75rem; cursor:pointer; }
+.f select option{ background:#111; color:var(--ink); }
+.chips{ display:flex; flex-wrap:wrap; gap:.5rem; }
+.chip{ position:relative; cursor:pointer; }
+.chip input{ position:absolute; opacity:0; width:1px; height:1px; margin:0; }
+.chip span{ display:inline-block; font-family:var(--display); font-size:1.35rem; letter-spacing:.05em; line-height:1; text-transform:uppercase; border:2px solid #333; border-radius:4px; padding:.75rem 1rem .6rem; color:var(--body); transition:border-color .15s ease, background .15s ease, color .15s ease; }
+.chip:hover span{ border-color:var(--orange); }
+.chip input:checked + span{ background:var(--orange); color:#000; border-color:var(--orange); }
+.chip input:focus-visible + span{ outline:3px solid var(--orange); outline-offset:3px; }
+.check{ display:flex; gap:.85rem; align-items:flex-start; font-size:.95rem; color:var(--body); cursor:pointer; text-transform:none; letter-spacing:0; font-weight:400; }
+.check input{ width:22px; height:22px; margin:.15rem 0 0; accent-color:var(--orange); flex:0 0 auto; cursor:pointer; }
+.check a{ color:var(--orange); }
+.claim{ grid-column:1 / -1; display:none; font-family:var(--display); font-size:1.5rem; letter-spacing:.04em; line-height:1.1; color:var(--orange); border-left:3px solid var(--orange); padding:.2rem 0 .2rem 1rem; text-transform:uppercase; }
+.claim.on{ display:block; }
+.form-err{ grid-column:1 / -1; display:none; border:2px solid var(--orange); border-radius:4px; padding:1rem 1.25rem; color:var(--ink); }
+.form-err.on{ display:block; }
+.form-err strong{ font-family:var(--display); font-weight:400; font-size:1.4rem; letter-spacing:.04em; text-transform:uppercase; }
+.form-err ul{ margin:.4rem 0 0; padding-left:1.2rem; }
+.submit-row{ grid-column:1 / -1; display:flex; flex-wrap:wrap; align-items:center; gap:1rem 1.5rem; margin-top:.5rem; }
+.demo-note{ font-size:.72rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--mute); margin:0; }
+.done{ display:none; margin-top:2rem; }
+.done.on{ display:block; }
+.done h3{ font-size:clamp(2.75rem,8vw,6.5rem); margin-bottom:1rem; max-width:14ch; }
+.done h3 b{ color:var(--orange); font-weight:400; }
+.done dl{ display:grid; grid-template-columns:auto 1fr; gap:.5rem 1.5rem; margin:1.75rem 0; max-width:620px; }
+.done dt{ font-size:.72rem; font-weight:600; letter-spacing:.18em; text-transform:uppercase; color:var(--mute); padding-top:.25rem; }
+.done dd{ margin:0; color:var(--ink); font-size:1.1rem; }
+@media (max-width:640px){ .form{ grid-template-columns:1fr; gap:1.5rem; } }
+
+/* ============================================================
+   WAIVER — numbered rules + expandable placeholder
+   ============================================================ */
+.rules{ list-style:none; margin:1.5rem 0 0; padding:0; border-top:1px solid var(--line); max-width:860px; counter-reset:r; }
+.rules li{ display:grid; grid-template-columns:3rem 1fr; gap:1rem; padding:1.1rem 0; border-bottom:1px solid var(--line); counter-increment:r; }
+.rules li::before{ content:counter(r, decimal-leading-zero); font-family:var(--display); color:var(--orange); font-size:1.5rem; line-height:1; padding-top:.15rem; }
+.rules strong{ display:block; font-family:var(--display); font-weight:400; font-size:1.5rem; letter-spacing:.03em; line-height:1; text-transform:uppercase; color:var(--ink); margin-bottom:.3rem; }
+.rules p{ margin:0; font-size:.98rem; }
+.full-waiver{ margin-top:2rem; max-width:860px; border:1px dashed #3a3a3a; border-radius:6px; padding:0 1.25rem; }
+.full-waiver summary{ list-style:none; cursor:pointer; padding:1.1rem 0; font-family:var(--display); font-size:1.5rem; letter-spacing:.04em; text-transform:uppercase; color:var(--ink); display:flex; justify-content:space-between; align-items:center; gap:1rem; }
+.full-waiver summary::-webkit-details-marker{ display:none; }
+.full-waiver summary:hover{ color:var(--orange); }
+.full-waiver summary .plus{ flex:0 0 auto; width:24px; height:24px; position:relative; }
+.full-waiver summary .plus::before,.full-waiver summary .plus::after{ content:""; position:absolute; background:var(--orange); left:50%; top:50%; transform:translate(-50%,-50%); }
+.full-waiver summary .plus::before{ width:100%; height:3px; }
+.full-waiver summary .plus::after{ width:3px; height:100%; transition:transform .2s ease; }
+.full-waiver[open] summary .plus::after{ transform:translate(-50%,-50%) scaleY(0); }
+.ph-text{ padding:0 0 1.25rem; color:var(--mute); font-size:.95rem; }
+.ph-text .tag{ display:inline-block; background:#151515; border:1px dashed #3a3a3a; padding:.35rem .6rem; font-size:.68rem; font-weight:600; letter-spacing:.16em; text-transform:uppercase; color:var(--orange); margin-bottom:1rem; }
+.ph-text p{ max-width:70ch; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer{ border-top:1px solid var(--line); padding:3rem 0 4.5rem; font-size:.875rem; color:var(--mute); }
+footer .grid{ display:flex; flex-wrap:wrap; gap:2rem 3rem; align-items:flex-start; justify-content:space-between; }
+footer .brand{ font-size:1.6rem; }
+footer .tag{ font-family:var(--display); font-size:1.4rem; letter-spacing:.06em; color:var(--orange); margin:.5rem 0 0; }
+footer ul{ list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:.4rem 1.5rem; }
+footer ul a{ color:var(--body); text-decoration:none; font-weight:600; letter-spacing:.1em; text-transform:uppercase; font-size:.78rem; }
+footer ul a:hover{ color:var(--orange); }
+footer .fine{ margin-top:2.5rem; border-top:1px solid var(--line); padding-top:1.25rem; font-size:.75rem; display:flex; flex-wrap:wrap; gap:.5rem 2rem; justify-content:space-between; }
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{ transition:none !important; animation:none !important; }
+}
+@media print{ #dark,.badge,.nav,#gate{ display:none !important; } }
+</style>
+</head>
+
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ============ SVG symbol library (silhouettes) ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="s-crow" viewBox="0 0 120 80">
+      <path fill="currentColor" d="M2 54 L24 44 C34 28 56 20 76 22 C84 22 90 25 94 29 L112 27 L97 35 C93 43 85 47 74 49 C64 57 46 61 30 59 L12 68 L21 57 Z"/>
+      <path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" d="M56 58 l-3 13 M50 71 l7 0 M66 58 l1 13 M63 71 l7 0"/>
+    </symbol>
+    <symbol id="s-trees" viewBox="0 0 1200 200" preserveAspectRatio="none">
+      <path fill="currentColor" d="M0 200 L0 150 L20 95 L40 150 L55 120 L70 70 L85 120 L100 150 L118 105 L136 150 L150 130 L165 60 L180 130 L195 150 L212 88 L230 150 L246 115 L262 40 L278 115 L294 150 L312 100 L330 150 L345 128 L360 75 L375 128 L390 150 L408 95 L426 150 L442 120 L458 55 L474 120 L490 150 L505 110 L520 150 L538 132 L556 66 L574 132 L590 150 L608 90 L626 150 L642 118 L658 48 L674 118 L690 150 L706 104 L722 150 L738 126 L754 72 L770 126 L786 150 L803 98 L820 150 L836 122 L852 58 L868 122 L884 150 L900 108 L916 150 L932 130 L948 80 L964 130 L980 150 L997 96 L1014 150 L1030 118 L1046 44 L1062 118 L1078 150 L1096 102 L1114 150 L1130 126 L1146 70 L1162 126 L1178 150 L1200 110 L1200 200 Z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ============ GATE ============ -->
+<div id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-h">
+  <svg class="sil perch" viewBox="0 0 600 160" aria-label="Crows perched on a bare branch" role="img">
+    <path fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" d="M0 120 C110 96 190 104 300 84 C400 66 500 74 600 44"/>
+    <path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" d="M150 102 l-18 -26 M330 80 l12 -30 M470 74 l-10 -24"/>
+    <use href="#s-crow" x="78" y="42" width="84" height="56"/>
+    <use href="#s-crow" x="418" y="12" width="84" height="56"/>
+  </svg>
+  <svg class="sil crow lone" viewBox="0 0 120 80" aria-label="A lone crow" role="img"><use href="#s-crow"/></svg>
+  <svg class="sil trees" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-label="Treeline" role="img"><use href="#s-trees"/></svg>
+
+  <div class="gate-inner" id="gate-inner">
+    <p class="eyebrow">Crew only</p>
+    <h1 id="gate-h">Say the word.</h1>
+    <form id="gate-form" novalidate>
+      <label class="vh" for="pw">Crew password</label>
+      <div class="gate-row">
+        <input id="pw" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="•••" aria-describedby="gate-err gate-hint">
+        <button class="gate-go" type="submit" aria-label="Enter the crew portal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M13 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+      <p class="gate-err" id="gate-err" role="alert" aria-live="assertive"></p>
+      <p class="gate-hint" id="gate-hint">Demo password: <code>crow</code> &nbsp;·&nbsp; press Enter</p>
+    </form>
+    <a class="gate-back" href="02-blackout.html">← Back to the public site</a>
+  </div>
+</div>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Nightmare on the Crow crew portal — top">
+      <svg viewBox="0 0 120 80" aria-hidden="true"><use href="#s-crow"/></svg>
+      <span>Nightmare on the Crow</span>
+      <span class="crewtag">Crew</span>
+    </a>
+    <ul class="links" id="links">
+      <li><a href="#board">Board</a></li>
+      <li><a href="#stations">Stations</a></li>
+      <li><a href="#signup">Sign up</a></li>
+      <li><a href="#waiver">Waiver</a></li>
+      <li><a href="02-blackout.html">Public site</a></li>
+      <li><a href="#" class="logout" id="logout">Log out</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="lights" id="lights" type="button" aria-pressed="true" title="Toggle the flashlight effect">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>
+        <span class="lights-label">Lights Off</span>
+      </button>
+      <a class="btn btn-solid" href="#signup">Sign up</a>
+      <button class="menu-btn" id="menu" type="button" aria-expanded="false" aria-controls="links" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<div id="portal">
+<span id="top"></span>
+
+<!-- ============ PORTAL HEADER ============ -->
+<section class="hero" aria-labelledby="portal-h">
+  <svg class="sil crow lone" viewBox="0 0 120 80" aria-label="A crow" role="img"><use href="#s-crow"/></svg>
+  <div class="wrap">
+    <p class="eyebrow">Crew portal &nbsp;·&nbsp; Nightmare on the Crow &nbsp;·&nbsp; Greenfield, MN</p>
+    <h1 id="portal-h" tabindex="-1">You’re in. <span class="good">Read this.</span></h1>
+    <p class="lead">Read the board. Claim a station. Sign the agreement once. Then go be the thing in the dark.</p>
+    <p class="cd-line">Opening night in <span id="cd">—</span></p>
+    <div class="btn-row">
+      <a class="btn btn-solid" href="#stations">Station board</a>
+      <a class="btn btn-ghost" href="#signup">Sign up</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MESSAGE BOARD ============ -->
+<section class="board" id="board" aria-labelledby="board-h">
+  <div class="wrap">
+    <p class="eyebrow">Message board</p>
+    <h2 id="board-h" class="h2">Read before you go in.</h2>
+    <ol class="posts">
+      <li class="post pin">
+        <div class="when">Pinned<small>Walkthrough</small></div>
+        <div>
+          <h3>Pick a walkthrough date when you sign up.</h3>
+          <p>Every new crew member walks the trail with lights on before their first night. It’s where you learn your station, your exits, and where the fog machines are. The signup form asks for one. Pick one.</p>
+        </div>
+      </li>
+      <li class="post">
+        <div class="when"><time datetime="2026-09-26">Sept 26</time><small>2026</small></div>
+        <div>
+          <h3>New hours. Fireworks Oct 10.</h3>
+          <p>Haunt nights now run <strong>7:30 to 10:30 PM</strong>. Last entry is still <strong>10:00 PM</strong>, so plan to be in your station until the last group clears — figure 11.</p>
+          <p><strong>Saturday Oct 10:</strong> fireworks at <strong>7:45 PM</strong>, then the haunt runs <strong>8:00 – 10:30 PM</strong> (last entry 10). Be in position by 7:30 anyway. The crowd comes straight from the fireworks to the hayride.</p>
+        </div>
+      </li>
+      <li class="post">
+        <div class="when"><time datetime="2026-08-25">Aug 25</time><small>2026</small></div>
+        <div>
+          <h3>Dates we need help.</h3>
+          <p>All four. In order of how badly:</p>
+          <ul>
+            <li><strong>Fri Oct 9</strong> — opening night. The Woods and the Back Forty are nearly empty.</li>
+            <li><strong>Sat Oct 10</strong> — biggest crowd of the season (fireworks). Front & Operations too.</li>
+            <li><strong>Fri Oct 16</strong> — thin everywhere.</li>
+            <li><strong>Sat Oct 17</strong> — closing night. Then we take it all down.</li>
+          </ul>
+          <p>Use the station board below. Claim what’s orange.</p>
+        </div>
+      </li>
+      <li class="post">
+        <div class="when"><time datetime="2026-03-16">Mar 16</time><small>2026</small></div>
+        <div>
+          <h3>Monthly build nights.</h3>
+          <p>Mid-month, mid-week, evenings — one a month through the summer for set design and ideas. Ben runs them. Bring gloves, bring the weird idea you had in February. Exact dates go out on the crew socials.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ STATION BOARD ============ -->
+<section class="stations-sec" id="stations" aria-labelledby="st-h">
+  <div class="wrap">
+    <p class="eyebrow">Station board</p>
+    <h2 id="st-h" class="h2">Where we need you.</h2>
+    <p class="lead">Pick a night. Anything orange is open. Tap it and it fills in the signup form for you.</p>
+
+    <div class="tabs" role="tablist" aria-label="Choose a night" id="tabs"></div>
+
+    <p class="open-count" id="open-count" aria-live="polite"></p>
+    <p class="legend">
+      <span><i class="pip f" aria-hidden="true"></i> Filled</span>
+      <span><i class="pip" aria-hidden="true"></i> Open</span>
+      <span><i class="need" style="padding:.25rem .6rem .15rem;font-size:.8rem" aria-hidden="true">Need actor</i> In costume</span>
+      <span><i class="need help" style="padding:.25rem .6rem .15rem;font-size:.8rem" aria-hidden="true">Need help</i> Front / build / ops</span>
+    </p>
+
+    <div id="board-panel" role="tabpanel" aria-labelledby="tab-0"></div>
+  </div>
+</section>
+
+<!-- ============ SIGNUP ============ -->
+<section class="signup" id="signup" aria-labelledby="su-h">
+  <div class="wrap">
+    <p class="eyebrow">One-step signup</p>
+    <h2 id="su-h" class="h2">Put your name in the dark.</h2>
+    <p class="lead">One form. Your nights, your station, your walkthrough, the agreement. That’s it — no spreadsheets.</p>
+
+    <form class="form" id="su-form" novalidate>
+      <p class="claim" id="claim" aria-live="polite"></p>
+      <div class="form-err" id="form-err" role="alert" tabindex="-1"></div>
+
+      <div class="f">
+        <label for="fn">First name <span class="req" aria-hidden="true">*</span></label>
+        <input id="fn" name="fn" type="text" autocomplete="given-name" required>
+        <span class="err" id="fn-err">We need a first name.</span>
+      </div>
+      <div class="f">
+        <label for="ln">Last name <span class="req" aria-hidden="true">*</span></label>
+        <input id="ln" name="ln" type="text" autocomplete="family-name" required>
+        <span class="err" id="ln-err">And a last name.</span>
+      </div>
+      <div class="f">
+        <label for="em">Email <span class="req" aria-hidden="true">*</span></label>
+        <input id="em" name="em" type="email" autocomplete="email" inputmode="email" required>
+        <span class="err" id="em-err">That email doesn’t look right.</span>
+      </div>
+      <div class="f">
+        <label for="ph">Phone <span class="mute">(optional)</span></label>
+        <input id="ph" name="ph" type="tel" autocomplete="tel" inputmode="tel">
+      </div>
+
+      <fieldset class="f wide" style="border:0;padding:0;margin:0;min-width:0" id="nights-f">
+        <legend class="lab" style="padding:0;margin-bottom:.5rem">Nights you can work <span class="req" aria-hidden="true">*</span></legend>
+        <div class="chips" id="night-chips">
+          <label class="chip"><input type="checkbox" name="nights" value="oct9"><span>Fri Oct 9</span></label>
+          <label class="chip"><input type="checkbox" name="nights" value="oct10"><span>Sat Oct 10</span></label>
+          <label class="chip"><input type="checkbox" name="nights" value="oct16"><span>Fri Oct 16</span></label>
+          <label class="chip"><input type="checkbox" name="nights" value="oct17"><span>Sat Oct 17</span></label>
+        </div>
+        <span class="err" id="nights-err">Pick at least one night.</span>
+      </fieldset>
+
+      <div class="f">
+        <label for="zone">Preferred zone <span class="req" aria-hidden="true">*</span></label>
+        <div class="sel">
+          <select id="zone" name="zone" required>
+            <option value="">Choose a zone</option>
+          </select>
+        </div>
+        <span class="err" id="zone-err">Pick a zone — “anywhere” counts.</span>
+      </div>
+      <div class="f">
+        <label for="station">Preferred station <span class="req" aria-hidden="true">*</span></label>
+        <div class="sel">
+          <select id="station" name="station" required disabled>
+            <option value="">Pick a zone first</option>
+          </select>
+        </div>
+        <span class="err" id="station-err">Pick a station — or “wherever it’s darkest”.</span>
+      </div>
+
+      <div class="f wide">
+        <label for="walk">Walkthrough date <span class="req" aria-hidden="true">*</span> <span class="mute">— dates TBD by owner</span></label>
+        <div class="sel" style="max-width:420px">
+          <select id="walk" name="walk" required>
+            <option value="">Pick an evening</option>
+            <option>Tue Sept 29 · 6:30 PM</option>
+            <option>Thu Oct 1 · 6:30 PM</option>
+            <option>Tue Oct 6 · 6:30 PM</option>
+            <option>Thu Oct 8 · 6:30 PM</option>
+          </select>
+        </div>
+        <span class="err" id="walk-err">Every new crew member walks the trail first. Pick a night.</span>
+      </div>
+
+      <div class="f wide">
+        <label class="check" for="agree">
+          <input id="agree" name="agree" type="checkbox" required>
+          <span>I have read and agree to the <a href="#waiver">Volunteer Agreement &amp; Liability Waiver</a>. <span class="req" aria-hidden="true">*</span></span>
+        </label>
+        <span class="err" id="agree-err">You have to agree to the Volunteer Agreement to go in the woods.</span>
+        <label class="check" for="news" style="margin-top:.5rem">
+          <input id="news" name="news" type="checkbox">
+          <span>Send me crew updates and build-night dates by email.</span>
+        </label>
+      </div>
+
+      <div class="submit-row">
+        <button class="btn btn-solid" type="submit">Put me on the list</button>
+        <p class="demo-note">Demo — nothing is sent.</p>
+      </div>
+    </form>
+
+    <div class="done" id="done" tabindex="-1" aria-live="polite">
+      <p class="eyebrow">Confirmed — for the demo</p>
+      <h3 id="done-h">You’re on the list.</h3>
+      <dl id="done-dl"></dl>
+      <p>Watch your inbox for the real confirmation and your walkthrough details. Until then: don’t tell anyone where the Cage is.</p>
+      <div class="btn-row" style="margin-top:1.5rem">
+        <button class="btn btn-ghost" type="button" id="again">Sign up someone else</button>
+        <a class="btn btn-ghost" href="#stations">Back to the board</a>
+      </div>
+      <p class="demo-note" style="margin-top:1.5rem">Demo — nothing was sent.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WAIVER ============ -->
+<section class="waiver" id="waiver" aria-labelledby="wv-h">
+  <div class="wrap">
+    <p class="eyebrow">Volunteer agreement &amp; liability waiver</p>
+    <h2 id="wv-h" class="h2">The rules of the dark.</h2>
+    <p class="lead">The short version. The full agreement is below it, and you agree to the full one when you sign up.</p>
+    <ol class="rules">
+      <li><div><strong>You’re a volunteer.</strong><p>Unpaid. Not employment. You’re here because you want to be, and you can leave when you need to.</p></div></li>
+      <li><div><strong>On time. In your zone.</strong><p>Arrive when you’re scheduled and stay in your assigned area. If you move, we don’t know where you are — and neither does first aid.</p></div></li>
+      <li><div><strong>No touching. No chasing that hurts.</strong><p>No physical contact with guests, ever. No chasing that could put anyone on the ground. Scare them; don’t hurt them.</p></div></li>
+      <li><div><strong>Sober.</strong><p>No alcohol or substances before or during your shift.</p></div></li>
+      <li><div><strong>Know the procedures.</strong><p>Fire, emergency and first aid. You’ll get them at your walkthrough. Ask if anything’s unclear.</p></div></li>
+      <li><div><strong>The hazards are real.</strong><p>Strobes, fog, darkness, confined spaces, uneven ground, weather, mud, wildlife. You accept these risks when you volunteer.</p></div></li>
+      <li><div><strong>What’s in the woods stays in the woods.</strong><p>Layouts, scare tactics and what’s in each building are confidential. No spoilers, no behind-the-scenes posts without asking.</p></div></li>
+      <li><div><strong>Costumes and props aren’t yours.</strong><p>They belong to the haunt. Bring them back the way you found them, or tell us what broke.</p></div></li>
+      <li><div><strong>You may be photographed or filmed.</strong><p>And we may use it — socials, the website, next year’s promo.</p></div></li>
+      <li><div><strong>Assumption of risk. Release of liability.</strong><p>You take on the risk of volunteering and release the haunt and its organizers from liability. Governed by Minnesota law.</p></div></li>
+    </ol>
+
+    <details class="full-waiver">
+      <summary>Read the full agreement <span class="plus" aria-hidden="true"></span></summary>
+      <div class="ph-text">
+        <span class="tag">Full waiver text — supplied by owner</span>
+        <p>[Placeholder] The complete Volunteer Agreement &amp; Liability Waiver goes here, verbatim from the owner. It will cover the volunteer relationship, conduct and attendance expectations, the no-contact rule, prohibited substances, fire, emergency and first-aid procedures, the list of known hazards, confidentiality of layouts and scare tactics, ownership of costumes and props, the photo and video release, assumption of risk, release and indemnification, and governing law.</p>
+        <p>[Placeholder] Paragraphs 2 through N of the agreement, as supplied. This block is intentionally unstyled beyond readable spacing so that whatever length the final text runs, it stays legible on a phone.</p>
+        <p>[Placeholder] Signature block: by checking “I have read and agree” on the signup form, the volunteer confirms they have read this agreement in full and agree to its terms.</p>
+      </div>
+    </details>
+  </div>
+</section>
+</div>
+</main>
+
+<!-- ============ CREW FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="grid">
+      <div>
+        <a class="brand" href="#top"><svg viewBox="0 0 120 80" aria-hidden="true"><use href="#s-crow"/></svg><span>Nightmare on the Crow</span> <span class="crewtag">Crew</span></a>
+        <p class="tag">It All Begins with a Hayride!</p>
+        <p style="margin-top:.75rem">6470 Harff Road, Greenfield, MN 55373<br>Oct 9 · 10 · 16 · 17, 2026 · 7:30–10:30 PM · Last entry 10</p>
+        <p>Questions? <a href="#">Contact us</a> — or ask at build night.</p>
+      </div>
+      <nav aria-label="Social links">
+        <ul>
+          <li><a href="#">Facebook</a></li>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">TikTok</a></li>
+        </ul>
+      </nav>
+      <nav aria-label="Crew links">
+        <ul>
+          <li><a href="02-blackout.html">Back to the public site</a></li>
+          <li><a href="#board">Board</a></li>
+          <li><a href="#stations">Stations</a></li>
+          <li><a href="#signup">Sign up</a></li>
+          <li><a href="#waiver">Waiver</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="fine">
+      <span>© 2026 Nightmare on the Crow. Crew portal — keep it to yourself.</span>
+      <span>Website concept mockup — not the live site.</span>
+    </div>
+  </div>
+</footer>
+
+<div id="dark" aria-hidden="true"></div>
+<div class="badge" aria-hidden="true">Concept #2 — Blackout · Crew</div>
+
+<noscript><style>#gate,#dark{ display:none !important; } #portal,.nav,footer{ display:block !important; }</style></noscript>
+
+<script>
+(function(){
+  'use strict';
+  var root = document.documentElement;
+  var reduce = false;
+  try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
+
+  /* ============================================================
+     DATA — zones, stations, base slot counts (Opening Night) and
+     small deterministic deltas so each night's board differs.
+     Filled slots are anonymous; only Evan and Ben are named,
+     because they're already on the public About page.
+     ============================================================ */
+  var ZONES = [
+    { num:'I',   name:'Front & Operations', stations:[
+      { n:'Tickets', t:4, k:'help' }, { n:'In Charge', t:1, k:'help' }, { n:'Front Entertainer', t:2, k:'actor' },
+      { n:'Set Design', t:6, k:'help', who:'Ben' }, { n:'Shirt Sales', t:1, k:'help' }, { n:'Security', t:4, k:'help' } ] },
+    { num:'II',  name:'The Yard', stations:[
+      { n:'Ben’s Shed', t:4, k:'actor' }, { n:'Bridge', t:1, k:'actor' }, { n:'Beetlejuice', t:1, k:'actor', who:'Evan' },
+      { n:'Kids Shack', t:8, k:'actor' }, { n:'Butcher', t:1, k:'actor' }, { n:'Black Sheets', t:2, k:'actor' }, { n:'Blackout', t:1, k:'actor' } ] },
+    { num:'III', name:'The Woods', stations:[
+      { n:'Witch', t:1, k:'actor' }, { n:'Dark Harvest', t:5, k:'actor' }, { n:'Bus', t:1, k:'actor' }, { n:'Barn Hang', t:4, k:'actor' },
+      { n:'Tunnel', t:2, k:'actor' }, { n:'Cage', t:1, k:'actor' }, { n:'Last Woods', t:1, k:'actor' } ] },
+    { num:'IV',  name:'The Back Forty', stations:[
+      { n:'Garage/Shed', t:3, k:'help' }, { n:'Junk & Candy Van', t:3, k:'actor' }, { n:'Corn Field', t:3, k:'actor' },
+      { n:'Graveyard', t:2, k:'actor' }, { n:'Camp', t:2, k:'actor' }, { n:'Crossing Camp', t:3, k:'actor' }, { n:'Saloon', t:2, k:'actor' } ] }
+  ];
+  var BASE = {
+    'Tickets':4, 'In Charge':1, 'Front Entertainer':0, 'Set Design':4, 'Shirt Sales':1, 'Security':3,
+    'Ben’s Shed':0, 'Bridge':0, 'Beetlejuice':1, 'Kids Shack':8, 'Butcher':0, 'Black Sheets':0, 'Blackout':0,
+    'Witch':0, 'Dark Harvest':2, 'Bus':0, 'Barn Hang':0, 'Tunnel':0, 'Cage':0, 'Last Woods':0,
+    'Garage/Shed':0, 'Junk & Candy Van':0, 'Corn Field':0, 'Graveyard':0, 'Camp':0, 'Crossing Camp':0, 'Saloon':0
+  };
+  var NIGHTS = [
+    { id:'oct9',  dow:'Fri', day:'Oct 9',  note:'Opening night',   delta:{} },
+    { id:'oct10', dow:'Sat', day:'Oct 10', note:'Fireworks 7:45',  delta:{ 'Front Entertainer':1, 'Bridge':1, 'Witch':1, 'Tunnel':1, 'Corn Field':1 } },
+    { id:'oct16', dow:'Fri', day:'Oct 16', note:'7:30 – 10:30',    delta:{ 'Set Design':-1, 'Security':-1, 'Dark Harvest':-1 } },
+    { id:'oct17', dow:'Sat', day:'Oct 17', note:'Closing night',   delta:{ 'Tickets':-1, 'Kids Shack':-1, 'Dark Harvest':-1 } }
+  ];
+  function filledFor(night, st){
+    var f = (BASE[st.n] || 0) + (night.delta[st.n] || 0);
+    return Math.max(0, Math.min(st.t, f));
+  }
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  /* ============================================================
+     GATE
+     ============================================================ */
+  var gate = document.getElementById('gate');
+  var gateInner = document.getElementById('gate-inner');
+  var gateForm = document.getElementById('gate-form');
+  var pw = document.getElementById('pw');
+  var gateErr = document.getElementById('gate-err');
+  var WRONG = [
+    'Not the word. The woods stay shut.',
+    'Wrong. Something out there heard you try.',
+    'Still wrong. Ask Evan or Ben — quietly.'
+  ];
+  var wrongCount = 0;
+
+  function isOpen(){ return root.classList.contains('open'); }
+
+  function openPortal(remember){
+    root.classList.add('open');
+    if (remember) { try { sessionStorage.setItem('notc-crew', 'open'); } catch(e){} }
+    gateErr.textContent = '';
+    pw.value = '';
+    renderLights();
+    paint();
+    var h = document.getElementById('portal-h');
+    if (h) { try { h.focus({ preventScroll:true }); } catch(e){ h.focus(); } }
+    window.scrollTo(0, 0);
+  }
+  function closePortal(){
+    try { sessionStorage.removeItem('notc-crew'); } catch(e){}
+    root.classList.remove('open');
+    document.getElementById('nav').classList.remove('open');
+    window.scrollTo(0, 0);
+    lockBeam();
+    pw.value = '';
+    gateErr.textContent = '';
+    try { pw.focus({ preventScroll:true }); } catch(e){ pw.focus(); }
+  }
+
+  gateForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var v = (pw.value || '').trim().toLowerCase();
+    if (v === 'crow') { openPortal(true); return; }   /* DEMO password only — never the real one */
+    gateErr.textContent = WRONG[Math.min(wrongCount, WRONG.length - 1)];
+    wrongCount++;
+    pw.value = '';
+    if (!reduce) {
+      gateInner.classList.remove('shake');
+      void gateInner.offsetWidth;              /* restart the animation */
+      gateInner.classList.add('shake');
+    }
+    lockBeam();
+    pw.focus();
+  });
+  document.getElementById('logout').addEventListener('click', function(e){ e.preventDefault(); closePortal(); });
+
+  /* ============================================================
+     LIGHTS (portal only — the gate is always dark)
+     ============================================================ */
+  var lightsBtn = document.getElementById('lights');
+  var lightsLabel = lightsBtn.querySelector('.lights-label');
+  var lit = root.classList.contains('lit');
+
+  function renderLights(){
+    lightsBtn.setAttribute('aria-pressed', lit ? 'true' : 'false');
+    lightsLabel.textContent = lit ? 'Lights Off' : 'Lights On';
+    lightsBtn.setAttribute('title', lit ? 'Turn the lights off and use your flashlight' : 'Turn the lights on and read the board');
+  }
+  function setLights(on){
+    lit = !!on;
+    root.classList.toggle('lit', lit);
+    try { sessionStorage.setItem('notc-crew-lights', lit ? 'on' : 'off'); } catch(e){}
+    renderLights();
+  }
+  renderLights();
+  lightsBtn.addEventListener('click', function(){ setLights(!lit); });
+
+  /* ============================================================
+     FLASHLIGHT BEAM (rAF-throttled). On the gate it snaps back to
+     the input whenever you type or focus it; inside the portal it
+     follows the pointer (only visible when the lights are off).
+     ============================================================ */
+  var dark = document.getElementById('dark');
+  var px = window.innerWidth / 2, py = window.innerHeight * 0.45;
+  var pending = false;
+
+  function paint(){
+    pending = false;
+    dark.style.setProperty('--x', px + 'px');
+    dark.style.setProperty('--y', py + 'px');
+  }
+  function moveBeam(x, y){
+    px = x; py = y;
+    if (!pending) { pending = true; window.requestAnimationFrame(paint); }
+  }
+  function lockBeam(){
+    if (isOpen()) return;
+    var r = gateInner.getBoundingClientRect();
+    moveBeam(r.left + r.width / 2, r.top + r.height / 2);
+  }
+  paint();
+
+  window.addEventListener('pointermove', function(e){
+    if (e.pointerType === 'touch') return;
+    if (isOpen() && lit) return;
+    moveBeam(e.clientX, e.clientY);
+  }, { passive:true });
+  function onTouch(e){
+    if (isOpen() && lit) return;
+    var tch = e.touches && e.touches[0];
+    if (tch) moveBeam(tch.clientX, tch.clientY);
+  }
+  window.addEventListener('touchstart', onTouch, { passive:true });
+  window.addEventListener('touchmove', onTouch, { passive:true });
+  window.addEventListener('resize', lockBeam);
+  pw.addEventListener('focus', lockBeam);
+  pw.addEventListener('input', lockBeam);
+  document.addEventListener('keydown', function(){ if (!isOpen()) lockBeam(); });
+
+  /* Keyboard users inside the portal with the lights off: the beam follows focus. */
+  document.addEventListener('focusin', function(e){
+    if (!isOpen() || lit || !e.target || !e.target.getBoundingClientRect) return;
+    var r = e.target.getBoundingClientRect();
+    moveBeam(Math.min(Math.max(r.left + r.width / 2, 0), window.innerWidth), Math.min(Math.max(r.top + r.height / 2, 0), window.innerHeight));
+  });
+
+  if (!isOpen()) {
+    lockBeam();
+    try { pw.focus({ preventScroll:true }); } catch(e){}
+  }
+
+  /* ============================================================
+     MOBILE MENU
+     ============================================================ */
+  var nav = document.getElementById('nav');
+  var menuBtn = document.getElementById('menu');
+  menuBtn.addEventListener('click', function(){
+    var open = nav.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+  var navLinks = document.querySelectorAll('#links a');
+  for (var n = 0; n < navLinks.length; n++) {
+    navLinks[n].addEventListener('click', function(){
+      nav.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  /* ============================================================
+     STATION BOARD
+     ============================================================ */
+  var tabsEl = document.getElementById('tabs');
+  var panel = document.getElementById('board-panel');
+  var openCount = document.getElementById('open-count');
+  var night = 0;
+
+  function buildTabs(){
+    var html = '';
+    for (var i = 0; i < NIGHTS.length; i++) {
+      var nt = NIGHTS[i];
+      html += '<button class="tab" role="tab" type="button" id="tab-' + i + '" data-i="' + i + '" aria-selected="' + (i === night ? 'true' : 'false') + '" tabindex="' + (i === night ? '0' : '-1') + '" aria-controls="board-panel">'
+            + esc(nt.dow) + ' ' + esc(nt.day) + '<small>' + esc(nt.note) + '</small></button>';
+    }
+    tabsEl.innerHTML = html;
+  }
+  function renderBoard(){
+    var nt = NIGHTS[night];
+    var totalOpen = 0, html = '';
+    for (var z = 0; z < ZONES.length; z++) {
+      var zone = ZONES[z], zoneOpen = 0, rows = '';
+      for (var s = 0; s < zone.stations.length; s++) {
+        var st = zone.stations[s];
+        var f = filledFor(nt, st), o = st.t - f;
+        zoneOpen += o;
+        var pips = '';
+        for (var p = 0; p < st.t; p++) pips += '<i class="pip' + (p < f ? ' f' : '') + '"></i>';
+        rows += '<li class="st">'
+              + '<span class="st-name">' + esc(st.n) + '</span>'
+              + (st.who ? '<span class="who">' + esc(st.who) + '</span>' : '')
+              + '<span class="pips" role="img" aria-label="' + f + ' of ' + st.t + ' filled">' + pips + '</span>'
+              + (o > 0
+                  ? '<button class="need' + (st.k === 'help' ? ' help' : '') + '" type="button" data-z="' + z + '" data-s="' + esc(st.n) + '" aria-label="Claim an open slot: ' + esc(st.n) + ', Zone ' + zone.num + ', ' + esc(nt.dow + ' ' + nt.day) + '">'
+                    + (st.k === 'help' ? 'Need help' : 'Need actor') + '<b>' + o + '</b></button>'
+                  : '<span class="full">Full</span>')
+              + '</li>';
+      }
+      totalOpen += zoneOpen;
+      html += '<div class="zone"><div class="zone-h"><span class="num" aria-hidden="true">' + zone.num + '</span>'
+            + '<h3>Zone ' + zone.num + ' · ' + esc(zone.name) + '</h3>'
+            + '<span class="zc"><b>' + zoneOpen + '</b> open</span></div>'
+            + '<ul class="stations">' + rows + '</ul></div>';
+    }
+    panel.innerHTML = html;
+    panel.setAttribute('aria-labelledby', 'tab-' + night);
+    openCount.innerHTML = '<b>' + totalOpen + '</b> open spot' + (totalOpen === 1 ? '' : 's') + ' ' + esc(nt.dow + ' ' + nt.day) + '.';
+  }
+  function selectNight(i, focusTab){
+    night = i;
+    var tabs = tabsEl.querySelectorAll('.tab');
+    for (var t = 0; t < tabs.length; t++) {
+      var on = t === i;
+      tabs[t].setAttribute('aria-selected', on ? 'true' : 'false');
+      tabs[t].setAttribute('tabindex', on ? '0' : '-1');
+      if (on && focusTab) tabs[t].focus();
+    }
+    renderBoard();
+  }
+  buildTabs();
+  renderBoard();
+  tabsEl.addEventListener('click', function(e){
+    var b = e.target.closest ? e.target.closest('.tab') : null;
+    if (b) selectNight(parseInt(b.getAttribute('data-i'), 10), false);
+  });
+  tabsEl.addEventListener('keydown', function(e){
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'Home' && e.key !== 'End') return;
+    e.preventDefault();
+    var i = night;
+    if (e.key === 'ArrowLeft') i = (night + NIGHTS.length - 1) % NIGHTS.length;
+    if (e.key === 'ArrowRight') i = (night + 1) % NIGHTS.length;
+    if (e.key === 'Home') i = 0;
+    if (e.key === 'End') i = NIGHTS.length - 1;
+    selectNight(i, true);
+  });
+
+  /* ============================================================
+     SIGNUP FORM
+     ============================================================ */
+  var form = document.getElementById('su-form');
+  var zoneSel = document.getElementById('zone');
+  var stSel = document.getElementById('station');
+  var claim = document.getElementById('claim');
+  var formErr = document.getElementById('form-err');
+  var done = document.getElementById('done');
+
+  (function fillZones(){
+    var html = '<option value="">Choose a zone</option>';
+    for (var z = 0; z < ZONES.length; z++) html += '<option value="' + z + '">Zone ' + ZONES[z].num + ' · ' + esc(ZONES[z].name) + '</option>';
+    html += '<option value="any">Anywhere — put me where you need me</option>';
+    zoneSel.innerHTML = html;
+  })();
+  function buildStations(){
+    var v = zoneSel.value, html = '';
+    if (v === '') {
+      stSel.innerHTML = '<option value="">Pick a zone first</option>';
+      stSel.disabled = true;
+      return;
+    }
+    stSel.disabled = false;
+    html += '<option value="">Choose a station</option>';
+    if (v !== 'any') {
+      var zone = ZONES[parseInt(v, 10)];
+      for (var s = 0; s < zone.stations.length; s++) html += '<option value="' + esc(zone.stations[s].n) + '">' + esc(zone.stations[s].n) + '</option>';
+    }
+    html += '<option value="any">Wherever it’s darkest — no preference</option>';
+    stSel.innerHTML = html;
+  }
+  zoneSel.addEventListener('change', function(){ buildStations(); clearBad(stSel); });
+
+  /* Clicking an open slot on the board pre-fills the form and scrolls to it. */
+  panel.addEventListener('click', function(e){
+    var b = e.target.closest ? e.target.closest('.need') : null;
+    if (!b) return;
+    var z = b.getAttribute('data-z'), s = b.getAttribute('data-s');
+    zoneSel.value = z;
+    buildStations();
+    stSel.value = s;
+    var box = form.querySelector('input[name="nights"][value="' + NIGHTS[night].id + '"]');
+    if (box) box.checked = true;
+    clearBad(zoneSel); clearBad(stSel); clearBad(document.getElementById('nights-f'));
+    claim.textContent = 'Claimed: Zone ' + ZONES[z].num + ' · ' + s + ' · ' + NIGHTS[night].dow + ' ' + NIGHTS[night].day + '. Finish the form.';
+    claim.classList.add('on');
+    if (done.classList.contains('on')) resetForm(false);
+    var target = document.getElementById('signup');
+    try { target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block:'start' }); } catch(err){}
+    setTimeout(function(){ try { document.getElementById('fn').focus({ preventScroll:true }); } catch(err){} }, reduce ? 0 : 450);
+  });
+
+  function markBad(el){ var f = el.closest('.f'); if (f) f.classList.add('bad'); if (el.setAttribute && el.tagName !== 'FIELDSET') el.setAttribute('aria-invalid', 'true'); }
+  function clearBad(el){ var f = el.closest('.f'); if (f) f.classList.remove('bad'); if (el.removeAttribute) el.removeAttribute('aria-invalid'); }
+  var watch = form.querySelectorAll('input, select');
+  for (var w = 0; w < watch.length; w++) {
+    watch[w].addEventListener('input', function(){ clearBad(this); if (this.name === 'nights') clearBad(document.getElementById('nights-f')); });
+    watch[w].addEventListener('change', function(){ clearBad(this); if (this.name === 'nights') clearBad(document.getElementById('nights-f')); });
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var errs = [], first = null;
+    function bad(el, msg){ markBad(el); errs.push(msg); if (!first) first = el; }
+    var fn = document.getElementById('fn'), ln = document.getElementById('ln'), em = document.getElementById('em');
+    var walk = document.getElementById('walk'), agree = document.getElementById('agree');
+    var nightsChecked = form.querySelectorAll('input[name="nights"]:checked');
+
+    if (!fn.value.trim()) bad(fn, 'First name');
+    if (!ln.value.trim()) bad(ln, 'Last name');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em.value.trim())) bad(em, 'A working email');
+    if (!nightsChecked.length) { bad(document.getElementById('nights-f'), 'At least one night'); if (first === document.getElementById('nights-f')) first = form.querySelector('input[name="nights"]'); }
+    if (!zoneSel.value) bad(zoneSel, 'A zone');
+    if (!stSel.value) bad(stSel, 'A station');
+    if (!walk.value) bad(walk, 'A walkthrough date');
+    if (!agree.checked) bad(agree, 'Agreeing to the Volunteer Agreement');
+
+    if (errs.length) {
+      formErr.innerHTML = '<strong>Not yet. Still missing:</strong><ul>' + errs.map(function(m){ return '<li>' + esc(m) + '</li>'; }).join('') + '</ul>';
+      formErr.classList.add('on');
+      try { first.focus(); } catch(err){}
+      try { formErr.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block:'center' }); } catch(err){}
+      return;
+    }
+    formErr.classList.remove('on');
+
+    /* Confirmation state — demo only, nothing is sent. */
+    var nightNames = [];
+    for (var i = 0; i < nightsChecked.length; i++) {
+      for (var j = 0; j < NIGHTS.length; j++) if (NIGHTS[j].id === nightsChecked[i].value) nightNames.push(NIGHTS[j].dow + ' ' + NIGHTS[j].day);
+    }
+    var zoneText = zoneSel.value === 'any' ? 'Anywhere' : 'Zone ' + ZONES[parseInt(zoneSel.value, 10)].num + ' · ' + ZONES[parseInt(zoneSel.value, 10)].name;
+    var stText = stSel.value === 'any' ? 'Wherever it’s darkest' : stSel.value;
+    var count = nightNames.length;
+    document.getElementById('done-h').innerHTML = esc(fn.value.trim()) + ', you’re on the list for <b>' + count + ' night' + (count === 1 ? '' : 's') + '.</b>';
+    document.getElementById('done-dl').innerHTML =
+        '<dt>Nights</dt><dd>' + esc(nightNames.join(' · ')) + '</dd>'
+      + '<dt>Station</dt><dd>' + esc(zoneText) + ' — ' + esc(stText) + '</dd>'
+      + '<dt>Walkthrough</dt><dd>' + esc(walk.value) + '</dd>'
+      + '<dt>Confirmation to</dt><dd>' + esc(em.value.trim()) + '</dd>'
+      + '<dt>Agreement</dt><dd>Signed' + (document.getElementById('news').checked ? ' · crew updates on' : '') + '</dd>';
+    form.hidden = true;
+    done.classList.add('on');
+    try { done.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block:'start' }); } catch(err){}
+    setTimeout(function(){ try { done.focus({ preventScroll:true }); } catch(err){} }, reduce ? 0 : 450);
+  });
+
+  function resetForm(focusFirst){
+    form.reset();
+    buildStations();
+    claim.classList.remove('on');
+    formErr.classList.remove('on');
+    var bads = form.querySelectorAll('.bad');
+    for (var b = 0; b < bads.length; b++) bads[b].classList.remove('bad');
+    var inv = form.querySelectorAll('[aria-invalid]');
+    for (var v = 0; v < inv.length; v++) inv[v].removeAttribute('aria-invalid');
+    done.classList.remove('on');
+    form.hidden = false;
+    if (focusFirst) { try { document.getElementById('fn').focus(); } catch(err){} }
+  }
+  document.getElementById('again').addEventListener('click', function(){ resetForm(true); });
+
+  /* ============================================================
+     COUNTDOWN (one line, updates every minute)
+     ============================================================ */
+  var target = new Date('2026-10-09T19:30:00-05:00'); /* Fri Oct 9, 2026, 7:30 PM Central (CDT) */
+  var cdEl = document.getElementById('cd');
+  function cdTick(){
+    var diff = target.getTime() - Date.now();
+    if (isNaN(diff) || diff <= 0) { cdEl.textContent = '0. The trail is open.'; return; }
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    cdEl.textContent = d + ' day' + (d === 1 ? '' : 's') + ', ' + h + ' hr, ' + m + ' min.';
+    setTimeout(cdTick, 60000 - (Date.now() % 60000) + 50);
+  }
+  cdTick();
+})();
+</script>
+</body>
+</html>

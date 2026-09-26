@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Ledger — Crew Portal · The Scarecrow's Almanac · Nightmare on the Crow</title>
+<meta name="description" content="The Scarecrow's Ledger: the crew portal for Nightmare on the Crow volunteers. Notices, the field ledger of open stations for all four October nights, enrolment of hands, and the conditions of service. Not for the public.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   CONCEPT #9 — THE SCARECROW'S ALMANAC · CREW PORTAL ("The Ledger")
+   Same paper, same ink, same woodcut hand as the public almanac. This page
+   is the back of the book: a gated ledger for the hands of the harvest.
+   Fonts: Pirata One (display), IM Fell English (body), IM Fell English SC.
+   ========================================================================== */
+
+:root{
+  --paper:#f1e9d6;
+  --paper-deep:#e6dbc0;
+  --paper-fold:#cfc3a3;
+  --ink:#1a1612;
+  --ink-soft:#3d332a;
+  --blood:#7a1f1f;
+  --mustard:#c9a227;
+  --display:'Pirata One', 'IM Fell English', Georgia, serif;
+  --body:'IM Fell English', Georgia, 'Times New Roman', serif;
+  --sc:'IM Fell English SC', 'IM Fell English', Georgia, serif;
+  --measure:64ch;
+  --frame:1080px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+body{
+  margin:0;
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:clamp(1.05rem, 1rem + .3vw, 1.2rem);
+  line-height:1.55;
+  background-color:var(--paper);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(40,25,5,.035) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(40,25,5,.03) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at 50% 40%, transparent 55%, rgba(70,45,10,.14) 100%);
+  overflow-x:hidden;
+}
+body.locked{overflow:hidden}
+
+a{color:var(--blood);text-decoration-thickness:1px;text-underline-offset:.15em}
+a:hover{color:var(--ink)}
+:focus-visible{outline:3px solid var(--blood);outline-offset:3px}
+.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+[hidden]{display:none!important}
+
+h1,h2,h3,h4{font-family:var(--display);font-weight:400;line-height:1.05;margin:0;letter-spacing:.01em}
+h2{font-size:clamp(2rem, 1.6rem + 2vw, 3.2rem)}
+h3{font-size:clamp(1.4rem, 1.2rem + .8vw, 1.9rem)}
+p{margin:0 0 1em}
+.sc,.label{font-family:var(--sc);letter-spacing:.06em;text-transform:lowercase}
+.small{font-size:.9em}
+.red{color:var(--blood)}
+.center{text-align:center}
+.book{max-width:var(--frame);margin:0 auto;padding:0 16px}
+svg{display:block;max-width:100%}
+
+/* --------------------------------------------------------------------------
+   Concept badge, dog-ears (as on the public page)
+   -------------------------------------------------------------------------- */
+.badge{
+  position:fixed;left:12px;bottom:70px;z-index:90;
+  font-family:var(--sc);font-size:.72rem;letter-spacing:.08em;
+  background:var(--ink);color:var(--paper);padding:.35em .7em;
+  border:1px solid var(--mustard);box-shadow:3px 3px 0 var(--blood);
+  transform:rotate(-2deg);
+}
+.dogear{position:fixed;bottom:0;width:58px;height:58px;z-index:55;pointer-events:none}
+.dogear.br{right:0;background:linear-gradient(to top left, var(--paper-fold) 49%, rgba(0,0,0,.28) 49.5%, #f8f2e3 51%)}
+.dogear.bl{left:0;background:linear-gradient(to top right, var(--paper-fold) 49%, rgba(0,0,0,.28) 49.5%, #f8f2e3 51%)}
+@media (max-width:600px){.dogear{width:40px;height:40px}.badge{bottom:52px;font-size:.62rem}}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+.btn{
+  display:inline-block;font-family:var(--sc);font-size:1.1rem;letter-spacing:.08em;
+  padding:.65em 1.5em;border:2px solid var(--ink);text-decoration:none;cursor:pointer;
+  background:var(--blood);color:var(--paper);box-shadow:4px 4px 0 var(--ink);
+  transition:transform .12s ease, box-shadow .12s ease;line-height:1.3;
+}
+.btn:hover,.btn:focus-visible{color:var(--paper);background:var(--ink);transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+.btn.ghost{background:var(--paper);color:var(--ink)}
+.btn.ghost:hover,.btn.ghost:focus-visible{background:var(--mustard);color:var(--ink)}
+.cta-row{display:flex;gap:.9rem;justify-content:center;flex-wrap:wrap;margin:1.3rem 0 .3rem}
+
+/* --------------------------------------------------------------------------
+   THE GATE — "The Ledger: Not for the Public"
+   A fixed sheet over everything until the word is spoken.
+   -------------------------------------------------------------------------- */
+.gate{
+  position:fixed;inset:0;z-index:80;overflow:auto;
+  display:grid;place-items:center;padding:1.2rem 16px 3rem;
+  background-color:var(--paper);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(40,25,5,.035) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(40,25,5,.03) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at 50% 40%, transparent 45%, rgba(70,45,10,.22) 100%);
+}
+.gate-card{
+  width:min(100%, 560px);position:relative;text-align:center;
+  border:3px solid var(--ink);outline:1px solid var(--ink);outline-offset:5px;
+  background:var(--paper);padding:3.2rem clamp(1rem,4vw,2.4rem) 1.6rem;margin-top:2.6rem;
+  box-shadow:8px 8px 0 var(--paper-deep), 8px 8px 0 1px var(--ink);
+}
+.gate-card::before,.gate-card::after{content:"";position:absolute;width:26px;height:26px;border:3px solid var(--ink)}
+.gate-card::before{top:-3px;left:-3px;border-right:0;border-bottom:0;box-shadow:inset 4px 4px 0 var(--paper), inset 6px 6px 0 var(--ink)}
+.gate-card::after{bottom:-3px;right:-3px;border-left:0;border-top:0;box-shadow:inset -4px -4px 0 var(--paper), inset -6px -6px 0 var(--ink)}
+.seal{position:absolute;top:-52px;left:50%;width:104px;height:104px;transform:translateX(-50%) rotate(-8deg);filter:drop-shadow(2px 3px 0 rgba(26,22,18,.35))}
+.gate .kicker{font-family:var(--sc);letter-spacing:.16em;font-size:.85rem;margin:0 0 .4rem}
+.gate h1{font-size:clamp(2.4rem, 1.6rem + 4.5vw, 4.2rem);line-height:.95;text-shadow:2px 2px 0 var(--paper), 4px 4px 0 var(--mustard)}
+.gate .sub{font-style:italic;margin:.5rem auto .2rem;max-width:34ch}
+.gate .warn{display:inline-block;transform:rotate(-3deg);border:3px solid var(--blood);color:var(--blood);font-family:var(--sc);letter-spacing:.16em;padding:.15em .7em;font-size:.95rem;margin:.6rem 0 1rem;
+  mask-image:repeating-linear-gradient(45deg, #000 0 3px, rgba(0,0,0,.7) 3px 4px);-webkit-mask-image:repeating-linear-gradient(45deg, #000 0 3px, rgba(0,0,0,.7) 3px 4px)}
+.gate form{margin:0 auto;max-width:380px;text-align:left}
+.gate label{display:block;font-family:var(--sc);letter-spacing:.08em;font-size:.95rem;margin-bottom:.3rem}
+.word-row{display:flex;gap:.6rem;align-items:stretch}
+.word-row input{flex:1;min-width:0}
+.gate .err{color:var(--blood);font-style:italic;min-height:1.5em;margin:.5rem 0 0}
+.gate .demo{font-family:var(--sc);letter-spacing:.08em;font-size:.78rem;opacity:.75;margin:1.2rem 0 0}
+.gate .back{margin-top:.6rem;font-size:.92em}
+.gate-card.shake{animation:shake .4s ease}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-6px) rotate(-.4deg)}75%{transform:translateX(6px) rotate(.4deg)}}
+@media (prefers-reduced-motion:reduce){.gate-card.shake{animation:none}}
+
+/* --------------------------------------------------------------------------
+   Form controls: ruled ledger lines, ink borders
+   -------------------------------------------------------------------------- */
+input[type=text],input[type=email],input[type=tel],input[type=password],select{
+  font:inherit;color:var(--ink);background:var(--paper);
+  border:0;border-bottom:2px solid var(--ink);padding:.45em .3em;width:100%;
+  border-radius:0;-webkit-appearance:none;appearance:none;
+}
+input[type=password]{letter-spacing:.2em}
+select{
+  background-image:linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+  background-position:calc(100% - 16px) 55%, calc(100% - 10px) 55%;background-size:6px 6px;background-repeat:no-repeat;padding-right:2rem;
+}
+input:focus-visible,select:focus-visible{outline:none;border-bottom-color:var(--blood);box-shadow:0 2px 0 var(--blood)}
+input[aria-invalid=true],select[aria-invalid=true]{border-bottom-color:var(--blood);background:linear-gradient(transparent,transparent) padding-box, rgba(122,31,31,.06)}
+input[type=checkbox]{width:1.15em;height:1.15em;accent-color:var(--blood);margin:0 .5em 0 0;flex:none;vertical-align:-.15em}
+
+/* --------------------------------------------------------------------------
+   Sticky navigation, styled as the almanac's running head
+   -------------------------------------------------------------------------- */
+.nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:2px solid var(--ink);box-shadow:0 2px 0 var(--paper), 0 3px 0 var(--ink)}
+.nav-in{max-width:var(--frame);margin:0 auto;padding:.45rem 16px;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.5rem;text-decoration:none;color:var(--ink);font-family:var(--display);font-size:1.35rem;margin-right:auto}
+.brand svg{width:34px;height:22px}
+.brand small{font-family:var(--sc);font-size:.7rem;letter-spacing:.14em;color:var(--blood);margin-left:.3rem}
+.nav-list{display:flex;gap:.2rem 1.1rem;list-style:none;margin:0;padding:0;flex-wrap:wrap;align-items:center}
+.nav-list a{font-family:var(--sc);font-size:.95rem;color:var(--ink);text-decoration:none;letter-spacing:.05em;border-bottom:2px solid transparent;padding:.2em 0}
+.nav-list a:hover,.nav-list a:focus-visible{border-bottom-color:var(--blood)}
+.nav-list .cta{background:var(--blood);color:var(--paper);padding:.35em .9em;border:1.5px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+.nav-list .cta:hover{background:var(--ink);border-bottom-color:var(--ink)}
+.nav-toggle{display:none;font-family:var(--sc);font-size:1rem;background:none;border:1.5px solid var(--ink);color:var(--ink);padding:.3em .8em;cursor:pointer;letter-spacing:.05em}
+@media (max-width:900px){
+  .nav-toggle{display:inline-block}
+  .nav-list{display:none;width:100%;flex-direction:column;align-items:stretch;gap:0;border-top:1px dashed var(--ink);padding-top:.4rem;margin-top:.2rem}
+  .nav-list.open{display:flex}
+  .nav-list li{border-bottom:1px dotted rgba(26,22,18,.35)}
+  .nav-list a{display:block;padding:.55em .2em;font-size:1.05rem}
+  .nav-list .cta{margin:.6rem 0 .3rem;text-align:center}
+}
+
+/* --------------------------------------------------------------------------
+   Ledger cover (a smaller plate than the public cover)
+   -------------------------------------------------------------------------- */
+.cover{
+  margin:1.6rem auto 0;border:3px solid var(--ink);outline:1px solid var(--ink);outline-offset:5px;
+  padding:clamp(1.2rem, 3vw, 2.2rem) clamp(.8rem, 3vw, 2.4rem);position:relative;text-align:center;
+  background:linear-gradient(var(--paper), var(--paper)) padding-box, repeating-linear-gradient(45deg, rgba(26,22,18,.06) 0 2px, transparent 2px 9px);
+}
+.cover::before,.cover::after{content:"";position:absolute;width:26px;height:26px;border:3px solid var(--ink)}
+.cover::before{top:-3px;left:-3px;border-right:0;border-bottom:0;box-shadow:inset 4px 4px 0 var(--paper), inset 6px 6px 0 var(--ink)}
+.cover::after{bottom:-3px;right:-3px;border-left:0;border-top:0;box-shadow:inset -4px -4px 0 var(--paper), inset -6px -6px 0 var(--ink)}
+.cover .kicker{font-family:var(--sc);font-size:clamp(.8rem,.75rem + .4vw,1.05rem);letter-spacing:.14em;margin:0 0 .6rem}
+.cover h1{font-size:clamp(2.6rem, 1.6rem + 5vw, 5.2rem);line-height:.95;margin:.1em 0 .2em;text-shadow:2px 2px 0 var(--paper), 4px 4px 0 var(--mustard)}
+.cover .sub{font-style:italic;font-size:clamp(1.05rem, 1rem + .8vw, 1.5rem);max-width:36ch;margin:0 auto .3em;line-height:1.25}
+.cover .rule{width:min(60%, 420px);margin:1rem auto}
+.cover .tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:.6rem 1rem;max-width:720px;margin:.6rem auto 0}
+.cover .tool{display:flex;flex-direction:column;align-items:center;gap:.25rem;text-decoration:none;color:var(--ink)}
+.cover .tool svg{width:64px;height:64px}
+.cover .tool span{font-family:var(--sc);letter-spacing:.1em;font-size:.85rem;border-bottom:2px dotted transparent}
+.cover .tool:hover span,.cover .tool:focus-visible span{border-bottom-color:var(--blood);color:var(--blood)}
+.ribbon{display:inline-block;background:var(--ink);color:var(--paper);font-family:var(--display);font-size:clamp(1.05rem,1rem + 1vw,1.5rem);padding:.35em 1.4em;margin:1rem 0 .2rem;position:relative;letter-spacing:.03em}
+.ribbon::before,.ribbon::after{content:"";position:absolute;top:0;bottom:0;width:14px;background:var(--ink)}
+.ribbon::before{left:-13px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,45% 50%)}
+.ribbon::after{right:-13px;clip-path:polygon(0 0,100% 0,55% 50%,100% 100%,0 100%)}
+.cover .lantern-line{font-style:italic;margin:.6rem 0 0}
+.cover .lantern-line b{font-family:var(--display);font-weight:400;color:var(--blood);font-size:1.25em}
+
+/* --------------------------------------------------------------------------
+   Sections, headings with landing crows, dividers
+   -------------------------------------------------------------------------- */
+.section{padding:3rem 0 1rem;scroll-margin-top:4.5rem}
+.hd-wrap{text-align:center;margin-bottom:1.4rem}
+.hd{position:relative;display:inline-block;padding:0 .3em}
+.hd-crow{position:absolute;right:-.55em;top:-.95em;width:1.35em;height:.9em;pointer-events:none;opacity:0;transform:translate(-18px,-34px) rotate(-14deg)}
+.hd-crow svg{width:100%;height:100%}
+.hd.landed .hd-crow{opacity:1;transform:none;transition:transform .9s cubic-bezier(.2,.9,.3,1.15), opacity .5s ease}
+.hd.alt .hd-crow{right:auto;left:-.6em;transform:translate(18px,-34px) rotate(14deg) scaleX(-1)}
+.hd.alt.landed .hd-crow{transform:scaleX(-1)}
+@media (prefers-reduced-motion:reduce){
+  .hd-crow{opacity:1;transform:none}
+  .hd.alt .hd-crow{transform:scaleX(-1)}
+  .hd.landed .hd-crow{transition:none}
+}
+.hd-sub{font-style:italic;margin:.4rem 0 0;font-size:1.05em}
+.divider{width:min(100%, 520px);margin:1.6rem auto 0}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1.6rem 2.4rem;align-items:start}
+.prose{max-width:var(--measure);margin:0 auto}
+
+/* --------------------------------------------------------------------------
+   NOTICES NAILED TO THE BARN — the message board
+   -------------------------------------------------------------------------- */
+.barn{
+  position:relative;padding:1.6rem clamp(.6rem,2.5vw,1.6rem) 1.2rem;border:3px solid var(--ink);
+  background:
+    repeating-linear-gradient(90deg, rgba(26,22,18,.09) 0 2px, transparent 2px 46px),
+    repeating-linear-gradient(0deg, rgba(26,22,18,.05) 0 1px, transparent 1px 7px),
+    var(--paper-deep);
+}
+.notices{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:1.4rem 1.2rem;list-style:none;margin:0;padding:0}
+.notice{
+  position:relative;background:var(--paper);border:1.5px solid var(--ink);padding:1.5rem 1rem 1rem;
+  box-shadow:3px 4px 0 rgba(26,22,18,.35);
+}
+.notice:nth-child(odd){transform:rotate(-.9deg)}
+.notice:nth-child(even){transform:rotate(.7deg)}
+.notice:nth-child(3n){transform:rotate(1.3deg)}
+/* the nail: a hammered dot with a scratch of shadow */
+.notice::before{content:"";position:absolute;top:.5rem;left:50%;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:radial-gradient(circle at 35% 35%, #6b625a, var(--ink) 70%);box-shadow:0 1px 0 var(--paper), 1px 3px 2px rgba(26,22,18,.45)}
+.notice.pinned{background:linear-gradient(var(--paper),var(--paper)) padding-box, var(--mustard);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--mustard), 4px 4px 0 1.5px var(--ink)}
+.notice.pinned::after{content:"pinned";position:absolute;top:.45rem;right:.6rem;font-family:var(--sc);letter-spacing:.14em;font-size:.72rem;color:var(--blood)}
+.notice time{display:block;font-family:var(--sc);letter-spacing:.12em;font-size:.82rem;color:var(--blood);margin-bottom:.2rem}
+.notice h3{font-family:var(--body);font-style:italic;font-size:1.25em;line-height:1.2;margin-bottom:.5rem}
+.notice p{margin:0 0 .6em}
+.notice p:last-child{margin-bottom:0}
+.notice ul{margin:.2em 0 .6em;padding-left:1.2em}
+.notice li{margin-bottom:.15em}
+.notice .hrs{font-family:var(--display);font-size:1.5em;color:var(--blood);line-height:1.1;margin:.2rem 0}
+.notice .lead{font-family:var(--sc);letter-spacing:.06em}
+@media (prefers-reduced-motion:reduce){.notice{transform:none!important}}
+
+/* --------------------------------------------------------------------------
+   THE FIELD LEDGER — station board
+   -------------------------------------------------------------------------- */
+.ledger{border:3px double var(--ink);padding:1rem clamp(.6rem,2.5vw,1.6rem) 1.4rem;background:var(--paper);position:relative}
+/* night tabs, styled as almanac page corners */
+.tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin:0 0 1rem;padding:0;list-style:none;border-bottom:2px solid var(--ink)}
+.tab{
+  font-family:var(--sc);letter-spacing:.06em;font-size:.95rem;cursor:pointer;
+  background:var(--paper-deep);color:var(--ink);border:1.5px solid var(--ink);border-bottom:0;
+  padding:.45em .9em .35em;margin-bottom:-2px;display:flex;flex-direction:column;align-items:center;gap:0;line-height:1.15;min-width:5.6rem;
+  clip-path:polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 0 100%);
+}
+.tab .pg{font-family:var(--display);font-size:1.5em;color:var(--blood);letter-spacing:0}
+.tab .dow{font-size:.78rem;letter-spacing:.12em}
+.tab[aria-selected=true]{background:var(--paper);border-bottom:2px solid var(--paper);position:relative;z-index:1}
+.tab:hover{background:var(--paper)}
+.tab:focus-visible{outline-offset:-3px}
+@media (max-width:480px){.tabs{gap:.25rem}.tab{min-width:0;flex:1;padding:.4em .3em .3em;font-size:.85rem}.tab .pg{font-size:1.35em}}
+.ledger-head{display:flex;justify-content:space-between;align-items:baseline;gap:.6rem 1.2rem;flex-wrap:wrap;margin-bottom:.8rem}
+.ledger-head h3{font-family:var(--display)}
+.open-count{font-family:var(--sc);letter-spacing:.1em;font-size:1rem}
+.open-count b{font-family:var(--display);font-weight:400;font-size:1.6em;color:var(--blood);line-height:1;vertical-align:-.05em}
+.legend{display:flex;gap:.6rem 1.4rem;flex-wrap:wrap;font-family:var(--sc);letter-spacing:.06em;font-size:.85rem;margin:0 0 1rem;align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:.4rem}
+
+.zone{margin-top:1.4rem}
+.zone-hd{display:flex;align-items:baseline;gap:.6rem;border-bottom:2px solid var(--ink);padding-bottom:.25rem;margin-bottom:.2rem;flex-wrap:wrap}
+.zone-hd .rn{font-family:var(--display);font-size:1.6em;color:var(--blood);line-height:1}
+.zone-hd h4{font-family:var(--sc);font-size:1.15rem;letter-spacing:.1em;text-transform:lowercase}
+.zone-hd .tally{margin-left:auto;font-family:var(--sc);letter-spacing:.08em;font-size:.85rem;color:var(--ink-soft)}
+/* column headers, small caps, only on wide screens */
+.ledger-cols{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(11rem,auto);gap:.4rem 1rem;font-family:var(--sc);letter-spacing:.12em;font-size:.75rem;color:var(--ink-soft);padding:.25rem .2rem}
+.rows{list-style:none;margin:0;padding:0}
+.row{
+  display:grid;grid-template-columns:minmax(0,1fr) auto minmax(11rem,auto);gap:.35rem 1rem;align-items:center;
+  padding:.5rem .2rem;border-bottom:1px dotted rgba(26,22,18,.55);
+}
+.row.need{background:linear-gradient(90deg, rgba(122,31,31,.07), transparent 60%)}
+.row .name{display:flex;align-items:baseline;gap:.5rem;min-width:0}
+.row .name .nm{font-size:1.05em}
+.row .name .who{font-family:var(--sc);font-size:.8rem;letter-spacing:.06em;color:var(--ink-soft)}
+.row .name .dots{flex:1;border-bottom:2px dotted rgba(26,22,18,.6);transform:translateY(-.35em);min-width:1rem}
+/* tally-mark pips: filled = an ink stroke, open = a red dashed slot */
+.pips{display:flex;gap:.25rem;flex-wrap:wrap;align-items:center}
+.pip{display:inline-block;width:.6rem;height:1.2rem;border:1.5px dashed var(--blood);opacity:.9}
+.pip.f{border:0;background:var(--ink);width:.28rem;transform:rotate(6deg);margin:0 .2rem}
+.pip.f:nth-child(odd){transform:rotate(-5deg)}
+.state{display:flex;justify-content:flex-end;align-items:center;gap:.5rem;min-width:0}
+.full{font-family:var(--sc);letter-spacing:.12em;font-size:.82rem;color:var(--ink-soft)}
+.full::before{content:"✓ ";color:var(--ink)}
+.wanted{
+  font-family:var(--sc);letter-spacing:.12em;font-size:.82rem;cursor:pointer;line-height:1.2;
+  color:var(--blood);background:var(--paper);border:2px solid var(--blood);padding:.3em .6em;
+  transform:rotate(-1.5deg);text-align:left;white-space:nowrap;
+  mask-image:repeating-linear-gradient(45deg, #000 0 3px, rgba(0,0,0,.75) 3px 4px);-webkit-mask-image:repeating-linear-gradient(45deg, #000 0 3px, rgba(0,0,0,.75) 3px 4px);
+  transition:transform .12s ease;
+}
+.wanted b{font-family:var(--display);font-size:1.25em;letter-spacing:.04em;margin-right:.35em}
+.wanted:hover,.wanted:focus-visible{background:var(--blood);color:var(--paper);transform:rotate(0) scale(1.03)}
+.wanted .n{opacity:.85}
+@media (max-width:640px){
+  .ledger-cols{display:none}
+  .row{grid-template-columns:1fr auto;grid-template-areas:"name name" "pips state"}
+  .row .name{grid-area:name}
+  .row .pips{grid-area:pips}
+  .row .state{grid-area:state;justify-content:flex-end}
+  .wanted{white-space:normal}
+}
+.ledger-foot{font-style:italic;font-size:.92em;margin:1.4rem 0 0;border-top:1px solid var(--ink);padding-top:.7rem}
+
+/* --------------------------------------------------------------------------
+   ENROLMENT OF HANDS — the signup
+   -------------------------------------------------------------------------- */
+.enrol{max-width:820px;margin:0 auto;border:3px solid var(--ink);padding:1.4rem clamp(.8rem,3vw,2rem) 1.6rem;background:var(--paper);
+  box-shadow:6px 6px 0 var(--mustard),6px 6px 0 2px var(--ink);position:relative}
+.enrol .form-hd{text-align:center;font-family:var(--sc);letter-spacing:.14em;font-size:.85rem;margin-bottom:1rem}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:1rem 1.6rem}
+.field{display:flex;flex-direction:column;gap:.2rem;min-width:0}
+.field label,.fieldset legend{font-family:var(--sc);letter-spacing:.08em;font-size:.95rem}
+.field .hint{font-style:italic;font-size:.85em;color:var(--ink-soft)}
+.req::after{content:" *";color:var(--blood)}
+.fieldset{border:1.5px dashed var(--ink);padding:.7rem .9rem .8rem;margin:0;min-width:0}
+.fieldset legend{padding:0 .4em}
+.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:.4rem .8rem}
+.check{display:flex;align-items:center;gap:0;cursor:pointer;padding:.2em 0}
+.check b{font-family:var(--sc);font-weight:400;letter-spacing:.06em}
+.check.pre{background:linear-gradient(90deg, rgba(201,162,39,.35), transparent)}
+.agree{display:flex;align-items:flex-start;gap:0;margin:.4rem 0 0;line-height:1.4}
+.agree input{margin-top:.3em}
+.form-err{border:2px solid var(--blood);color:var(--blood);padding:.6rem .9rem;font-style:italic;margin:1rem 0 0}
+.form-err ul{margin:.3em 0 0;padding-left:1.2em}
+.submit-row{text-align:center;margin-top:1.4rem}
+.submit-row .demo{display:block;font-family:var(--sc);letter-spacing:.1em;font-size:.78rem;margin-top:.7rem;opacity:.75}
+.prefill-note{border-left:3px solid var(--blood);padding:.2rem 0 .2rem .9rem;font-style:italic;margin:0 0 1rem}
+/* confirmation: a stamped receipt */
+.receipt{text-align:center;padding:1rem 0 .4rem}
+.receipt .stamp{display:inline-block;transform:rotate(-6deg);border:3px solid var(--blood);color:var(--blood);font-family:var(--sc);letter-spacing:.16em;padding:.2em .7em;font-size:1.1rem;margin:.4rem 0 1rem;
+  mask-image:repeating-linear-gradient(45deg, #000 0 3px, rgba(0,0,0,.7) 3px 4px);-webkit-mask-image:repeating-linear-gradient(45deg, #000 0 3px, rgba(0,0,0,.7) 3px 4px)}
+.receipt h3{margin-bottom:.5rem}
+.receipt dl{display:grid;grid-template-columns:auto 1fr;gap:.3rem 1rem;text-align:left;max-width:520px;margin:1rem auto;font-size:.98em}
+.receipt dt{font-family:var(--sc);letter-spacing:.08em;color:var(--blood)}
+.receipt dd{margin:0}
+@media (max-width:480px){.receipt dl{grid-template-columns:1fr}.receipt dd{margin-bottom:.4rem}}
+
+/* --------------------------------------------------------------------------
+   CONDITIONS OF SERVICE — waiver summary + folded broadsheet
+   -------------------------------------------------------------------------- */
+.conditions{max-width:820px;margin:0 auto}
+.cond-list{list-style:none;padding:0;margin:0;counter-reset:cond}
+.cond-list li{display:grid;grid-template-columns:2.6rem 1fr;gap:.6rem;padding:.6rem 0;border-bottom:1px dotted rgba(26,22,18,.55);align-items:start}
+.cond-list li::before{counter-increment:cond;content:counter(cond, upper-roman) ".";font-family:var(--display);font-size:1.5em;color:var(--blood);line-height:1;text-align:right}
+.cond-list li b{font-family:var(--sc);font-weight:400;letter-spacing:.06em;display:block}
+.cond-list li.grave b{color:var(--blood)}
+.broadsheet{margin-top:1.6rem;border:2px solid var(--ink);background:var(--paper);
+  box-shadow:5px 5px 0 var(--paper-deep), 5px 5px 0 1px var(--ink)}
+.broadsheet summary{cursor:pointer;list-style:none;padding:.9rem 1rem .9rem 3rem;position:relative;font-family:var(--sc);letter-spacing:.1em;font-size:1rem;
+  background:repeating-linear-gradient(180deg, transparent 0 22px, rgba(26,22,18,.08) 22px 23px)}
+.broadsheet summary::-webkit-details-marker{display:none}
+.broadsheet summary::before{content:"";position:absolute;left:.9rem;top:50%;width:1.2rem;height:1.2rem;margin-top:-.6rem;border:2px solid var(--ink);
+  background:linear-gradient(135deg, var(--paper) 50%, var(--paper-fold) 50%)}
+.broadsheet summary::after{content:"unfold";position:absolute;right:1rem;top:50%;transform:translateY(-50%);font-size:.78rem;color:var(--blood);letter-spacing:.14em}
+.broadsheet[open] summary::after{content:"fold"}
+.broadsheet .sheet{padding:1rem clamp(.8rem,3vw,1.8rem) 1.4rem;border-top:2px solid var(--ink);column-width:22rem;column-gap:2.2rem;column-rule:1px solid rgba(26,22,18,.4)}
+.broadsheet .sheet h4{font-family:var(--display);font-size:1.4em;break-after:avoid;column-span:all;text-align:center;margin-bottom:.6rem}
+.broadsheet .sheet .ph{font-family:var(--sc);letter-spacing:.1em;font-size:.82rem;color:var(--blood);border:1.5px dashed var(--blood);padding:.3em .6em;display:inline-block;margin:.4rem 0 .6rem;break-inside:avoid}
+.broadsheet .sheet p{font-size:.95em;margin-bottom:.8em}
+
+/* --------------------------------------------------------------------------
+   Colophon / footer
+   -------------------------------------------------------------------------- */
+.colophon{margin-top:3.5rem;border-top:3px solid var(--ink);background:var(--ink);color:var(--paper);padding:2.2rem 0 5rem}
+.colophon a{color:var(--mustard)}
+.colophon a:hover{color:var(--paper)}
+.colophon .in{max-width:var(--frame);margin:0 auto;padding:0 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:1.6rem}
+.colophon h3{color:var(--mustard);margin-bottom:.5rem}
+.colophon .fine{font-size:.85em;opacity:.85;grid-column:1/-1;border-top:1px dotted rgba(241,233,214,.4);padding-top:1rem;text-align:center;font-style:italic}
+.socials{list-style:none;padding:0;margin:0;display:flex;gap:.8rem;flex-wrap:wrap}
+.socials a{display:inline-flex;align-items:center;gap:.4rem;font-family:var(--sc);letter-spacing:.08em;text-decoration:none;border:1.5px solid var(--mustard);padding:.3em .7em}
+.socials a:hover{background:var(--mustard);color:var(--ink)}
+.socials svg{width:18px;height:18px;fill:currentColor}
+.colophon .btn{margin-top:.4rem}
+.colophon .btn.ghost{background:var(--ink);color:var(--mustard);border-color:var(--mustard);box-shadow:4px 4px 0 var(--mustard)}
+.colophon .btn.ghost:hover,.colophon .btn.ghost:focus-visible{background:var(--mustard);color:var(--ink)}
+</style>
+</head>
+<body class="locked">
+
+<!-- ==========================================================================
+     Shared SVG defs: hatching patterns + reusable woodcut symbols.
+     ========================================================================== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#1a1612" stroke-width="1.7"/>
+    </pattern>
+    <pattern id="hatch-fine" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+      <line x1="0" y1="0" x2="0" y2="4" stroke="#1a1612" stroke-width="1"/>
+    </pattern>
+    <pattern id="hatch-h" width="5" height="5" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="2.5" x2="5" y2="2.5" stroke="#1a1612" stroke-width="1.3"/>
+    </pattern>
+    <pattern id="crosshatch" width="7" height="7" patternUnits="userSpaceOnUse">
+      <path d="M0 0L7 7M7 0L0 7" stroke="#1a1612" stroke-width="1"/>
+    </pattern>
+
+    <!-- perched crow, facing right -->
+    <symbol id="crow" viewBox="0 0 64 42">
+      <path fill="#1a1612" d="M1 15 L15 20 C19 12 30 8 42 11 C44 5 51 3 55 7 L63 12 L54 14 C56 18 54 22 50 24 C46 30 34 33 22 31 L4 34 L18 29 C10 27 5 22 1 15 Z"/>
+      <path d="M26 32 L24 41 M31 32 L32 41" stroke="#1a1612" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="49" cy="10" r="1.4" fill="#f1e9d6"/>
+    </symbol>
+
+    <!-- ornamental fleuron for dividers -->
+    <symbol id="fleuron" viewBox="0 0 60 24">
+      <path fill="#1a1612" d="M30 2 L36 12 L30 22 L24 12 Z"/>
+      <path d="M2 12 C10 4 18 4 24 12 C18 20 10 20 2 12 Z M58 12 C50 4 42 4 36 12 C42 20 50 20 58 12 Z" fill="none" stroke="#1a1612" stroke-width="1.6"/>
+      <circle cx="30" cy="12" r="2" fill="#f1e9d6"/>
+    </symbol>
+
+    <!-- wax seal: a blood-red blot with a crow pressed into it -->
+    <symbol id="seal" viewBox="0 0 100 100">
+      <path fill="#7a1f1f" d="M50 4 C58 2 64 8 71 9 C79 10 84 16 88 23 C93 30 97 38 95 47 C94 56 98 63 94 71 C90 79 82 84 74 88 C66 92 58 98 50 96 C42 98 34 92 26 88 C18 84 10 79 7 71 C3 63 6 56 5 47 C3 38 8 30 12 23 C16 16 22 10 30 9 C37 8 42 2 50 4 Z"/>
+      <path fill="none" stroke="#5a1414" stroke-width="1.5" d="M50 12 C56 10 61 15 67 16 C74 17 78 22 81 28 C85 34 88 41 87 48 C86 55 89 61 86 68 C83 74 76 78 70 81 C63 84 57 90 50 88 C43 90 37 84 30 81 C24 78 17 74 14 68 C11 61 14 55 13 48 C12 41 15 34 19 28 C22 22 26 17 33 16 C39 15 44 10 50 12 Z"/>
+      <circle cx="50" cy="50" r="30" fill="none" stroke="#f1e9d6" stroke-width="1.6" opacity=".8"/>
+      <circle cx="50" cy="50" r="26" fill="none" stroke="#f1e9d6" stroke-width=".8" stroke-dasharray="2 3" opacity=".8"/>
+      <g transform="translate(24 31) scale(.82)">
+        <path fill="#f1e9d6" d="M1 15 L15 20 C19 12 30 8 42 11 C44 5 51 3 55 7 L63 12 L54 14 C56 18 54 22 50 24 C46 30 34 33 22 31 L4 34 L18 29 C10 27 5 22 1 15 Z"/>
+        <path d="M26 32 L24 41 M31 32 L32 41" stroke="#f1e9d6" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="49" cy="10" r="1.4" fill="#7a1f1f"/>
+      </g>
+      <path d="M36 74 L64 74" stroke="#f1e9d6" stroke-width="1.2" opacity=".7"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- concept badge + dog-ear folds -->
+<div class="badge" aria-label="Concept 9, The Scarecrow's Almanac, crew portal">CONCEPT #9 — The Scarecrow's Almanac · CREW</div>
+<div class="dogear br" aria-hidden="true"></div>
+<div class="dogear bl" aria-hidden="true"></div>
+
+<!-- ==========================================================================
+     THE GATE — demo password screen. The word is "crow" (demo only).
+     ========================================================================== -->
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+  <div class="gate-card" id="gate-card">
+    <svg class="seal" viewBox="0 0 100 100" role="img" aria-label="A wax seal pressed with a crow"><use href="#seal"/></svg>
+    <p class="kicker">The Back of the Almanac</p>
+    <h1 id="gate-title">The Ledger</h1>
+    <p class="sub">Being the private account of the hands who work the harvest on Harff Road.</p>
+    <div><span class="warn">Not for the Public</span></div>
+    <form id="gate-form" novalidate>
+      <label for="word">Speak the word the scarecrow gave you</label>
+      <div class="word-row">
+        <input type="password" id="word" name="word" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="gate-err gate-demo" required>
+        <button class="btn" type="submit">Enter</button>
+      </div>
+      <p class="err" id="gate-err" aria-live="polite"></p>
+    </form>
+    <p class="demo" id="gate-demo">Demo password: crow</p>
+    <p class="back"><a href="09-almanac.html">← Not on the crew? Back to the public almanac.</a></p>
+  </div>
+</div>
+
+<a class="visually-hidden" href="#notices">Skip to notices</a>
+
+<!-- ==========================================================================
+     Everything below is hidden until the gate opens.
+     ========================================================================== -->
+<div id="portal" hidden>
+
+<header class="nav">
+  <div class="nav-in">
+    <a class="brand" href="09-almanac.html" aria-label="Nightmare on the Crow, back to the public almanac">
+      <svg viewBox="0 0 64 42" aria-hidden="true"><use href="#crow"/></svg>
+      Nightmare on the Crow <small>the ledger</small>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-list">Contents</button>
+    <ul class="nav-list" id="nav-list">
+      <li><a href="#notices">Notices</a></li>
+      <li><a href="#ledger">Field Ledger</a></li>
+      <li><a href="#enrol">Enrolment</a></li>
+      <li><a href="#conditions">Conditions</a></li>
+      <li><a href="09-almanac.html">Public Almanac</a></li>
+      <li><a class="cta" href="#enrol">Sign the Roll</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="top" class="book">
+
+  <!-- ========================================================================
+       LEDGER COVER
+       ======================================================================== -->
+  <section class="cover" aria-labelledby="title">
+    <p class="kicker">Fourth Season · Anno Domini 2026 · For the Hands of the Harvest Only</p>
+    <h1 id="title">The Scarecrow's Ledger</h1>
+    <p class="sub">Notices, the field ledger of open stations, the enrolment of hands, and the conditions under which they serve.</p>
+    <svg class="rule" viewBox="0 0 400 24" aria-hidden="true">
+      <line x1="0" y1="12" x2="168" y2="12" stroke="#1a1612" stroke-width="2"/>
+      <line x1="232" y1="12" x2="400" y2="12" stroke="#1a1612" stroke-width="2"/>
+      <use href="#fleuron" x="170" y="0" width="60" height="24"/>
+    </svg>
+    <nav class="tools" aria-label="Ledger contents">
+      <a class="tool" href="#notices">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><g stroke="#1a1612" stroke-width="2.5" stroke-linejoin="round" fill="none"><rect x="12" y="14" width="40" height="44" fill="url(#hatch-h)"/><path d="M18 26 L46 26 M18 34 L46 34 M18 42 L38 42" stroke-width="2"/><circle cx="32" cy="10" r="3.5" fill="#1a1612"/><path d="M32 13 L32 20"/></g></svg>
+        <span>Notices</span>
+      </a>
+      <a class="tool" href="#ledger">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><g stroke="#1a1612" stroke-width="2.5" stroke-linejoin="round" fill="none"><path d="M8 10 L56 10 L56 56 L8 56 Z" fill="url(#hatch-fine)"/><path d="M8 22 L56 22 M8 34 L56 34 M8 46 L56 46 M28 10 L28 56" stroke-width="2"/><path d="M14 26 L14 31 M18 26 L18 31 M22 26 L22 31 M36 38 L36 43 M40 38 L40 43" stroke="#7a1f1f" stroke-width="2.5"/></g></svg>
+        <span>Field Ledger</span>
+      </a>
+      <a class="tool" href="#enrol">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><g stroke="#1a1612" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" fill="none"><path d="M12 52 L44 20 L50 26 L18 58 L10 60 Z" fill="url(#hatch)"/><path d="M44 20 L50 14 L56 20 L50 26" fill="#7a1f1f"/><path d="M8 60 C20 58 36 60 56 58"/></g></svg>
+        <span>Enrolment</span>
+      </a>
+      <a class="tool" href="#conditions">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><g stroke="#1a1612" stroke-width="2.5" stroke-linejoin="round" fill="none"><path d="M14 8 L50 8 L50 56 L14 56 Z" fill="url(#hatch-h)"/><path d="M20 18 L44 18 M20 26 L44 26 M20 34 L38 34" stroke-width="2"/><circle cx="40" cy="46" r="7" fill="#7a1f1f"/></g></svg>
+        <span>Conditions</span>
+      </a>
+    </nav>
+    <p class="ribbon">It All Begins with a Hayride!</p>
+    <p class="lantern-line" id="lantern-line">The first lantern is lit on Friday the 9th of October, half past seven.</p>
+  </section>
+
+  <!-- ========================================================================
+       1. NOTICES NAILED TO THE BARN — message board
+       ======================================================================== -->
+  <section class="section" id="notices" aria-labelledby="notices-title">
+    <div class="hd-wrap">
+      <h2 class="hd" id="notices-title">Notices Nailed to the Barn<span class="hd-crow" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></h2>
+      <p class="hd-sub">Newest at the top. Read them all; the scarecrow will ask.</p>
+    </div>
+    <div class="barn">
+      <ul class="notices">
+        <li class="notice pinned">
+          <time datetime="2026-09">Standing notice</time>
+          <h3>Pick your walkthrough</h3>
+          <p>Every hand walks the trail once before the first lantern is lit: where the tunnels turn, where the fog hides the roots, where you stand and where you never stand. <strong>Choose a walkthrough date when you sign the roll</strong> below. If none suits, write to the neighbors and they will find you another.</p>
+        </li>
+        <li class="notice">
+          <time datetime="2026-09-26">September 26, 2026</time>
+          <h3>Hours, fixed and final</h3>
+          <p class="lead">Every haunt night:</p>
+          <p class="hrs">7:30 – 10:30 PM</p>
+          <p>The gate admits no guest after <strong>10:00 PM</strong>; the last wagon rolls after that, and we run until the last group is through.</p>
+          <p class="lead">Saturday, October 10:</p>
+          <p><strong>Fireworks at 7:45 PM</strong> over the field, then the haunt runs <strong>8:00 – 10:30 PM</strong>, last entry 10. Be at your station, in costume, before the first shell goes up.</p>
+        </li>
+        <li class="notice">
+          <time datetime="2026-08-25">August 25, 2026</time>
+          <h3>Dates we need help</h3>
+          <p>Four nights. The scarecrow has counted, and we are short on every one:</p>
+          <ul>
+            <li><strong>Friday, October 9</strong> — opening night</li>
+            <li><strong>Saturday, October 10</strong> — Kids Day by noon, fireworks by dark</li>
+            <li><strong>Friday, October 16</strong></li>
+            <li><strong>Saturday, October 17</strong> — the last lantern</li>
+          </ul>
+          <p>Check the <a href="#ledger">Field Ledger</a> for the stations still marked WANTED and put your name to one.</p>
+        </li>
+        <li class="notice">
+          <time datetime="2026-03-16">March 16, 2026</time>
+          <h3>Monthly build nights</h3>
+          <p>Once a month, mid-month and mid-week, in the evening, the neighbors open the barn for <strong>set design and ideas</strong>. Bring a hammer, a sketch, or a scare you've been thinking about since November. Dates go out on the socials and here on the barn door.</p>
+        </li>
+      </ul>
+    </div>
+    <svg class="divider" viewBox="0 0 520 24" aria-hidden="true"><line x1="0" y1="12" x2="228" y2="12" stroke="#1a1612" stroke-width="2"/><line x1="292" y1="12" x2="520" y2="12" stroke="#1a1612" stroke-width="2"/><use href="#fleuron" x="230" y="0" width="60" height="24"/></svg>
+  </section>
+
+  <!-- ========================================================================
+       2. THE FIELD LEDGER — station board, one page per night
+       ======================================================================== -->
+  <section class="section" id="ledger" aria-labelledby="ledger-title">
+    <div class="hd-wrap">
+      <h2 class="hd alt" id="ledger-title">The Field Ledger<span class="hd-crow" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></h2>
+      <p class="hd-sub">Every zone, every station, every hand accounted for. Red ink means the scarecrow is short.</p>
+    </div>
+    <div class="ledger">
+      <ul class="tabs" role="tablist" aria-label="Choose a night" id="tabs"></ul>
+      <div id="ledger-panel" role="tabpanel" aria-labelledby="tab-oct9" tabindex="0">
+        <div class="ledger-head">
+          <h3 id="night-name">Friday, October 9</h3>
+          <p class="open-count" style="margin:0" aria-live="polite"><b id="open-n">0</b> open spots tonight</p>
+        </div>
+        <div class="legend" aria-label="How to read the ledger">
+          <span><span class="pips" aria-hidden="true"><span class="pip f"></span><span class="pip f"></span></span> a stroke, a hand on the books</span>
+          <span><span class="pips" aria-hidden="true"><span class="pip"></span></span> an empty slot</span>
+          <span><span class="wanted" style="cursor:default;pointer-events:none;font-size:.72rem;padding:.2em .5em" aria-hidden="true"><b>Wanted</b></span> tap to claim it below</span>
+        </div>
+        <div id="zones"></div>
+        <p class="ledger-foot">Hands are shown as tally strokes, never names; the scarecrow keeps those. Evan holds Beetlejuice and Ben holds the sets, as the public almanac already says. Every other stroke is a neighbor.</p>
+      </div>
+    </div>
+    <svg class="divider" viewBox="0 0 520 24" aria-hidden="true"><line x1="0" y1="12" x2="228" y2="12" stroke="#1a1612" stroke-width="2"/><line x1="292" y1="12" x2="520" y2="12" stroke="#1a1612" stroke-width="2"/><use href="#fleuron" x="230" y="0" width="60" height="24"/></svg>
+  </section>
+
+  <!-- ========================================================================
+       3. ENROLMENT OF HANDS FOR THE HARVEST — one-step signup
+       ======================================================================== -->
+  <section class="section" id="enrol" aria-labelledby="enrol-title">
+    <div class="hd-wrap">
+      <h2 class="hd" id="enrol-title">Enrolment of Hands for the Harvest<span class="hd-crow" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></h2>
+      <p class="hd-sub">One form. Your nights, your post, your walkthrough, your word. The scarecrow does the rest.</p>
+    </div>
+    <div class="enrol">
+      <form id="enrol-form" novalidate>
+        <p class="form-hd">Set your hand to the roll</p>
+        <p class="prefill-note" id="prefill-note" hidden></p>
+        <div class="fgrid">
+          <div class="field">
+            <label for="fn" class="req">First name</label>
+            <input type="text" id="fn" name="fn" autocomplete="given-name" required>
+          </div>
+          <div class="field">
+            <label for="ln" class="req">Last name</label>
+            <input type="text" id="ln" name="ln" autocomplete="family-name" required>
+          </div>
+          <div class="field">
+            <label for="em" class="req">Email</label>
+            <input type="email" id="em" name="em" autocomplete="email" inputmode="email" required>
+            <span class="hint">where the neighbors will write to you</span>
+          </div>
+          <div class="field">
+            <label for="ph">Telephone <span class="hint">(optional)</span></label>
+            <input type="tel" id="ph" name="ph" autocomplete="tel" inputmode="tel">
+          </div>
+        </div>
+
+        <div class="fgrid" style="margin-top:1.2rem">
+          <fieldset class="fieldset" id="nights-set">
+            <legend class="req">Nights you can work</legend>
+            <div class="checks">
+              <label class="check" for="n-oct9"><input type="checkbox" id="n-oct9" name="nights" value="Fri Oct 9"><b>Fri Oct 9</b></label>
+              <label class="check" for="n-oct10"><input type="checkbox" id="n-oct10" name="nights" value="Sat Oct 10"><b>Sat Oct 10</b></label>
+              <label class="check" for="n-oct16"><input type="checkbox" id="n-oct16" name="nights" value="Fri Oct 16"><b>Fri Oct 16</b></label>
+              <label class="check" for="n-oct17"><input type="checkbox" id="n-oct17" name="nights" value="Sat Oct 17"><b>Sat Oct 17</b></label>
+            </div>
+          </fieldset>
+          <div class="field">
+            <label for="walk" class="req">Walkthrough date</label>
+            <select id="walk" name="walk" required>
+              <option value="">— choose an evening —</option>
+              <option value="Wed Sept 30, 6:30 PM">Wed Sept 30, 6:30 PM (TBD by owner)</option>
+              <option value="Sun Oct 4, 5:00 PM">Sun Oct 4, 5:00 PM (TBD by owner)</option>
+              <option value="Wed Oct 7, 6:30 PM">Wed Oct 7, 6:30 PM (TBD by owner)</option>
+              <option value="Thu Oct 8, 6:30 PM">Thu Oct 8, 6:30 PM (TBD by owner)</option>
+            </select>
+            <span class="hint">walk the trail once before the lanterns are lit</span>
+          </div>
+        </div>
+
+        <div class="fgrid" style="margin-top:1.2rem">
+          <div class="field">
+            <label for="zone" class="req">Preferred zone</label>
+            <select id="zone" name="zone" required>
+              <option value="">— choose a zone —</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="station" class="req">Preferred station</label>
+            <select id="station" name="station" required disabled>
+              <option value="">— choose a zone first —</option>
+            </select>
+            <span class="hint" id="station-hint">stations marked WANTED are where we're shortest</span>
+          </div>
+        </div>
+
+        <label class="agree" for="agree" style="margin-top:1.2rem">
+          <input type="checkbox" id="agree" name="agree" required>
+          <span><span class="req">I have read and agree to the Volunteer Agreement</span> — the <a href="#conditions">Conditions of Service</a> below, and the full agreement folded within them.</span>
+        </label>
+        <label class="agree" for="news">
+          <input type="checkbox" id="news" name="news">
+          <span>Send me the crew newsletter: build nights, call times, and what the scarecrow saw.</span>
+        </label>
+
+        <div class="form-err" id="form-err" role="alert" hidden></div>
+
+        <div class="submit-row">
+          <button class="btn" type="submit">Set My Hand to the Roll</button>
+          <span class="demo">Demo — nothing is sent.</span>
+        </div>
+      </form>
+
+      <div class="receipt" id="receipt" hidden tabindex="-1">
+        <div><span class="stamp">Entered in the Ledger</span></div>
+        <h3 id="receipt-title">You're on the list.</h3>
+        <p id="receipt-lede"></p>
+        <dl>
+          <dt>Nights</dt><dd id="r-nights"></dd>
+          <dt>Post</dt><dd id="r-post"></dd>
+          <dt>Walkthrough</dt><dd id="r-walk"></dd>
+          <dt>Word sent to</dt><dd id="r-email"></dd>
+        </dl>
+        <p class="small"><em>Demo — nothing is sent. In production, the neighbors receive this and you receive a confirmation with your call time.</em></p>
+        <p><button class="btn ghost" type="button" id="again">Enrol another hand</button></p>
+      </div>
+    </div>
+    <svg class="divider" viewBox="0 0 520 24" aria-hidden="true"><line x1="0" y1="12" x2="228" y2="12" stroke="#1a1612" stroke-width="2"/><line x1="292" y1="12" x2="520" y2="12" stroke="#1a1612" stroke-width="2"/><use href="#fleuron" x="230" y="0" width="60" height="24"/></svg>
+  </section>
+
+  <!-- ========================================================================
+       4. CONDITIONS OF SERVICE — waiver summary + folded full text
+       ======================================================================== -->
+  <section class="section" id="conditions" aria-labelledby="cond-title">
+    <div class="hd-wrap">
+      <h2 class="hd alt" id="cond-title">Conditions of Service<span class="hd-crow" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></h2>
+      <p class="hd-sub">The Volunteer Agreement, set down plain. The full text is folded beneath.</p>
+    </div>
+    <div class="conditions">
+      <ol class="cond-list">
+        <li><span><b>You are a volunteer, not an employee.</b> The work is unpaid and this is not employment. You give your nights freely, and the neighbors are grateful for every one.</span></li>
+        <li><span><b>Arrive on time; keep to your assigned area.</b> Be at your station before the first wagon rolls, and stay in it till the last group is through. The trail only works if every post is held.</span></li>
+        <li class="grave"><span><b>No physical contact with guests. None.</b> No touching, no grabbing, no chasing that could cause harm. Scare with the dark, the voice, the timing. Guests are asked for the same courtesy.</span></li>
+        <li class="grave"><span><b>No alcohol or substances.</b> Not before, not during. A hand under the influence is sent home and struck from the ledger.</span></li>
+        <li><span><b>Follow fire, emergency and first-aid procedures.</b> Know where the exits are, where the extinguishers hang, and who is In Charge that night. If a guest is truly hurt, the scare stops and the lights come up.</span></li>
+        <li><span><b>Know the hazards of the field.</b> Strobes, fog, darkness, confined spaces, uneven ground, weather, mud, and the wildlife of the Crow River bottoms. Wear boots. Watch your footing.</span></li>
+        <li><span><b>Keep the layouts and scare tactics confidential.</b> What happens on the trail stays on the trail until the last lantern is out. Don't post the map; don't spoil the Cage.</span></li>
+        <li><span><b>Costumes and props belong to the haunt.</b> They are company property; return them clean and whole at the end of your night.</span></li>
+        <li><span><b>Photo and video release.</b> You may be photographed or filmed in costume, and the haunt may use those images to promote the trail.</span></li>
+        <li><span><b>Assumption of risk and release of liability.</b> You accept the risks of working a haunted trail at night and release the haunt and its neighbors from liability for them, as the full agreement sets out.</span></li>
+        <li><span><b>Minnesota law governs.</b> The agreement is read under the laws of the State of Minnesota.</span></li>
+      </ol>
+
+      <details class="broadsheet">
+        <summary>Read the full agreement</summary>
+        <div class="sheet">
+          <h4>Volunteer Agreement &amp; Liability Waiver</h4>
+          <span class="ph">FULL WAIVER TEXT — supplied by owner</span>
+          <p>Section 1, Volunteer status. [Placeholder paragraph. The full legal text of the Volunteer Agreement, as currently published on the crew page, will be set here in full and unaltered. It is not reproduced in this concept.]</p>
+          <p>Section 2, Duties and conduct. [Placeholder paragraph. Punctuality, assigned areas, the prohibition on physical contact with guests, and the prohibition on alcohol and substances.]</p>
+          <p>Section 3, Safety and emergency procedures. [Placeholder paragraph. Fire, emergency and first-aid procedures; the hazards of the trail including strobes, fog, darkness, confined spaces, uneven ground, weather, mud, and wildlife.]</p>
+          <span class="ph">FULL WAIVER TEXT — supplied by owner</span>
+          <p>Section 4, Confidentiality and property. [Placeholder paragraph. Confidentiality of layouts and scare tactics; costumes and props as company property.]</p>
+          <p>Section 5, Photo and video release. [Placeholder paragraph.]</p>
+          <p>Section 6, Assumption of risk, release of liability, and governing law. [Placeholder paragraph. Assumption of risk, release and indemnity, and the choice of Minnesota law.]</p>
+          <p><em>Ticking "I have read and agree" on the enrolment form records your agreement to the full text above, not only to the summary.</em></p>
+        </div>
+      </details>
+    </div>
+  </section>
+
+</main>
+
+<!-- ==========================================================================
+     COLOPHON / CREW FOOTER
+     ========================================================================== -->
+<footer class="colophon" aria-label="Colophon">
+  <div class="in">
+    <div>
+      <h3>Nightmare on the Crow</h3>
+      <p>6470 Harff Road<br>Greenfield, MN 55373</p>
+      <p class="small">Four nights in October: 9, 10, 16, 17 — 7:30 to 10:30 PM, last entry 10. Hands report earlier; your call time comes with your confirmation.</p>
+      <a class="btn ghost" href="09-almanac.html">← Back to the Public Almanac</a>
+    </div>
+    <div>
+      <h3>Questions?</h3>
+      <p class="small">Contact the neighbors through the socials, or catch one of them at a build night. The scarecrow does not answer letters; the neighbors do.</p>
+      <ul class="socials">
+        <li><a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v7h4v-7h3l1-4h-4V9c0-.6.4-1 1-1z"/></svg>Facebook</a></li>
+        <li><a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM17.5 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>Instagram</a></li>
+        <li><a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2h3c.3 2.4 1.8 4 4 4.3v3c-1.5 0-2.9-.5-4-1.3V15a6 6 0 1 1-6-6v3a3 3 0 1 0 3 3V2z"/></svg>TikTok</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>The Ledger</h3>
+      <p class="small"><a href="#notices">Notices</a> · <a href="#ledger">Field Ledger</a> · <a href="#enrol">Enrolment</a> · <a href="#conditions">Conditions of Service</a></p>
+      <p class="small"><a href="#" id="lock-up">Close the ledger (log out)</a></p>
+    </div>
+    <p class="fine">Kept in Greenfield, Minn., for the Fourth Season, 2026. Not for the public. What the scarecrow sees in this ledger, he keeps. © Nightmare on the Crow.</p>
+  </div>
+</footer>
+
+</div><!-- /#portal -->
+
+<script>
+/* ==========================================================================
+   Ledger scripts: the gate, the station board, the enrolment form, nav,
+   crows on headings, a one-line countdown. Everything guarded.
+   NOTE: the gate is a DEMO. The word is "crow". No real password lives here.
+   ========================================================================== */
+(function () {
+  'use strict';
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------- Data: zones, stations, and each night's tally ---------- */
+  // [station, filled (opening night), total, kind]  kind: 'actor' | 'help'
+  var ZONES = [
+    { n: 'I', name: 'Front & Operations', st: [
+      ['Tickets', 4, 4, 'help'], ['In Charge', 1, 1, 'help'], ['Front Entertainer', 0, 2, 'actor'],
+      ['Set Design', 4, 6, 'help', 'Ben + hands'], ['Shirt Sales', 1, 1, 'help'], ['Security', 3, 4, 'help'] ] },
+    { n: 'II', name: 'The Yard', st: [
+      ["Ben's Shed", 0, 4, 'help'], ['Bridge', 0, 1, 'actor'], ['Beetlejuice', 1, 1, 'actor', 'Evan'],
+      ['Kids Shack', 8, 8, 'help'], ['Butcher', 0, 1, 'actor'], ['Black Sheets', 0, 2, 'actor'], ['Blackout', 0, 1, 'actor'] ] },
+    { n: 'III', name: 'The Woods', st: [
+      ['Witch', 0, 1, 'actor'], ['Dark Harvest', 2, 5, 'actor'], ['Bus', 0, 1, 'actor'], ['Barn Hang', 0, 4, 'actor'],
+      ['Tunnel', 0, 2, 'actor'], ['Cage', 0, 1, 'actor'], ['Last Woods', 0, 1, 'actor'] ] },
+    { n: 'IV', name: 'The Back Forty', st: [
+      ['Garage/Shed', 0, 3, 'help'], ['Junk & Candy Van', 0, 3, 'actor'], ['Corn Field', 0, 3, 'actor'], ['Graveyard', 0, 2, 'actor'],
+      ['Camp', 0, 2, 'actor'], ['Crossing Camp', 0, 3, 'actor'], ['Saloon', 0, 2, 'actor'] ] }
+  ];
+  // Deterministic variations per night, applied to the opening-night counts.
+  var NIGHTS = [
+    { id: 'oct9',  pg: '9',  dow: 'Fri', full: 'Friday, October 9',    val: 'Fri Oct 9',  delta: {} },
+    { id: 'oct10', pg: '10', dow: 'Sat', full: 'Saturday, October 10', val: 'Sat Oct 10', delta: { 'Front Entertainer': 1, 'Bridge': 1, 'Witch': 1, 'Corn Field': 1, 'Saloon': 1, 'Barn Hang': 1 } },
+    { id: 'oct16', pg: '16', dow: 'Fri', full: 'Friday, October 16',   val: 'Fri Oct 16', delta: { 'Tickets': -1, 'Set Design': -1, 'Dark Harvest': -1 } },
+    { id: 'oct17', pg: '17', dow: 'Sat', full: 'Saturday, October 17', val: 'Sat Oct 17', delta: { 'Security': -1, 'Kids Shack': -1, 'Butcher': 1, 'Tunnel': 1 } }
+  ];
+  function filledFor(st, night) {
+    var d = night.delta[st[0]] || 0;
+    return Math.max(0, Math.min(st[2], st[1] + d));
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  /* ---------- The gate ---------- */
+  var gate = $('gate'), gateCard = $('gate-card'), gateForm = $('gate-form'), word = $('word'), gateErr = $('gate-err');
+  var portal = $('portal');
+  var DEMO_WORD = 'crow'; // demo only; never the real site password
+  var wrongLines = [
+    'The scarecrow does not know that word. Try again.',
+    'The crows laughed. That is not it.',
+    'Wrong word. The corn is listening; speak lower and try once more.'
+  ];
+  var wrongCount = 0;
+
+  function unlock(remember) {
+    if (remember) {
+      try { window.sessionStorage.setItem('almanacLedgerOpen', '1'); } catch (e) { /* storage unavailable */ }
+    }
+    if (gate) { gate.hidden = true; gate.setAttribute('aria-hidden', 'true'); }
+    if (portal) { portal.hidden = false; }
+    document.body.classList.remove('locked');
+    // if the URL carried a hash, honour it now that the section exists
+    if (location.hash && location.hash.length > 1) {
+      var tgt = document.getElementById(location.hash.slice(1));
+      if (tgt && tgt.scrollIntoView) { tgt.scrollIntoView(); }
+    }
+  }
+  function lock() {
+    try { window.sessionStorage.removeItem('almanacLedgerOpen'); } catch (e) { /* ignore */ }
+    if (portal) { portal.hidden = true; }
+    if (gate) { gate.hidden = false; gate.removeAttribute('aria-hidden'); }
+    document.body.classList.add('locked');
+    window.scrollTo(0, 0);
+    if (word) { word.value = ''; word.focus(); }
+  }
+
+  var alreadyOpen = false;
+  try { alreadyOpen = window.sessionStorage.getItem('almanacLedgerOpen') === '1'; } catch (e) { alreadyOpen = false; }
+  var skip = /[?&]crew=open(&|$)/.test(location.search);
+  if (alreadyOpen || skip) {
+    unlock(false);
+  } else if (word) {
+    setTimeout(function () { try { word.focus(); } catch (e) { /* ignore */ } }, 50);
+  }
+
+  if (gateForm) {
+    gateForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var v = (word && word.value || '').trim().toLowerCase();
+      if (v === DEMO_WORD) {
+        gateErr.textContent = '';
+        unlock(true);
+        var first = document.querySelector('#portal .brand');
+        if (first) { try { first.focus(); } catch (err) { /* ignore */ } }
+      } else {
+        gateErr.textContent = wrongLines[wrongCount % wrongLines.length];
+        wrongCount++;
+        word.setAttribute('aria-invalid', 'true');
+        word.select();
+        if (gateCard && !reduced.matches) {
+          gateCard.classList.remove('shake');
+          void gateCard.offsetWidth; // restart the animation
+          gateCard.classList.add('shake');
+        }
+      }
+    });
+  }
+  var lockLink = $('lock-up');
+  if (lockLink) { lockLink.addEventListener('click', function (e) { e.preventDefault(); lock(); }); }
+
+  /* ---------- Mobile nav toggle ---------- */
+  var toggle = document.querySelector('.nav-toggle');
+  var list = $('nav-list');
+  if (toggle && list) {
+    toggle.addEventListener('click', function () {
+      var open = list.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    list.addEventListener('click', function (e) {
+      if (e.target && e.target.tagName === 'A') {
+        list.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && list.classList.contains('open')) {
+        list.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.focus();
+      }
+    });
+  }
+
+  /* ---------- The Field Ledger: tabs + zones ---------- */
+  var tabs = $('tabs'), zonesEl = $('zones'), nightName = $('night-name'), openN = $('open-n'), panel = $('ledger-panel');
+  var current = 0;
+
+  function renderTabs() {
+    if (!tabs) { return; }
+    var html = '';
+    NIGHTS.forEach(function (n, i) {
+      html += '<li role="presentation"><button class="tab" role="tab" type="button" id="tab-' + n.id + '"' +
+        ' aria-selected="' + (i === current ? 'true' : 'false') + '" aria-controls="ledger-panel" tabindex="' + (i === current ? '0' : '-1') + '" data-i="' + i + '">' +
+        '<span class="dow">' + n.dow + '</span><span class="pg">p. ' + n.pg + '</span></button></li>';
+    });
+    tabs.innerHTML = html;
+  }
+  function renderZones() {
+    if (!zonesEl) { return; }
+    var night = NIGHTS[current];
+    var open = 0, html = '';
+    ZONES.forEach(function (z) {
+      var zoneOpen = 0, zoneTotal = 0, rows = '';
+      z.st.forEach(function (st) {
+        var f = filledFor(st, night), t = st[2], o = t - f;
+        zoneOpen += o; zoneTotal += t;
+        var pips = '';
+        for (var i = 0; i < t; i++) { pips += '<span class="pip' + (i < f ? ' f' : '') + '"></span>'; }
+        var who = st[4] ? '<span class="who">(' + esc(st[4]) + ')</span>' : '';
+        var state;
+        if (o > 0) {
+          state = '<button type="button" class="wanted" data-zone="' + z.n + '" data-station="' + esc(st[0]) + '" aria-label="Wanted: ' +
+            (st[3] === 'actor' ? 'need actor' : 'need help') + ' at ' + esc(st[0]) + ', ' + o + ' open of ' + t + '. Claim this station.">' +
+            '<b>Wanted</b>' + (st[3] === 'actor' ? 'need actor' : 'need help') + ' <span class="n">· ' + o + ' of ' + t + '</span></button>';
+        } else {
+          state = '<span class="full">full · ' + f + ' of ' + t + '</span>';
+        }
+        rows += '<li class="row' + (o > 0 ? ' need' : '') + '">' +
+          '<div class="name"><span class="nm">' + esc(st[0]) + '</span>' + who + '<span class="dots" aria-hidden="true"></span></div>' +
+          '<div class="pips" aria-label="' + f + ' of ' + t + ' hands on the books">' + pips + '</div>' +
+          '<div class="state">' + state + '</div></li>';
+      });
+      open += zoneOpen;
+      html += '<section class="zone" aria-labelledby="z-' + z.n + '">' +
+        '<div class="zone-hd"><span class="rn">' + z.n + '.</span><h4 id="z-' + z.n + '">Zone ' + z.n + ' · ' + esc(z.name) + '</h4>' +
+        '<span class="tally">' + (zoneTotal - zoneOpen) + ' of ' + zoneTotal + ' hands · <span class="red">' + zoneOpen + ' wanted</span></span></div>' +
+        '<div class="ledger-cols" aria-hidden="true"><span>station</span><span>hands</span><span style="text-align:right">state</span></div>' +
+        '<ul class="rows">' + rows + '</ul></section>';
+    });
+    zonesEl.innerHTML = html;
+    if (nightName) { nightName.textContent = night.full; }
+    if (openN) { openN.textContent = String(open); }
+    if (panel) { panel.setAttribute('aria-labelledby', 'tab-' + night.id); }
+  }
+  function selectNight(i, focusTab) {
+    current = Math.max(0, Math.min(NIGHTS.length - 1, i));
+    renderTabs();
+    renderZones();
+    if (focusTab) {
+      var t = $('tab-' + NIGHTS[current].id);
+      if (t) { t.focus(); }
+    }
+  }
+  if (tabs) {
+    tabs.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('.tab') : null;
+      if (b) { selectNight(parseInt(b.getAttribute('data-i'), 10), false); }
+    });
+    tabs.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === 'Home' || e.key === 'End') {
+        e.preventDefault();
+        var next = current;
+        if (e.key === 'ArrowRight') { next = (current + 1) % NIGHTS.length; }
+        if (e.key === 'ArrowLeft') { next = (current - 1 + NIGHTS.length) % NIGHTS.length; }
+        if (e.key === 'Home') { next = 0; }
+        if (e.key === 'End') { next = NIGHTS.length - 1; }
+        selectNight(next, true);
+      }
+    });
+  }
+  selectNight(0, false);
+
+  /* ---------- Enrolment form: selects, prefill, validation, receipt ---------- */
+  var zoneSel = $('zone'), stationSel = $('station'), prefill = $('prefill-note');
+  function fillZones() {
+    if (!zoneSel) { return; }
+    var html = '<option value="">— choose a zone —</option>';
+    ZONES.forEach(function (z) { html += '<option value="' + z.n + '">Zone ' + z.n + ' · ' + esc(z.name) + '</option>'; });
+    zoneSel.innerHTML = html;
+  }
+  function fillStations(zoneN, pick) {
+    if (!stationSel) { return; }
+    var z = null;
+    ZONES.forEach(function (zz) { if (zz.n === zoneN) { z = zz; } });
+    if (!z) {
+      stationSel.innerHTML = '<option value="">— choose a zone first —</option>';
+      stationSel.disabled = true;
+      return;
+    }
+    var night = NIGHTS[current];
+    var html = '<option value="">— choose a station —</option>';
+    z.st.forEach(function (st) {
+      var o = st[2] - filledFor(st, night);
+      html += '<option value="' + esc(st[0]) + '">' + esc(st[0]) + (o > 0 ? ' — WANTED (' + o + ' open)' : ' — full') + '</option>';
+    });
+    html += '<option value="Wherever I am needed">Wherever I am needed</option>';
+    stationSel.innerHTML = html;
+    stationSel.disabled = false;
+    if (pick) { stationSel.value = pick; }
+  }
+  fillZones();
+  if (zoneSel) { zoneSel.addEventListener('change', function () { fillStations(zoneSel.value, null); }); }
+
+  // Clicking a WANTED slot in the ledger pre-fills zone/station (+ that night) and scrolls down.
+  if (zonesEl) {
+    zonesEl.addEventListener('click', function (e) {
+      var b = e.target.closest ? e.target.closest('.wanted') : null;
+      if (!b) { return; }
+      var zn = b.getAttribute('data-zone'), sn = b.getAttribute('data-station');
+      var night = NIGHTS[current];
+      if (zoneSel) { zoneSel.value = zn; }
+      fillStations(zn, sn);
+      var nightBox = $('n-' + night.id);
+      if (nightBox && !nightBox.checked) {
+        nightBox.checked = true;
+        var lbl = nightBox.parentNode; if (lbl) { lbl.classList.add('pre'); }
+      }
+      if (prefill) {
+        prefill.innerHTML = 'Claiming <strong>' + esc(sn) + '</strong> in Zone ' + esc(zn) + ' for <strong>' + esc(night.full) + '</strong>. Add any other nights you can work, then set your hand to the roll.';
+        prefill.hidden = false;
+      }
+      var receipt = $('receipt'), form = $('enrol-form');
+      if (receipt && !receipt.hidden) { receipt.hidden = true; form.hidden = false; }
+      var enrol = $('enrol');
+      if (enrol) { enrol.scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'start' }); }
+      var fn = $('fn');
+      setTimeout(function () { if (fn && !fn.value) { try { fn.focus({ preventScroll: true }); } catch (err) { fn.focus(); } } }, reduced.matches ? 0 : 500);
+    });
+  }
+
+  var form = $('enrol-form'), errBox = $('form-err'), receipt = $('receipt');
+  function setInvalid(el, bad) {
+    if (!el) { return; }
+    if (bad) { el.setAttribute('aria-invalid', 'true'); } else { el.removeAttribute('aria-invalid'); }
+  }
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var fn = $('fn'), ln = $('ln'), em = $('em'), walk = $('walk'), agree = $('agree'), news = $('news');
+      var nights = Array.prototype.filter.call(form.querySelectorAll('input[name=nights]'), function (c) { return c.checked; })
+        .map(function (c) { return c.value; });
+      var problems = [];
+      var v = function (el) { return (el && el.value || '').trim(); };
+      setInvalid(fn, !v(fn)); if (!v(fn)) { problems.push('The ledger needs a first name.'); }
+      setInvalid(ln, !v(ln)); if (!v(ln)) { problems.push('And a last name; the scarecrow keeps proper books.'); }
+      var emOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v(em));
+      setInvalid(em, !emOk); if (!emOk) { problems.push('An email the neighbors can write to, please.'); }
+      if (!nights.length) { problems.push('Tick at least one night you can work.'); }
+      setInvalid(walk, !v(walk)); if (!v(walk)) { problems.push('Choose a walkthrough evening.'); }
+      setInvalid(zoneSel, !v(zoneSel)); if (!v(zoneSel)) { problems.push('Choose a preferred zone.'); }
+      setInvalid(stationSel, !v(stationSel)); if (!v(stationSel)) { problems.push('Choose a preferred station (or "wherever I am needed").'); }
+      if (!agree || !agree.checked) { problems.push('You must read and agree to the Volunteer Agreement before your name goes in the ledger.'); }
+
+      if (problems.length) {
+        errBox.innerHTML = '<strong>The scarecrow cannot enter this yet:</strong><ul>' + problems.map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>';
+        errBox.hidden = false;
+        errBox.scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'nearest' });
+        return;
+      }
+      errBox.hidden = true;
+
+      var zoneName = '';
+      ZONES.forEach(function (z) { if (z.n === v(zoneSel)) { zoneName = z.name; } });
+      var nStr = nights.length === 1 ? 'one night' : nights.length + ' nights';
+      $('receipt-title').textContent = 'You’re on the list for ' + nStr + ', ' + v(fn) + '.';
+      $('receipt-lede').textContent = 'The scarecrow has written you in. Mind the walkthrough, mind the conditions, and be at your station before the first wagon rolls.' +
+        (news && news.checked ? ' The crew newsletter will find you.' : '');
+      $('r-nights').textContent = nights.join(' · ');
+      $('r-post').textContent = 'Zone ' + v(zoneSel) + ' · ' + zoneName + ' — ' + v(stationSel);
+      $('r-walk').textContent = v(walk);
+      $('r-email').textContent = v(em);
+      form.hidden = true;
+      receipt.hidden = false;
+      receipt.scrollIntoView({ behavior: reduced.matches ? 'auto' : 'smooth', block: 'center' });
+      try { receipt.focus({ preventScroll: true }); } catch (err) { receipt.focus(); }
+    });
+  }
+  var again = $('again');
+  if (again) {
+    again.addEventListener('click', function () {
+      form.reset();
+      fillStations('', null);
+      if (prefill) { prefill.hidden = true; }
+      Array.prototype.forEach.call(form.querySelectorAll('.check.pre'), function (l) { l.classList.remove('pre'); });
+      Array.prototype.forEach.call(form.querySelectorAll('[aria-invalid]'), function (el) { el.removeAttribute('aria-invalid'); });
+      receipt.hidden = true;
+      form.hidden = false;
+      var fn = $('fn'); if (fn) { fn.focus(); }
+    });
+  }
+
+  /* ---------- One-line countdown on the cover (optional, coarse) ---------- */
+  var line = $('lantern-line');
+  var target = new Date('2026-10-09T19:30:00-05:00');
+  var seasonEnd = new Date('2026-10-17T22:30:00-05:00');
+  function lanternTick() {
+    if (!line) { return; }
+    var diff = target.getTime() - Date.now();
+    if (isNaN(diff)) { return; }
+    if (diff <= 0) {
+      line.textContent = Date.now() > seasonEnd.getTime()
+        ? 'The last lantern is out. The ledger closes till next October.'
+        : 'The lanterns are lit. Every hand to its station.';
+      return;
+    }
+    var days = Math.floor(diff / 86400000);
+    var hours = Math.floor((diff % 86400000) / 3600000);
+    line.innerHTML = 'The first lantern is lit in <b>' + days + '</b> ' + (days === 1 ? 'night' : 'nights') + ' and <b>' + hours + '</b> ' + (hours === 1 ? 'hour' : 'hours') + ' — Friday the 9th of October, half past seven.';
+  }
+  lanternTick();
+  setInterval(lanternTick, 60000);
+
+  /* ---------- Crows land on section headings as they scroll into view ---------- */
+  var heads = document.querySelectorAll('.hd');
+  if ('IntersectionObserver' in window && !reduced.matches) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          var delay = 120 + Math.floor(Math.random() * 380);
+          setTimeout(function () { en.target.classList.add('landed'); }, delay);
+          io.unobserve(en.target);
+        }
+      });
+    }, { threshold: 0.6, rootMargin: '0px 0px -8% 0px' });
+    Array.prototype.forEach.call(heads, function (h) { io.observe(h); });
+  } else {
+    Array.prototype.forEach.call(heads, function (h) { h.classList.add('landed'); });
+  }
+})();
+</script>
+</body>
+</html>

@@ -22,9 +22,12 @@ Every page is a single self-contained HTML file (inline CSS/JS, Google Fonts onl
 | `sites/09-almanac.html` | The Scarecrow's Almanac — folk-horror woodcut almanac |
 | `sites/10-textadventure.html` | Harff Road — playable text-adventure homepage |
 
-`BRIEF.md` holds the shared facts and requirements every concept was built against.
+## Crew pages (volunteer portal redesign)
+Each concept has a matching `sites/NN-<slug>-crew.html`, a redesign of the client's password-protected volunteer page in that concept's visual language. Each one has: a styled password gate (demo password `crow`; `?crew=open` skips it for previews), a dated message board, a per-night station board built from the real zone/station structure with open slots flagged, a one-step signup that folds in the waiver acknowledgment, a waiver summary, and a link back to the public page. Forms are client-side demos; nothing is sent. The real site password is not in this repo.
+
+`BRIEF.md` holds the shared facts and requirements every concept was built against, including the crew-portal addendum.
 
 ## Notes
 - All imagery is code-drawn (CSS/SVG/canvas). Labeled placeholder blocks mark where real photos/video go.
-- Facts (dates Oct 9/10/16/17, 7:30–10 PM, $20 / $15 with donation, Kids Day Oct 10 noon–3 $5) reflect the live site as of Sept 2026.
+- Facts (dates Oct 9/10/16/17, 7:30–10:30 PM with last entry 10 PM, fireworks Oct 10 at 7:45 PM, $20 / $15 with donation, Kids Day Oct 10 noon–3 $5) reflect the live site and the owner's crew page as of Sept 26 2026.
 - Every "Get Tickets" button links to the client's real HauntPay page.

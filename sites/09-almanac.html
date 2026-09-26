@@ -270,6 +270,8 @@ svg{display:block;max-width:100%}
 .cal .mark{position:absolute;right:.15em;bottom:.1em;display:flex;gap:.15em;align-items:flex-end}
 .cal .mark svg{width:clamp(18px,4vw,34px);height:auto}
 .cal .mark .sun{width:clamp(16px,3.4vw,28px)}
+.cal .fw{display:block;color:var(--blood);font-size:clamp(.55rem,.5rem + .3vw,.78rem);letter-spacing:.04em;line-height:1.1;margin-top:.1em}
+@media (max-width:480px){.cal .fw{display:none}}
 .cal-legend{display:flex;gap:1.2rem 2rem;flex-wrap:wrap;justify-content:center;margin:1rem 0 0;font-family:var(--sc);letter-spacing:.06em;font-size:.95rem}
 .cal-legend span{display:inline-flex;align-items:center;gap:.4rem}
 .cal-legend svg{width:28px;height:auto}
@@ -425,6 +427,19 @@ svg{display:block;max-width:100%}
       <circle cx="20" cy="20" r="5" fill="url(#hatch-fine)"/>
     </symbol>
 
+    <!-- small woodcut firework burst for Oct 10 -->
+    <symbol id="burst" viewBox="0 0 40 40">
+      <g stroke="#7a1f1f" stroke-width="2.2" stroke-linecap="round">
+        <line x1="20" y1="20" x2="20" y2="4"/><line x1="20" y1="20" x2="34" y2="12"/><line x1="20" y1="20" x2="34" y2="28"/>
+        <line x1="20" y1="20" x2="20" y2="36"/><line x1="20" y1="20" x2="6" y2="28"/><line x1="20" y1="20" x2="6" y2="12"/>
+      </g>
+      <g fill="#c9a227" stroke="#1a1612" stroke-width="1.2">
+        <circle cx="20" cy="4" r="2.4"/><circle cx="34" cy="12" r="2.4"/><circle cx="34" cy="28" r="2.4"/>
+        <circle cx="20" cy="36" r="2.4"/><circle cx="6" cy="28" r="2.4"/><circle cx="6" cy="12" r="2.4"/>
+      </g>
+      <circle cx="20" cy="20" r="3" fill="#1a1612"/>
+    </symbol>
+
     <!-- one corn stalk -->
     <symbol id="stalk" viewBox="0 0 40 120">
       <g stroke="#1a1612" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -473,6 +488,7 @@ svg{display:block;max-width:100%}
       <li><a href="#hands">Crew</a></li>
       <li><a href="#questions">Questions</a></li>
       <li><a href="#field">Directions</a></li>
+      <li><a href="09-almanac-crew.html" title="For the hands of the harvest">Crew Log-in</a></li>
       <li><a class="cta" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a></li>
     </ul>
   </div>
@@ -612,7 +628,7 @@ svg{display:block;max-width:100%}
       <div class="ct-cell"><span class="ct-num" id="cd-m">--</span><span class="ct-lbl">minutes</span></div>
       <div class="ct-cell"><span class="ct-num" id="cd-s">--</span><span class="ct-lbl">seconds</span></div>
     </div>
-    <p id="cd-note">Friday the 9th of October, half past seven in the evening. The gate closes at ten.</p>
+    <p id="cd-note">Friday the 9th of October, half past seven till half past ten in the evening. The gate admits no one after ten.</p>
   </section>
 
   <!-- ========================================================================
@@ -652,7 +668,7 @@ svg{display:block;max-width:100%}
   <section class="section" id="calendar" aria-labelledby="cal-title">
     <div class="hd-wrap">
       <h2 class="hd" id="cal-title">I. Calendar of Nights<span class="hd-crow" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></h2>
-      <p class="hd-sub">Four nights only. Half past seven till ten of the clock; the gate admits no one after ten.</p>
+      <p class="hd-sub">Four nights only. Half past seven till half past ten; the gate admits no one after ten. On the tenth, fireworks at a quarter to eight.</p>
     </div>
 
     <table class="cal">
@@ -667,13 +683,13 @@ svg{display:block;max-width:100%}
         </tr>
         <tr>
           <td><span class="d">4</span></td><td><span class="d">5</span></td><td><span class="d">6</span></td><td><span class="d">7</span></td><td><span class="d">8</span></td>
-          <td class="haunt"><span class="d">9</span><span class="visually-hidden">Haunt night, 7:30 to 10 PM</span><span class="mark" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></td>
-          <td class="haunt"><span class="d">10</span><span class="visually-hidden">Kids Day noon to 3 PM, then haunt night 7:30 to 10 PM</span><span class="mark" aria-hidden="true"><svg class="sun" viewBox="0 0 40 40"><use href="#sun"/></svg><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></td>
+          <td class="haunt"><span class="d">9</span><span class="visually-hidden">Haunt night, 7:30 to 10:30 PM, last entry 10 PM</span><span class="mark" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></td>
+          <td class="haunt"><span class="d">10</span><span class="visually-hidden">Kids Day noon to 3 PM; fireworks at 7:45 PM; then haunt night 8 to 10:30 PM, last entry 10 PM</span><span class="fw" aria-hidden="true">fireworks 7:45</span><span class="mark" aria-hidden="true"><svg class="sun" viewBox="0 0 40 40"><use href="#sun"/></svg><svg class="sun" viewBox="0 0 40 40"><use href="#burst"/></svg><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></td>
         </tr>
         <tr>
           <td><span class="d">11</span></td><td><span class="d">12</span></td><td><span class="d">13</span></td><td><span class="d">14</span></td><td><span class="d">15</span></td>
-          <td class="haunt"><span class="d">16</span><span class="visually-hidden">Haunt night, 7:30 to 10 PM</span><span class="mark" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></td>
-          <td class="haunt"><span class="d">17</span><span class="visually-hidden">Haunt night, 7:30 to 10 PM</span><span class="mark" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></td>
+          <td class="haunt"><span class="d">16</span><span class="visually-hidden">Haunt night, 7:30 to 10:30 PM, last entry 10 PM</span><span class="mark" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></td>
+          <td class="haunt"><span class="d">17</span><span class="visually-hidden">Haunt night, 7:30 to 10:30 PM, last entry 10 PM</span><span class="mark" aria-hidden="true"><svg viewBox="0 0 64 42"><use href="#crow"/></svg></span></td>
         </tr>
         <tr>
           <td><span class="d">18</span></td><td><span class="d">19</span></td><td><span class="d">20</span></td><td><span class="d">21</span></td><td><span class="d">22</span></td><td><span class="d">23</span></td><td><span class="d">24</span></td>
@@ -684,16 +700,18 @@ svg{display:block;max-width:100%}
       </tbody>
     </table>
     <div class="cal-legend" aria-label="Calendar legend">
-      <span><svg viewBox="0 0 64 42" aria-hidden="true"><use href="#crow"/></svg> a crow marks a haunt night, 7:30–10 PM</span>
+      <span><svg viewBox="0 0 64 42" aria-hidden="true"><use href="#crow"/></svg> a crow marks a haunt night, 7:30–10:30 PM, last entry 10</span>
       <span><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#sun"/></svg> the sun marks Kids Day, noon–3 PM</span>
+      <span><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#burst"/></svg> the burst marks fireworks, Oct 10 at 7:45 PM</span>
     </div>
 
     <div class="nights">
-      <article class="night"><div class="dow">Friday</div><div class="day">Oct 9</div><div class="hrs">7:30 – 10:00 PM<br>the first lantern</div></article>
-      <article class="night kids"><div class="dow">Saturday</div><div class="day">Oct 10</div><div class="hrs">Kids Day noon – 3 PM<br>Haunt 7:30 – 10:00 PM</div></article>
-      <article class="night"><div class="dow">Friday</div><div class="day">Oct 16</div><div class="hrs">7:30 – 10:00 PM<br>the corn is taller</div></article>
-      <article class="night"><div class="dow">Saturday</div><div class="day">Oct 17</div><div class="hrs">7:30 – 10:00 PM<br>the last lantern</div></article>
+      <article class="night"><div class="dow">Friday</div><div class="day">Oct 9</div><div class="hrs">7:30 – 10:30 PM<br>the first lantern</div></article>
+      <article class="night kids"><div class="dow">Saturday</div><div class="day">Oct 10</div><div class="hrs">Kids Day noon – 3 PM<br><strong class="red">Fireworks 7:45 PM</strong><br>Haunt 8:00 – 10:30 PM</div></article>
+      <article class="night"><div class="dow">Friday</div><div class="day">Oct 16</div><div class="hrs">7:30 – 10:30 PM<br>the corn is taller</div></article>
+      <article class="night"><div class="dow">Saturday</div><div class="day">Oct 17</div><div class="hrs">7:30 – 10:30 PM<br>the last lantern</div></article>
     </div>
+    <p class="center small" style="margin:.8rem 0 0"><em>Last entry every night is 10:00 PM. The gate admits no one after.</em></p>
     <p class="center" style="margin-top:1.4rem"><a class="btn" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets for a Night</a></p>
 
     <!-- II. Phases of the Moon (decorative; dates as the scarecrow reckons them) -->
@@ -760,7 +778,7 @@ svg{display:block;max-width:100%}
           <h3>When the corn whispers…</h3>
         </div>
         <div class="what">The Corn Maze</div>
-        <p>Rows taller than a tall man. Paths that fold back on themselves like a letter you'd rather not read. It's eerie in there, and something walks the rows beside you, keeping pace. It is probably one of ours.</p>
+        <p>Rows taller than a tall man. Paths that fold back on themselves like a letter you'd rather not read. The old folk call it the <em>Corn Field</em> and speak of a <em>Dark Harvest</em> in it; something walks the rows beside you, keeping pace. It is probably one of ours.</p>
       </article>
       <article class="omen">
         <div class="top">
@@ -768,7 +786,7 @@ svg{display:block;max-width:100%}
           <h3>When the trees close in…</h3>
         </div>
         <div class="what">The Haunted Trail</div>
-        <p>The trail winds through the forest by tunnels and winding paths. Keep to the path; the path does not always keep to you. What you hear behind you is closer than it sounds.</p>
+        <p>The trail winds through the forest by tunnels and winding paths: over the <em>Bridge</em>, through the <em>Tunnel</em>, past the <em>Crossing</em> and into the <em>Last Woods</em>. Keep to the path; the path does not always keep to you. What you hear behind you is closer than it sounds.</p>
       </article>
       <article class="omen">
         <div class="top">
@@ -776,7 +794,7 @@ svg{display:block;max-width:100%}
           <h3>When a light burns in the barn…</h3>
         </div>
         <div class="what">The Haunted Buildings</div>
-        <p>Buildings full of live actors and displays. Every door opens. Not every door lets you back out the way you came. If a room seems empty, it is waiting for you to say so out loud.</p>
+        <p>Buildings full of live actors and displays: the <em>Butcher's</em>, the <em>Saloon</em>, the <em>Bus</em> that never left, the <em>Barn Hang</em>. Every door opens. Not every door lets you back out the way you came. If a room seems empty, it is waiting for you to say so out loud.</p>
       </article>
       <article class="omen">
         <div class="top">
@@ -784,7 +802,7 @@ svg{display:block;max-width:100%}
           <h3>When a hand reaches from the dark…</h3>
         </div>
         <div class="what">Live Actors &amp; Interactive Scares</div>
-        <p>Live actors, all through the trail, every one of them a neighbor who volunteered to be your nightmare. This isn't just a haunt. It's an experience designed to crawl under your skin and stay there till Thanksgiving.</p>
+        <p>Live actors, all through the trail, every one of them a neighbor who volunteered to be your nightmare: <em>Beetlejuice</em> at the yard, the <em>Witch</em> in the woods, whatever waits in the <em>Blackout</em>. This isn't just a haunt. It's an experience designed to crawl under your skin and stay there till Thanksgiving.</p>
       </article>
       <article class="omen">
         <div class="top">
@@ -828,7 +846,7 @@ svg{display:block;max-width:100%}
         <thead><tr><th scope="col">Admission</th><th scope="col">Price</th></tr></thead>
         <tbody>
           <tr>
-            <td>Haunted Trail, one soul<span class="it">any of the four nights, 7:30–10 PM</span></td>
+            <td>Haunted Trail, one soul<span class="it">any of the four nights, 7:30–10:30 PM, last entry 10</span></td>
             <td><span class="amt">$20</span></td>
           </tr>
           <tr class="best">
@@ -874,9 +892,11 @@ svg{display:block;max-width:100%}
           <span><b>Noon–3 PM</b></span>
           <span><b>$5</b> a child</span>
           <span><b>$5 off</b> an evening haunt</span>
+          <span><b>7:45 PM</b> fireworks</span>
         </div>
         <p>By daylight the trail is a different creature. The lanterns stay lit, the actors keep their masks on their laps, and the little ones walk the <strong>lights-on trail</strong>, go <strong>trick-or-treating</strong>, and get up to <strong>family activities</strong> in the yard. Nobody jumps out. The scarecrow has given his word.</p>
         <p>Hold on to your Kids Day ticket: it is good for <strong>$5 off an evening haunt ticket</strong>, for the grown-ups who'd like to come back after dark and find out what the corn is like without the sun.</p>
+        <p><strong class="red">Come back at dark for fireworks.</strong> On Saturday the 10th the sky over the field goes up at <strong>7:45 PM</strong>, and the haunt runs <strong>8:00 to 10:30 PM</strong> after it, last entry ten. The scarecrow will be watching the fireworks too; he says the crows hate them.</p>
         <a class="btn" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Kids Day Tickets</a>
       </div>
       <figure class="plate-ph" style="margin:0">
@@ -957,8 +977,8 @@ svg{display:block;max-width:100%}
         <div class="mid">No experience required · Costume &amp; makeup provided by the field</div>
         <p style="margin:1rem 0">Every nightmare on this trail is a neighbor who volunteered. If you can lurk, lunge, cackle, build a coffin, run a fog machine, or park a wagon, there is a place for you in the corn.</p>
         <div class="cta-row" style="margin-top:.4rem">
-          <a class="btn" href="#">Sign the Roll</a>
-          <a class="btn ghost" href="#">Actor Login</a>
+          <a class="btn" href="09-almanac-crew.html#enrol">Sign the Roll</a>
+          <a class="btn ghost" href="09-almanac-crew.html">Already on the crew? Log in</a>
         </div>
       </div>
       <div>
@@ -969,7 +989,7 @@ svg{display:block;max-width:100%}
           <li><span class="role">The Scarecrow</span><span>Watches the corn. Keeps this almanac. Turns his head when you aren't looking.</span></li>
           <li><span class="role">You</span><span>Standing very still behind a tree on Harff Road this October, waiting for the wagon to creak.</span></li>
         </ul>
-        <p class="small" style="margin-top:1rem"><em>Write to the neighbors through the socials in the colophon, or sign the roll above. Actors already on the books may use the actor login.</em></p>
+        <p class="small" style="margin-top:1rem"><em>Write to the neighbors through the socials in the colophon, or sign the roll above. Already on the crew? <a href="09-almanac-crew.html">Log in to the Ledger</a> for notices, the station board, and the enrolment roll.</em></p>
       </div>
     </div>
     <svg class="divider" viewBox="0 0 520 24" aria-hidden="true"><line x1="0" y1="12" x2="228" y2="12" stroke="#1a1612" stroke-width="2"/><line x1="292" y1="12" x2="520" y2="12" stroke="#1a1612" stroke-width="2"/><use href="#fleuron" x="230" y="0" width="60" height="24"/></svg>
@@ -1061,7 +1081,7 @@ svg{display:block;max-width:100%}
     <div>
       <h3>Nightmare on the Crow</h3>
       <p>6470 Harff Road<br>Greenfield, MN 55373</p>
-      <p class="small">A haunted trail built by three neighbors. Four nights in October: 9, 10, 16, 17 — 7:30 to 10 PM.</p>
+      <p class="small">A haunted trail built by three neighbors. Four nights in October: 9, 10, 16, 17 — 7:30 to 10:30 PM, last entry 10.</p>
       <a class="btn" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
     </div>
     <div>
@@ -1071,7 +1091,7 @@ svg{display:block;max-width:100%}
         <li><a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 2a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM17.5 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>Instagram</a></li>
         <li><a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2h3c.3 2.4 1.8 4 4 4.3v3c-1.5 0-2.9-.5-4-1.3V15a6 6 0 1 1-6-6v3a3 3 0 1 0 3 3V2z"/></svg>TikTok</a></li>
       </ul>
-      <p class="small" style="margin-top:1rem"><a href="#">Actor login</a> · <a href="#hands">Join the crew</a></p>
+      <p class="small" style="margin-top:1rem"><a href="09-almanac-crew.html">Crew log-in</a> · <a href="#hands">Join the crew</a></p>
     </div>
     <div>
       <h3>Contents</h3>
@@ -1092,7 +1112,7 @@ svg{display:block;max-width:100%}
 
   /* ---------- Countdown: first lantern, Fri Oct 9 2026, 7:30 PM Central ---------- */
   var target = new Date('2026-10-09T19:30:00-05:00');
-  var seasonEnd = new Date('2026-10-17T22:00:00-05:00');
+  var seasonEnd = new Date('2026-10-17T22:30:00-05:00');
   var cd = {
     d: document.getElementById('cd-d'),
     h: document.getElementById('cd-h'),

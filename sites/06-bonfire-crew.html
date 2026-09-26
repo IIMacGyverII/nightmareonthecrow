@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crew Portal — Nightmare on the Crow</title>
+<meta name="description" content="Volunteer crew portal for Nightmare on the Crow: message board, per-night station board, one-step signup, and the volunteer agreement. Demo concept page.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#050505">
+
+<!-- Google Fonts: Oswald (display) + Inter (body). Only external request on the page. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ==========================================================================
+   CONCEPT #6 — THE BONFIRE · CREW PORTAL
+   Same tokens and visual language as 06-bonfire.html, applied to a
+   dashboard: gate → summary strip → message feed → station board →
+   signup form → waiver → crew footer. No backend; everything is a demo.
+   ========================================================================== */
+
+/* ---------- Tokens ---------- */
+:root{
+  --bg:#050505;
+  --bg-2:#0b0b0b;
+  --bg-3:#121212;
+  --orange:#ff6a00;
+  --orange-hi:#ff7f24;
+  --amber:#ffb347;
+  --cream:#f4f1ea;
+  --green:#7ddc8a;
+  --muted:rgba(244,241,234,.70);
+  --faint:rgba(244,241,234,.55);
+  --line:rgba(244,241,234,.09);
+  --line-2:rgba(244,241,234,.18);
+  --font-head:"Oswald","Arial Narrow",Impact,sans-serif;
+  --font-body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --radius:18px;
+  --radius-sm:12px;
+  --max:1180px;
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --header-h:76px;
+}
+
+/* ---------- Reset & base ---------- */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html,body{overflow-x:hidden}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--cream);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{margin:0;font-family:var(--font-head);font-weight:700;line-height:1.05;text-transform:uppercase}
+p{margin:0 0 1rem}
+a{color:var(--amber);text-decoration:none}
+a:hover{color:var(--cream)}
+ul,ol{margin:0;padding:0;list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+svg{display:block}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px;border-radius:4px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip-link{position:fixed;top:-100px;left:1rem;z-index:200;background:var(--orange);color:#0b0500;padding:.75rem 1rem;border-radius:999px;font-weight:600}
+.skip-link:focus{top:1rem}
+
+.wrap{width:min(var(--max),calc(100% - 2.5rem));margin-inline:auto}
+.section{padding:clamp(3rem,6vw,4.5rem) 0;scroll-margin-top:calc(var(--header-h) + 1rem)}
+.section-alt{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;margin-bottom:clamp(1.5rem,3vw,2.25rem)}
+.section-head>div{max-width:700px}
+.eyebrow{
+  display:flex;align-items:center;gap:.75rem;
+  font-family:var(--font-head);font-weight:500;font-size:.8rem;letter-spacing:.24em;text-transform:uppercase;color:var(--orange);margin:0;
+}
+.eyebrow::before{content:"";width:28px;height:2px;background:var(--orange);border-radius:2px}
+h2.title{font-size:clamp(1.9rem,4vw,2.8rem);letter-spacing:.01em;margin:.6rem 0 .5rem}
+.lede{font-size:1.02rem;color:var(--muted);max-width:60ch;margin:0}
+
+/* ---------- Buttons, pills, badges ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.6rem;
+  font-family:var(--font-head);font-weight:600;font-size:1rem;letter-spacing:.08em;text-transform:uppercase;
+  padding:1rem 1.75rem;border-radius:999px;border:1px solid transparent;white-space:nowrap;
+  transition:transform .28s var(--ease),box-shadow .28s var(--ease),background .28s,border-color .28s,color .28s;
+}
+.btn-primary{background:var(--orange);color:#0b0500;box-shadow:0 0 0 1px rgba(255,106,0,.45),0 12px 40px rgba(255,106,0,.35)}
+.btn-primary:hover{background:var(--orange-hi);color:#0b0500;transform:translateY(-2px);box-shadow:0 0 0 1px rgba(255,106,0,.6),0 18px 50px rgba(255,106,0,.5)}
+.btn-secondary{background:rgba(244,241,234,.04);border-color:var(--line-2);color:var(--cream)}
+.btn-secondary:hover{border-color:var(--amber);color:var(--amber);transform:translateY(-2px);background:rgba(255,179,71,.06)}
+.btn-sm{padding:.65rem 1.15rem;font-size:.82rem}
+.btn-block{width:100%}
+.btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.pill{
+  display:inline-flex;align-items:center;gap:.45rem;
+  font-weight:600;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;
+  padding:.38rem .7rem;border-radius:999px;
+  border:1px solid rgba(255,179,71,.35);color:var(--amber);background:rgba(255,106,0,.08);
+}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 0 rgba(255,106,0,.6);animation:pillPulse 2s ease-out infinite}
+@keyframes pillPulse{0%{box-shadow:0 0 0 0 rgba(255,106,0,.6)}100%{box-shadow:0 0 0 8px rgba(255,106,0,0)}}
+.pill-muted{border-color:var(--line-2);color:var(--faint);background:transparent}
+.pill-muted::before{background:var(--faint);animation:none}
+
+.badge{
+  display:inline-flex;align-items:center;gap:.35rem;flex:none;
+  font-weight:700;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:.36rem .62rem;border-radius:8px;line-height:1;white-space:nowrap;
+}
+.badge-need{background:var(--orange);color:#0b0500;box-shadow:0 6px 18px rgba(255,106,0,.35)}
+.badge-help{background:rgba(255,179,71,.16);color:var(--amber);border:1px solid rgba(255,179,71,.5)}
+.badge-full{background:rgba(244,241,234,.06);color:var(--faint);border:1px solid var(--line)}
+
+/* ---------- Concept badge ---------- */
+.concept-badge{
+  position:fixed;left:14px;bottom:14px;z-index:120;
+  font-weight:600;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;
+  padding:.55rem .85rem;border-radius:999px;color:var(--amber);
+  background:rgba(5,5,5,.85);border:1px solid rgba(255,179,71,.45);backdrop-filter:blur(8px);
+  pointer-events:none;
+}
+
+/* ---------- Fog (shared by gate + portal band) ---------- */
+.fog{position:absolute;z-index:1;pointer-events:none;border-radius:50%;filter:blur(38px);mix-blend-mode:screen;will-change:transform}
+.fog-1{width:95vw;height:44vh;left:-22vw;bottom:2vh;opacity:.55;background:radial-gradient(ellipse,rgba(255,140,60,.20),rgba(120,100,90,.08) 48%,transparent 70%);animation:fog1 40s ease-in-out infinite alternate}
+.fog-2{width:75vw;height:34vh;right:-18vw;bottom:10vh;opacity:.45;background:radial-gradient(ellipse,rgba(244,241,234,.14),rgba(160,140,130,.06) 50%,transparent 70%);animation:fog2 48s ease-in-out infinite alternate}
+@keyframes fog1{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(14vw,-3vh,0) scale(1.12)}}
+@keyframes fog2{from{transform:translate3d(0,0,0) scale(1.05)}to{transform:translate3d(-12vw,-5vh,0) scale(1)}}
+
+/* ==========================================================================
+   GATE — polished login card over a dim ember background
+   ========================================================================== */
+.gate{
+  position:fixed;inset:0;z-index:150;isolation:isolate;overflow:hidden;
+  display:grid;place-items:center;padding:1.25rem;
+  background:radial-gradient(ellipse 80% 55% at 50% 100%,#1a0a00 0%,var(--bg) 70%);
+}
+.gate-embers{position:absolute;inset:0;z-index:0;width:100%;height:100%;pointer-events:none;opacity:.7}
+.gate-moon{
+  position:absolute;z-index:0;top:8%;right:12%;width:clamp(140px,20vw,260px);aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 42% 40%,rgba(244,241,234,.16) 0%,rgba(244,241,234,.08) 50%,rgba(244,241,234,.02) 68%,transparent 71%);
+}
+.gate-crow{position:absolute;z-index:0;top:6%;right:0;width:clamp(320px,44vw,640px);fill:#040404;opacity:.95;filter:drop-shadow(0 0 30px rgba(255,106,0,.10))}
+.gate-card{
+  position:relative;z-index:2;width:min(440px,100%);
+  padding:clamp(1.75rem,4vw,2.5rem);border-radius:calc(var(--radius) + 6px);
+  background:linear-gradient(180deg,rgba(18,18,18,.92),rgba(9,9,9,.94));
+  border:1px solid rgba(255,179,71,.22);
+  box-shadow:0 40px 100px rgba(0,0,0,.75),0 0 0 1px rgba(255,106,0,.12),inset 0 1px 0 rgba(255,255,255,.05);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+}
+.gate-card .brand{margin-bottom:1.6rem}
+.gate-card h1{font-size:clamp(1.9rem,5vw,2.4rem);letter-spacing:.01em;margin:.5rem 0 .4rem}
+.gate-card .lede{font-size:.97rem;margin-bottom:1.5rem}
+.gate-field{position:relative}
+.gate-field input{padding-right:3.4rem}
+.eye{
+  position:absolute;right:.4rem;top:50%;transform:translateY(-50%);
+  width:40px;height:40px;border-radius:10px;display:grid;place-items:center;color:var(--faint);
+}
+.eye:hover{color:var(--amber);background:rgba(255,179,71,.08)}
+.eye svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.gate-card .btn{margin-top:1.1rem}
+.gate-card.is-shake{animation:shake .45s var(--ease)}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.gate-demo{margin:1.25rem 0 0;text-align:center;font-size:.78rem;color:var(--faint)}
+.gate-demo code{font-family:inherit;color:var(--amber);font-weight:600;background:rgba(255,179,71,.1);padding:.1rem .4rem;border-radius:6px}
+.gate-back{margin:1.25rem 0 0;padding-top:1.1rem;border-top:1px solid var(--line);text-align:center;font-size:.86rem}
+.gate-back a{color:var(--muted)}
+.gate-back a:hover{color:var(--amber)}
+.gate.is-out{opacity:0;visibility:hidden;transition:opacity .45s var(--ease),visibility .45s}
+
+/* ---------- Form controls (shared by gate + signup) ---------- */
+.label{display:block;font-weight:600;font-size:.84rem;letter-spacing:.02em;margin-bottom:.45rem;color:var(--cream)}
+.label .opt{font-weight:500;color:var(--faint);margin-left:.35rem}
+.input,select.input,textarea.input{
+  width:100%;padding:.9rem 1.05rem;border-radius:var(--radius-sm);border:1px solid var(--line-2);
+  background:rgba(5,5,5,.7);color:var(--cream);font:inherit;font-size:1rem;line-height:1.3;
+  transition:border-color .2s,box-shadow .2s;
+  -webkit-appearance:none;appearance:none;
+}
+.input::placeholder{color:rgba(244,241,234,.38)}
+.input:hover{border-color:rgba(244,241,234,.3)}
+.input:focus{outline:none;border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,179,71,.22)}
+.input[aria-invalid="true"]{border-color:var(--orange);box-shadow:0 0 0 3px rgba(255,106,0,.18)}
+select.input{
+  cursor:pointer;padding-right:2.75rem;
+  background-image:linear-gradient(45deg,transparent 50%,var(--amber) 50%),linear-gradient(135deg,var(--amber) 50%,transparent 50%);
+  background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px,6px 6px;background-repeat:no-repeat;
+}
+select.input option{background:#121212;color:var(--cream)}
+.field{display:flex;flex-direction:column;min-width:0}
+.field-error{display:none;margin:.45rem 0 0;font-size:.82rem;color:var(--orange);font-weight:500;align-items:flex-start;gap:.35rem;line-height:1.35}
+.field-error svg{flex:none;width:14px;height:14px;margin-top:.12em;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.field.is-invalid .field-error{display:flex}
+.field-hint{margin:.45rem 0 0;font-size:.8rem;color:var(--faint)}
+.form-error{display:none;align-items:flex-start;gap:.6rem;margin:0 0 1.25rem;padding:.9rem 1.05rem;border-radius:var(--radius-sm);background:rgba(255,106,0,.1);border:1px solid rgba(255,106,0,.4);font-size:.9rem;color:var(--cream)}
+.form-error.is-on{display:flex}
+.form-error svg{flex:none;width:18px;height:18px;stroke:var(--orange);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-top:.1rem}
+
+/* Checkbox / chip controls */
+.check{display:flex;align-items:flex-start;gap:.75rem;cursor:pointer;font-size:.95rem;color:var(--cream);line-height:1.45}
+.check input{position:absolute;opacity:0;width:1px;height:1px}
+.check .box{flex:none;width:22px;height:22px;margin-top:.1rem;border-radius:7px;border:1px solid var(--line-2);background:rgba(5,5,5,.7);display:grid;place-items:center;transition:background .2s,border-color .2s,box-shadow .2s}
+.check .box svg{width:14px;height:14px;stroke:#0b0500;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0;transform:scale(.6);transition:opacity .15s,transform .2s var(--ease)}
+.check input:checked+.box{background:var(--orange);border-color:var(--orange);box-shadow:0 0 0 4px rgba(255,106,0,.18)}
+.check input:checked+.box svg{opacity:1;transform:scale(1)}
+.check input:focus-visible+.box{outline:2px solid var(--amber);outline-offset:3px}
+.check.is-invalid .box{border-color:var(--orange)}
+.check small{display:block;color:var(--faint);font-size:.82rem}
+
+.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem}
+.chip{position:relative;cursor:pointer}
+.chip input{position:absolute;opacity:0;width:1px;height:1px}
+.chip .face{
+  display:flex;flex-direction:column;gap:.15rem;padding:.8rem .9rem;border-radius:var(--radius-sm);
+  border:1px solid var(--line-2);background:rgba(5,5,5,.6);transition:border-color .2s,background .2s,box-shadow .2s;
+}
+.chip .face b{font-family:var(--font-head);font-weight:600;font-size:1.05rem;letter-spacing:.04em;text-transform:uppercase;line-height:1.1}
+.chip .face span{font-size:.74rem;color:var(--faint)}
+.chip .face i{position:absolute;top:.6rem;right:.6rem;width:18px;height:18px;border-radius:50%;border:1px solid var(--line-2);display:grid;place-items:center}
+.chip .face i svg{width:11px;height:11px;stroke:#0b0500;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.chip input:checked+.face{border-color:var(--orange);background:rgba(255,106,0,.12);box-shadow:0 0 0 1px rgba(255,106,0,.35)}
+.chip input:checked+.face i{background:var(--orange);border-color:var(--orange)}
+.chip input:checked+.face i svg{opacity:1}
+.chip input:focus-visible+.face{outline:2px solid var(--amber);outline-offset:3px}
+.chip:hover .face{border-color:rgba(255,179,71,.5)}
+
+/* ==========================================================================
+   PORTAL — header
+   ========================================================================== */
+.site-header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:1.05rem 0;
+  background:linear-gradient(180deg,rgba(5,5,5,.92) 0%,rgba(5,5,5,.75) 100%);
+  border-bottom:1px solid transparent;
+  transition:padding .35s var(--ease),background .35s,box-shadow .35s,border-color .35s;
+}
+.site-header.is-compact{
+  padding:.55rem 0;
+  background:rgba(5,5,5,.88);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom-color:var(--line);
+  box-shadow:0 10px 40px rgba(0,0,0,.45);
+}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:1.5rem}
+.brand{display:flex;align-items:center;gap:.75rem;color:var(--cream)}
+.brand:hover{color:var(--cream)}
+.brand svg{width:46px;height:23px;fill:var(--orange);flex:none;transition:transform .3s var(--ease)}
+.brand:hover svg{transform:translateY(-2px)}
+.brand-name{font-family:var(--font-head);font-weight:600;font-size:1.05rem;letter-spacing:.1em;text-transform:uppercase;line-height:1}
+.brand-name small{display:block;font-family:var(--font-body);font-weight:500;font-size:.58rem;letter-spacing:.26em;color:var(--amber);margin-top:.32rem}
+.nav-links{display:flex;gap:1.4rem;align-items:center}
+.nav-links a{position:relative;font-size:.86rem;font-weight:500;color:var(--muted);padding:.25rem 0;white-space:nowrap}
+.nav-links a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--orange);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease)}
+.nav-links a:hover{color:var(--cream)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-right{display:flex;align-items:center;gap:.6rem}
+.nav-right .btn{gap:.45rem}
+.who{display:inline-flex;align-items:center;gap:.55rem;font-size:.8rem;color:var(--faint);padding-right:.5rem}
+.who .avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-head);font-weight:600;font-size:.72rem;color:#0b0500;background:linear-gradient(135deg,var(--amber),var(--orange))}
+/* Mobile jump row: horizontally scrollable link chips under the brand */
+.jump-row{display:none;margin-top:.7rem;gap:.45rem;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.jump-row::-webkit-scrollbar{display:none}
+.jump-row a{flex:none;font-size:.78rem;font-weight:600;color:var(--muted);padding:.42rem .8rem;border-radius:999px;border:1px solid var(--line-2);white-space:nowrap}
+.jump-row a:hover{color:var(--amber);border-color:var(--amber)}
+
+/* ---------- Portal top band (welcome + summary strip) ---------- */
+.band{
+  position:relative;isolation:isolate;overflow:hidden;
+  padding:calc(var(--header-h) + 2.75rem) 0 2.5rem;
+  background:radial-gradient(ellipse 70% 60% at 50% 110%,#1a0a00 0%,var(--bg) 70%);
+  border-bottom:1px solid var(--line);
+}
+.band-glow{position:absolute;z-index:0;left:50%;bottom:-60%;width:140vw;max-width:1800px;aspect-ratio:2/1;transform:translateX(-50%);background:radial-gradient(ellipse at 50% 100%,rgba(255,106,0,.34) 0%,rgba(255,106,0,.10) 34%,rgba(255,106,0,0) 68%)}
+.band-embers{position:absolute;inset:0;z-index:2;width:100%;height:100%;pointer-events:none;opacity:.8}
+.band .wrap{position:relative;z-index:3}
+.band-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;margin-bottom:1.75rem}
+.band h1{font-size:clamp(2rem,5vw,3.2rem);letter-spacing:.01em;margin:.5rem 0 .4rem}
+.band h1 em{font-style:normal;color:var(--orange)}
+.band .lede{font-size:1.02rem}
+.band-actions{display:flex;gap:.6rem;flex-wrap:wrap}
+
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.stat{
+  position:relative;overflow:hidden;
+  padding:1.2rem 1.3rem;border-radius:var(--radius);
+  background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));
+  border:1px solid var(--line);
+  transition:border-color .3s,transform .3s var(--ease);
+}
+.stat:hover{border-color:rgba(255,179,71,.35);transform:translateY(-3px)}
+.stat .k{display:flex;align-items:center;gap:.5rem;font-size:.7rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--amber)}
+.stat .k svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.stat .v{display:block;margin-top:.5rem;font-family:var(--font-head);font-weight:700;font-size:clamp(2rem,3.6vw,2.7rem);line-height:1;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.stat .v.text{font-size:clamp(1.35rem,2.6vw,1.7rem);text-transform:uppercase;letter-spacing:.02em}
+.stat .s{display:block;margin-top:.45rem;font-size:.82rem;color:var(--muted)}
+.stat.hot{border-color:rgba(255,106,0,.5);background:linear-gradient(160deg,rgba(255,106,0,.16),rgba(255,106,0,.03) 60%,rgba(255,255,255,.02));box-shadow:0 0 0 1px rgba(255,106,0,.2),0 20px 60px rgba(255,106,0,.14)}
+.stat.hot .v{color:var(--orange)}
+.stat.ok .v{color:var(--green)}
+
+/* ---------- Cards ---------- */
+.card{
+  position:relative;
+  background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012));
+  border:1px solid var(--line);border-radius:var(--radius);padding:1.5rem;
+  transition:transform .35s var(--ease),border-color .35s,box-shadow .35s;
+}
+.card:hover{border-color:rgba(255,179,71,.3);box-shadow:0 20px 50px rgba(0,0,0,.45)}
+
+/* ==========================================================================
+   MESSAGE BOARD — feed of cards
+   ========================================================================== */
+.feed{display:grid;grid-template-columns:repeat(2,1fr);gap:1.1rem}
+.post{display:flex;gap:1.1rem;align-items:flex-start}
+.post.pinned{grid-column:1/-1;border-color:rgba(255,179,71,.4);background:linear-gradient(135deg,rgba(255,179,71,.10),rgba(255,106,0,.03) 60%,rgba(255,255,255,.01))}
+.post-date{
+  flex:none;width:64px;text-align:center;padding:.6rem 0;border-radius:var(--radius-sm);
+  border:1px solid var(--line-2);background:rgba(5,5,5,.6);
+}
+.post-date b{display:block;font-family:var(--font-head);font-weight:700;font-size:1.6rem;line-height:1}
+.post-date span{display:block;font-size:.62rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--amber);margin-top:.25rem}
+.post-date small{display:block;font-size:.6rem;color:var(--faint);margin-top:.1rem}
+.post-date.pin{border-color:rgba(255,179,71,.5);color:var(--amber)}
+.post-date.pin svg{width:22px;height:22px;margin:.15rem auto;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.post-body{min-width:0;flex:1}
+.post-meta{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.35rem;font-size:.74rem;color:var(--faint)}
+.post h3{font-size:1.25rem;letter-spacing:.03em;margin:0 0 .45rem}
+.post p{color:var(--muted);font-size:.95rem;margin:0}
+.post p+p{margin-top:.6rem}
+.post .kv{display:grid;gap:.35rem;margin-top:.7rem}
+.post .kv li{display:flex;justify-content:space-between;gap:1rem;font-size:.9rem;padding:.5rem .75rem;border-radius:8px;background:rgba(5,5,5,.5);border:1px solid var(--line)}
+.post .kv li b{color:var(--cream);font-weight:600}
+.post .kv li span{color:var(--amber)}
+.post .nights{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.7rem}
+.post .nights span{font-family:var(--font-head);font-weight:600;font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;padding:.35rem .7rem;border-radius:8px;border:1px solid rgba(255,179,71,.4);color:var(--amber);background:rgba(255,106,0,.08)}
+
+/* ==========================================================================
+   STATION BOARD — segmented night control + zone panels
+   ========================================================================== */
+.board-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem}
+.seg{
+  display:inline-flex;gap:.25rem;padding:.3rem;border-radius:999px;
+  background:rgba(5,5,5,.7);border:1px solid var(--line-2);
+}
+.seg [role="tab"]{
+  position:relative;padding:.6rem 1.05rem;border-radius:999px;
+  font-family:var(--font-head);font-weight:600;font-size:.88rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  transition:color .2s,background .25s,box-shadow .25s;white-space:nowrap;
+}
+.seg [role="tab"] small{display:block;font-family:var(--font-body);font-weight:500;font-size:.62rem;letter-spacing:.08em;text-transform:none;color:var(--faint);line-height:1;margin-top:.15rem}
+.seg [role="tab"]:hover{color:var(--cream)}
+.seg [role="tab"][aria-selected="true"]{background:var(--orange);color:#0b0500;box-shadow:0 8px 24px rgba(255,106,0,.35)}
+.seg [role="tab"][aria-selected="true"] small{color:rgba(11,5,0,.7)}
+.board-sum{display:flex;align-items:center;gap:.75rem;font-size:.95rem;color:var(--muted)}
+.board-sum b{font-family:var(--font-head);font-weight:700;font-size:1.9rem;line-height:1;color:var(--orange);font-variant-numeric:tabular-nums}
+.board-sum span{line-height:1.3}
+.board-sum small{display:block;color:var(--faint);font-size:.8rem}
+.legend{display:flex;flex-wrap:wrap;gap:.5rem 1.25rem;margin:0 0 1.1rem;font-size:.78rem;color:var(--faint)}
+.legend span{display:inline-flex;align-items:center;gap:.4rem}
+.legend .badge{font-size:.58rem;padding:.28rem .5rem}
+
+.zones{display:grid;grid-template-columns:repeat(2,1fr);gap:1.1rem}
+.zone{padding:0;overflow:hidden}
+.zone:hover{transform:none}
+.zone-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.05rem 1.25rem;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02)}
+.zone-head h3{font-size:1.2rem;letter-spacing:.03em;display:flex;align-items:baseline;gap:.6rem}
+.zone-head h3 .roman{font-weight:500;font-size:.78rem;letter-spacing:.24em;color:var(--amber)}
+.zone-head .zc{font-size:.78rem;color:var(--faint);white-space:nowrap}
+.zone-head .zc b{color:var(--orange);font-weight:700}
+.stations{display:grid}
+.station{
+  display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:1rem;
+  width:100%;text-align:left;padding:.85rem 1.25rem;border-bottom:1px solid var(--line);
+  color:var(--cream);transition:background .2s;
+}
+.station:last-child{border-bottom:0}
+.station.is-open{cursor:pointer}
+.station.is-open:hover{background:rgba(255,106,0,.08)}
+.station.is-open:focus-visible{outline-offset:-3px}
+.station.is-full{color:var(--muted)}
+.st-name{min-width:0;font-weight:600;font-size:.95rem;line-height:1.25}
+.st-name small{display:block;font-weight:500;font-size:.74rem;color:var(--faint);margin-top:.1rem}
+.pips{display:flex;gap:.3rem;flex-wrap:wrap;justify-content:flex-end;max-width:150px}
+.pip{
+  width:16px;height:16px;border-radius:50%;display:grid;place-items:center;
+  border:1.5px solid rgba(255,179,71,.55);background:transparent;
+}
+.pip svg{width:9px;height:9px;stroke:#0b0500;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.pip.filled{background:var(--amber);border-color:var(--amber)}
+.pip.open{border-color:var(--orange);background:rgba(255,106,0,.12);box-shadow:0 0 0 0 rgba(255,106,0,.5);animation:pipPulse 2.4s ease-out infinite}
+@keyframes pipPulse{0%{box-shadow:0 0 0 0 rgba(255,106,0,.5)}100%{box-shadow:0 0 0 6px rgba(255,106,0,0)}}
+.station .go{display:none}
+
+/* ==========================================================================
+   SIGNUP — multi-column form + success card + toast
+   ========================================================================== */
+.signup-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:1.25rem;align-items:start}
+.form-card{padding:clamp(1.4rem,3vw,2.25rem)}
+.prefill{display:none;align-items:center;gap:.6rem;margin:0 0 1.25rem;padding:.75rem 1rem;border-radius:var(--radius-sm);background:rgba(255,179,71,.1);border:1px solid rgba(255,179,71,.4);font-size:.88rem;color:var(--cream)}
+.prefill.is-on{display:flex}
+.prefill svg{flex:none;width:18px;height:18px;stroke:var(--amber);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.prefill b{color:var(--amber);font-weight:600}
+fieldset{border:0;padding:0;margin:0 0 1.75rem;min-width:0}
+legend{padding:0;margin-bottom:1rem;font-family:var(--font-head);font-weight:600;font-size:.82rem;letter-spacing:.22em;text-transform:uppercase;color:var(--amber)}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.f3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.f-full{grid-column:1/-1}
+.agree-block{display:grid;gap:.9rem;padding:1.1rem 1.2rem;border-radius:var(--radius-sm);border:1px solid var(--line);background:rgba(5,5,5,.4)}
+.submit-row{display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;margin-top:.5rem}
+.demo-note{font-size:.8rem;color:var(--faint);margin:0}
+
+.aside{display:grid;gap:1.1rem;position:sticky;top:calc(var(--header-h) + 1rem)}
+.aside .card h3{font-size:1.15rem;letter-spacing:.03em;margin:0 0 .75rem}
+.steps{display:grid;gap:.75rem}
+.steps li{display:flex;gap:.8rem;align-items:flex-start;font-size:.92rem;color:var(--muted)}
+.steps li b{color:var(--cream);font-weight:600}
+.steps .n{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-head);font-weight:600;font-size:.8rem;color:#0b0500;background:var(--amber)}
+.note-list{display:grid;gap:.5rem;font-size:.9rem;color:var(--muted)}
+.note-list li{display:flex;gap:.6rem;align-items:flex-start}
+.note-list svg{flex:none;width:17px;height:17px;margin-top:.15rem;stroke:var(--amber);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.success{display:none;text-align:center;padding:clamp(1.5rem,4vw,2.5rem)}
+.success.is-on{display:block}
+.success .ring{width:76px;height:76px;margin:0 auto 1.1rem;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 30% 30%,rgba(255,106,0,.35),rgba(255,106,0,.08));border:1px solid rgba(255,179,71,.5);box-shadow:0 0 0 8px rgba(255,106,0,.08),0 20px 50px rgba(255,106,0,.25)}
+.success .ring svg{width:36px;height:36px;stroke:var(--amber);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.success h3{font-size:clamp(1.6rem,3.6vw,2.2rem);letter-spacing:.02em;margin:0 0 .5rem}
+.success .lede{margin:0 auto 1.4rem}
+.receipt{display:grid;grid-template-columns:repeat(2,1fr);gap:.6rem;max-width:620px;margin:0 auto 1.4rem;text-align:left}
+.receipt li{padding:.7rem .9rem;border-radius:var(--radius-sm);background:rgba(5,5,5,.5);border:1px solid var(--line);font-size:.9rem}
+.receipt li span{display:block;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:.2rem;font-weight:600}
+.receipt li b{font-weight:600;color:var(--cream)}
+.receipt li.wide{grid-column:1/-1}
+.success .actions{display:flex;justify-content:center;gap:.75rem;flex-wrap:wrap}
+
+.toast{
+  position:fixed;left:50%;bottom:1.5rem;z-index:140;transform:translate(-50%,20px);
+  display:flex;align-items:center;gap:.7rem;
+  padding:.85rem 1.1rem .85rem .95rem;border-radius:999px;
+  background:rgba(12,12,12,.95);border:1px solid rgba(255,179,71,.45);color:var(--cream);font-size:.9rem;
+  box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 0 1px rgba(255,106,0,.15);
+  opacity:0;visibility:hidden;transition:opacity .35s var(--ease),transform .35s var(--ease),visibility .35s;
+  max-width:calc(100% - 2rem);
+}
+.toast.is-on{opacity:1;visibility:visible;transform:translate(-50%,0)}
+.toast .dot{flex:none;width:26px;height:26px;border-radius:50%;background:var(--orange);display:grid;place-items:center}
+.toast .dot svg{width:14px;height:14px;stroke:#0b0500;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+
+/* ==========================================================================
+   WAIVER — checklist + details expander
+   ========================================================================== */
+.waiver-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.85rem;margin-bottom:1.25rem}
+.w-item{display:flex;gap:.8rem;align-items:flex-start;padding:1rem 1.1rem;border-radius:var(--radius-sm);border:1px solid var(--line);background:rgba(255,255,255,.02);font-size:.92rem;color:var(--muted)}
+.w-item .ic{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;border:1px solid rgba(255,179,71,.3);background:radial-gradient(circle at 30% 30%,rgba(255,106,0,.22),rgba(255,106,0,.04));color:var(--amber)}
+.w-item .ic svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.w-item b{display:block;color:var(--cream);font-weight:600;margin-bottom:.1rem}
+details.full{border:1px solid var(--line);border-radius:var(--radius);background:rgba(255,255,255,.02);overflow:hidden}
+details.full summary{
+  list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:1.1rem 1.4rem;font-family:var(--font-head);font-weight:500;font-size:1.15rem;letter-spacing:.02em;color:var(--cream);
+}
+details.full summary::-webkit-details-marker{display:none}
+details.full summary:hover{color:var(--amber)}
+details.full summary .faq-icon{flex:none;width:30px;height:30px;border-radius:50%;border:1px solid var(--line-2);position:relative;transition:transform .35s var(--ease),border-color .3s,background .3s}
+details.full summary .faq-icon::before,details.full summary .faq-icon::after{content:"";position:absolute;left:50%;top:50%;width:12px;height:2px;background:currentColor;transform:translate(-50%,-50%);border-radius:2px}
+details.full summary .faq-icon::after{transform:translate(-50%,-50%) rotate(90deg);transition:transform .35s var(--ease)}
+details.full[open] summary .faq-icon{border-color:var(--orange);background:rgba(255,106,0,.15);color:var(--amber)}
+details.full[open] summary .faq-icon::after{transform:translate(-50%,-50%) rotate(0)}
+.full-body{padding:0 1.4rem 1.4rem;border-top:1px solid var(--line)}
+.full-body .ph{
+  margin-top:1.2rem;padding:1.25rem 1.4rem;border-radius:var(--radius-sm);
+  border:1px dashed rgba(255,179,71,.5);
+  background:repeating-linear-gradient(135deg,rgba(255,179,71,.05) 0 14px,transparent 14px 28px),#0d0d0d;
+}
+.full-body .ph h4{font-size:.74rem;letter-spacing:.2em;color:var(--amber);font-weight:600;margin-bottom:.6rem}
+.full-body .ph p{color:var(--faint);font-size:.9rem;margin:0 0 .7rem}
+.full-body .ph p:last-child{margin:0}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.site-footer{border-top:1px solid var(--line);padding:3.5rem 0 2rem;background:linear-gradient(180deg,var(--bg),#020202)}
+.footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:2.5rem}
+.footer-brand p{color:var(--muted);margin:1rem 0 0;max-width:34ch;font-size:.95rem}
+.footer-col h4{font-size:.8rem;letter-spacing:.24em;color:var(--amber);font-weight:500;margin-bottom:1rem}
+.footer-col ul{display:grid;gap:.55rem}
+.footer-col a,.footer-col li{color:var(--muted);font-size:.93rem}
+.footer-col a:hover{color:var(--cream)}
+.socials{display:flex;gap:.6rem}
+.socials a{width:44px;height:44px;border-radius:12px;border:1px solid var(--line-2);display:grid;place-items:center;color:var(--cream);transition:transform .3s var(--ease),border-color .3s,color .3s,background .3s}
+.socials a:hover{transform:translateY(-3px);border-color:var(--orange);color:var(--orange);background:rgba(255,106,0,.08)}
+.socials svg{width:20px;height:20px;fill:currentColor}
+.footer-bottom{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:.75rem;font-size:.8rem;color:var(--faint)}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1000px){
+  .summary{grid-template-columns:repeat(2,1fr)}
+  .signup-grid{grid-template-columns:1fr}
+  .aside{position:static}
+  .waiver-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media (max-width:820px){
+  .nav-links{display:none}
+  .jump-row{display:flex}
+  .who{display:none}
+  .feed{grid-template-columns:1fr}
+  .zones{grid-template-columns:1fr}
+  .f3{grid-template-columns:1fr 1fr}
+  .gate-crow{width:min(100vw,560px);right:-20vw}
+}
+@media (max-width:640px){
+  :root{--header-h:64px}
+  .band{padding-top:calc(var(--header-h) + 3.2rem)}
+  .summary{gap:.75rem}
+  .stat{padding:1rem 1.05rem}
+  .card{padding:1.2rem}
+  .brand-name{font-size:.95rem}
+  .brand-name small{display:none}
+  .nav-right .btn-secondary{display:none}
+  .seg{width:100%;display:grid;grid-template-columns:repeat(4,1fr);border-radius:16px}
+  .seg [role="tab"]{padding:.55rem .25rem;font-size:.8rem;border-radius:11px;text-align:center}
+  .seg [role="tab"] small{display:none}
+  .board-top{align-items:stretch}
+  .board-sum{justify-content:center;padding-top:.25rem}
+  .chips{grid-template-columns:repeat(2,1fr)}
+  .f2,.f3{grid-template-columns:1fr}
+  .station{grid-template-columns:1fr auto;gap:.5rem .9rem;padding:.85rem 1rem}
+  .station .pips{grid-column:1/-1;justify-content:flex-start;max-width:none}
+  .receipt{grid-template-columns:1fr}
+  .waiver-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr}
+  .concept-badge{font-size:.6rem;padding:.45rem .7rem}
+  .submit-row .btn{width:100%}
+  .success .actions .btn{width:100%}
+}
+@media (max-width:420px){
+  .summary{grid-template-columns:1fr 1fr}
+  .stat .v{font-size:1.7rem}
+  .stat .v.text{font-size:1.15rem}
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+  .fog{filter:blur(30px)}
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="concept-badge" aria-hidden="true">Concept #6 — The Bonfire · Crew</div>
+
+<!-- Reusable SVG symbols -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <path id="crow-wing" d="M300 148 C345 120 430 60 565 22 C548 62 528 92 506 112 L536 120 L486 132 L508 150 L458 154 L474 174 L428 170 L436 190 L392 180 C360 185 330 190 300 196 Z"/>
+    <symbol id="crow" viewBox="0 0 600 300">
+      <use href="#crow-wing"/>
+      <use href="#crow-wing" transform="translate(600 0) scale(-1 1)"/>
+      <ellipse cx="300" cy="172" rx="24" ry="42"/>
+      <circle cx="300" cy="124" r="16"/>
+      <polygon points="300,96 291,116 309,116"/>
+      <polygon points="280,205 320,205 331,264 300,251 269,264"/>
+    </symbol>
+    <symbol id="tick" viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></symbol>
+    <symbol id="warn" viewBox="0 0 24 24"><path d="M12 8v5M12 16h.01"/><circle cx="12" cy="12" r="9"/></symbol>
+  </defs>
+</svg>
+
+<!-- ===================== GATE (demo password: crow) ===================== -->
+<div class="gate" id="gate">
+  <canvas class="gate-embers" id="gate-embers" aria-hidden="true"></canvas>
+  <div class="gate-moon" aria-hidden="true"></div>
+  <svg class="gate-crow" viewBox="0 0 600 300" aria-hidden="true"><use href="#crow"/></svg>
+  <div class="fog fog-1" aria-hidden="true"></div>
+  <div class="fog fog-2" aria-hidden="true"></div>
+
+  <div class="gate-card" id="gate-card" role="dialog" aria-modal="true" aria-labelledby="gate-title" aria-describedby="gate-desc">
+    <a class="brand" href="06-bonfire.html" aria-label="Nightmare on the Crow — public site">
+      <svg aria-hidden="true"><use href="#crow"/></svg>
+      <span class="brand-name">Nightmare on the Crow<small>Greenfield, MN</small></span>
+    </a>
+    <p class="eyebrow">Crew portal</p>
+    <h1 id="gate-title">Welcome back, crew.</h1>
+    <p class="lede" id="gate-desc">Enter the crew password to open the board, grab a station, and sign your waiver.</p>
+
+    <form id="gate-form" novalidate>
+      <div class="field" id="gate-field">
+        <label class="label" for="gate-pass">Crew password</label>
+        <div class="gate-field">
+          <input class="input" type="password" id="gate-pass" name="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="••••" aria-describedby="gate-err gate-demo">
+          <button class="eye" type="button" id="gate-eye" aria-label="Show password" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <p class="field-error" id="gate-err" role="alert"><svg aria-hidden="true"><use href="#warn"/></svg><span></span></p>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit">Open the gate</button>
+    </form>
+
+    <p class="gate-demo" id="gate-demo">Demo password: <code>crow</code> · Concept mockup only</p>
+    <p class="gate-back"><a href="06-bonfire.html">&larr; Back to the public site</a></p>
+  </div>
+</div>
+
+<!-- ===================== PORTAL ===================== -->
+<div class="portal" id="portal" hidden>
+
+<header class="site-header" id="site-header">
+  <div class="wrap">
+    <div class="header-inner">
+      <a class="brand" href="#top" aria-label="Crew portal — top">
+        <svg aria-hidden="true"><use href="#crow"/></svg>
+        <span class="brand-name">Crew portal<small>Nightmare on the Crow</small></span>
+      </a>
+      <nav class="nav-links" aria-label="Portal sections">
+        <a href="#board">Message board</a>
+        <a href="#stations">Station board</a>
+        <a href="#signup">Sign up</a>
+        <a href="#waiver">Waiver</a>
+      </nav>
+      <div class="nav-right">
+        <span class="who"><span class="avatar" aria-hidden="true">CR</span>Signed in as crew</span>
+        <a class="btn btn-secondary btn-sm" href="06-bonfire.html">Public site</a>
+        <button class="btn btn-secondary btn-sm" type="button" id="sign-out">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 17l5-5-5-5M15 12H3M13 3h6v18h-6"/></svg>Sign out
+        </button>
+      </div>
+    </div>
+    <nav class="jump-row" aria-label="Portal sections (mobile)">
+      <a href="#board">Board</a>
+      <a href="#stations">Stations</a>
+      <a href="#signup">Sign up</a>
+      <a href="#waiver">Waiver</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ---------- Top band: welcome + summary strip ---------- -->
+<section class="band" id="top" aria-labelledby="portal-title">
+  <div class="band-glow" aria-hidden="true"></div>
+  <div class="fog fog-1" aria-hidden="true"></div>
+  <canvas class="band-embers" id="band-embers" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div class="band-head">
+      <div>
+        <p class="eyebrow">Season 2026 · 4 nights</p>
+        <h1 id="portal-title">The woods need <em>you</em>.</h1>
+        <p class="lede">Four nights, four zones, and more open stations than we'd like. Read the board, pick your spot, sign once. That's it.</p>
+      </div>
+      <div class="band-actions">
+        <a class="btn btn-primary" href="#stations">Find an open station</a>
+        <a class="btn btn-secondary" href="#signup">Sign up</a>
+      </div>
+    </div>
+
+    <div class="summary" role="list" aria-label="Crew summary">
+      <div class="stat hot" role="listitem">
+        <span class="k"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c2 4 6 6 6 11a6 6 0 0 1-12 0c0-3 2-4 2-6 1 1 2 2 2 3 0-3 1-6 2-8z"/></svg>Open spots tonight</span>
+        <span class="v" id="sum-open">—</span>
+        <span class="s" id="sum-open-night">Fri Oct 9 · updates with the night you pick</span>
+      </div>
+      <div class="stat" role="listitem">
+        <span class="k"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Nights left</span>
+        <span class="v" id="sum-nights">4</span>
+        <span class="s">Oct 9 · 10 · 16 · 17 — 7:30 to 10:30 PM</span>
+      </div>
+      <div class="stat" role="listitem">
+        <span class="k"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Opening night in</span>
+        <span class="v" id="sum-days">—</span>
+        <span class="s" id="sum-days-s">Fri Oct 9 · gates 7:30 PM</span>
+      </div>
+      <div class="stat" role="listitem" id="sum-status-card">
+        <span class="k"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Your status</span>
+        <span class="v text" id="sum-status">Not signed up</span>
+        <span class="s" id="sum-status-s">Pick a station below to get started</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- Message board ---------- -->
+<section class="section" id="board" aria-labelledby="board-title">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Message board</p>
+        <h2 class="title" id="board-title">What you need to know</h2>
+        <p class="lede">Newest first. If it changes, it shows up here before anywhere else.</p>
+      </div>
+      <span class="pill">4 posts</span>
+    </div>
+
+    <div class="feed">
+      <article class="card post pinned">
+        <div class="post-date pin" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 4h6l-1 6 3 3v2H7v-2l3-3z"/><path d="M12 15v6"/></svg><span>Pinned</span></div>
+        <div class="post-body">
+          <div class="post-meta"><span>Walkthrough</span><span aria-hidden="true">·</span><span>Applies to everyone</span></div>
+          <h3>Pick a walkthrough date when you sign up</h3>
+          <p>Every crew member walks the trail once with the lights on before opening night. You'll find your station, meet your zone lead, and learn the exits and radio calls. The signup form below has the dates — pick one you can actually make.</p>
+        </div>
+      </article>
+
+      <article class="card post">
+        <div class="post-date"><b>26</b><span>Sept</span><small>2026</small></div>
+        <div class="post-body">
+          <div class="post-meta"><span>Hours</span><span aria-hidden="true">·</span><span>Posted by the owners</span></div>
+          <h3>Hours are final. Fireworks on the 10th.</h3>
+          <p>Haunt nights run <strong>7:30 to 10:30 PM</strong> with <strong>last entry at 10:00</strong>. Plan to be in costume and at your station by 7:00. On <strong>Saturday, Oct 10</strong> there are fireworks at 7:45, so the haunt starts at 8:00 and runs to 10:30.</p>
+          <ul class="kv">
+            <li><b>Oct 9, 16, 17</b><span>7:30 – 10:30 PM · last entry 10</span></li>
+            <li><b>Oct 10</b><span>Fireworks 7:45 · haunt 8:00 – 10:30</span></li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="card post">
+        <div class="post-date"><b>25</b><span>Aug</span><small>2026</small></div>
+        <div class="post-body">
+          <div class="post-meta"><span>Dates we need help</span><span aria-hidden="true">·</span><span>All four nights</span></div>
+          <h3>We need help on every night</h3>
+          <p>Every night is short on actors, and Saturdays are short on front-of-house help too. Check the station board, find the orange badges, and grab one. Two nights is great. Four is legendary.</p>
+          <div class="nights" aria-label="Nights we need help"><span>Fri Oct 9</span><span>Sat Oct 10</span><span>Fri Oct 16</span><span>Sat Oct 17</span></div>
+        </div>
+      </article>
+
+      <article class="card post">
+        <div class="post-date"><b>16</b><span>Mar</span><small>2026</small></div>
+        <div class="post-body">
+          <div class="post-meta"><span>Build nights</span><span aria-hidden="true">·</span><span>Monthly</span></div>
+          <h3>Monthly build nights are back</h3>
+          <p>Mid-month, mid-week, evenings. We meet to build sets, fix what winter broke, and throw around ideas for new scenes. No skills required — bring a drill or bring an idea. Dates get posted here the week before.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- Station board ---------- -->
+<section class="section section-alt" id="stations" aria-labelledby="stations-title">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Station board</p>
+        <h2 class="title" id="stations-title">Haunter &amp; help zones</h2>
+        <p class="lede">Pick a night. Every orange badge is an open slot — tap one and we'll pre-fill your signup.</p>
+      </div>
+    </div>
+
+    <div class="board-top">
+      <div class="seg" role="tablist" aria-label="Choose a night" id="night-tabs">
+        <button role="tab" type="button" id="tab-oct9" aria-selected="true" aria-controls="panel-board" data-night="oct9" tabindex="0">Fri Oct 9<small>Opening night</small></button>
+        <button role="tab" type="button" id="tab-oct10" aria-selected="false" aria-controls="panel-board" data-night="oct10" tabindex="-1">Sat Oct 10<small>Fireworks 7:45</small></button>
+        <button role="tab" type="button" id="tab-oct16" aria-selected="false" aria-controls="panel-board" data-night="oct16" tabindex="-1">Fri Oct 16<small>Week two</small></button>
+        <button role="tab" type="button" id="tab-oct17" aria-selected="false" aria-controls="panel-board" data-night="oct17" tabindex="-1">Sat Oct 17<small>Closing night</small></button>
+      </div>
+      <p class="board-sum" role="status" aria-live="polite"><b id="board-open">0</b><span>open spots tonight<small id="board-night">Friday, October 9</small></span></p>
+    </div>
+
+    <p class="legend" aria-hidden="true">
+      <span><i class="pip filled"></i> Filled</span>
+      <span><i class="pip open"></i> Open</span>
+      <span><i class="badge badge-need">Need actor</i> Scare role</span>
+      <span><i class="badge badge-help">Need help</i> Crew / operations</span>
+    </p>
+
+    <div class="zones" id="panel-board" role="tabpanel" aria-labelledby="tab-oct9" tabindex="0">
+      <!-- Zone panels rendered by JS from the roster data -->
+    </div>
+  </div>
+</section>
+
+<!-- ---------- Signup ---------- -->
+<section class="section" id="signup" aria-labelledby="signup-title">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">One-step signup</p>
+        <h2 class="title" id="signup-title">Put your name on the list</h2>
+        <p class="lede">Nights, zone, station, walkthrough, waiver — one form, one submit. No spreadsheet.</p>
+      </div>
+    </div>
+
+    <div class="signup-grid">
+      <div class="card form-card" id="form-card">
+        <form id="signup-form" novalidate>
+          <div class="prefill" id="prefill" aria-live="polite"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg><span>Pre-filled from the station board: <b id="prefill-text"></b></span></div>
+          <div class="form-error" id="form-error" role="alert"><svg aria-hidden="true"><use href="#warn"/></svg><span>A few fields need attention — they're marked below.</span></div>
+
+          <fieldset>
+            <legend>About you</legend>
+            <div class="f2">
+              <div class="field" id="f-first">
+                <label class="label" for="first">First name</label>
+                <input class="input" type="text" id="first" name="first" autocomplete="given-name" required aria-describedby="e-first">
+                <p class="field-error" id="e-first"><svg aria-hidden="true"><use href="#warn"/></svg><span>Enter your first name.</span></p>
+              </div>
+              <div class="field" id="f-last">
+                <label class="label" for="last">Last name</label>
+                <input class="input" type="text" id="last" name="last" autocomplete="family-name" required aria-describedby="e-last">
+                <p class="field-error" id="e-last"><svg aria-hidden="true"><use href="#warn"/></svg><span>Enter your last name.</span></p>
+              </div>
+              <div class="field" id="f-email">
+                <label class="label" for="email">Email</label>
+                <input class="input" type="email" id="email" name="email" autocomplete="email" inputmode="email" required aria-describedby="e-email">
+                <p class="field-error" id="e-email"><svg aria-hidden="true"><use href="#warn"/></svg><span>Enter a valid email so we can confirm your spot.</span></p>
+              </div>
+              <div class="field" id="f-phone">
+                <label class="label" for="phone">Phone<span class="opt">(optional)</span></label>
+                <input class="input" type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="For night-of texts">
+                <p class="field-hint">Only used on haunt nights if we need to reach you.</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Nights you can work</legend>
+            <div class="field" id="f-nights">
+              <div class="chips" role="group" aria-label="Nights you can work" aria-describedby="e-nights">
+                <label class="chip"><input type="checkbox" name="nights" value="oct9"><span class="face"><b>Fri Oct 9</b><span>Opening night</span><i aria-hidden="true"><svg><use href="#tick"/></svg></i></span></label>
+                <label class="chip"><input type="checkbox" name="nights" value="oct10"><span class="face"><b>Sat Oct 10</b><span>Fireworks 7:45</span><i aria-hidden="true"><svg><use href="#tick"/></svg></i></span></label>
+                <label class="chip"><input type="checkbox" name="nights" value="oct16"><span class="face"><b>Fri Oct 16</b><span>Week two</span><i aria-hidden="true"><svg><use href="#tick"/></svg></i></span></label>
+                <label class="chip"><input type="checkbox" name="nights" value="oct17"><span class="face"><b>Sat Oct 17</b><span>Closing night</span><i aria-hidden="true"><svg><use href="#tick"/></svg></i></span></label>
+              </div>
+              <p class="field-error" id="e-nights"><svg aria-hidden="true"><use href="#warn"/></svg><span>Pick at least one night.</span></p>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Where you want to be</legend>
+            <div class="f3">
+              <div class="field" id="f-zone">
+                <label class="label" for="zone">Preferred zone</label>
+                <select class="input" id="zone" name="zone" required aria-describedby="e-zone">
+                  <option value="">Choose a zone</option>
+                </select>
+                <p class="field-error" id="e-zone"><svg aria-hidden="true"><use href="#warn"/></svg><span>Choose a zone.</span></p>
+              </div>
+              <div class="field" id="f-station">
+                <label class="label" for="station">Preferred station</label>
+                <select class="input" id="station" name="station" required aria-describedby="e-station" disabled>
+                  <option value="">Choose a zone first</option>
+                </select>
+                <p class="field-error" id="e-station"><svg aria-hidden="true"><use href="#warn"/></svg><span>Choose a station.</span></p>
+              </div>
+              <div class="field" id="f-walk">
+                <label class="label" for="walk">Walkthrough date</label>
+                <select class="input" id="walk" name="walk" required aria-describedby="e-walk">
+                  <option value="">Choose a date</option>
+                  <option value="Wed Sept 30 · 6:30 PM">Wed Sept 30 · 6:30 PM (TBD by owner)</option>
+                  <option value="Sun Oct 4 · 4:00 PM">Sun Oct 4 · 4:00 PM (TBD by owner)</option>
+                  <option value="Wed Oct 7 · 6:30 PM">Wed Oct 7 · 6:30 PM (TBD by owner)</option>
+                  <option value="Thu Oct 8 · 6:30 PM">Thu Oct 8 · 6:30 PM (TBD by owner)</option>
+                </select>
+                <p class="field-error" id="e-walk"><svg aria-hidden="true"><use href="#warn"/></svg><span>Pick a walkthrough date.</span></p>
+              </div>
+            </div>
+            <p class="field-hint" style="margin-top:.8rem">Station counts reflect the night selected on the board. We'll do our best on preferences — zone leads make the final call.</p>
+          </fieldset>
+
+          <fieldset>
+            <legend>Agreement</legend>
+            <div class="agree-block">
+              <div class="field" id="f-agree">
+                <label class="check" id="agree-label">
+                  <input type="checkbox" id="agree" name="agree" required aria-describedby="e-agree">
+                  <span class="box" aria-hidden="true"><svg><use href="#tick"/></svg></span>
+                  <span>I have read and agree to the <a href="#waiver">Volunteer Agreement &amp; Liability Waiver</a>.<small>Required. The summary is right below this form; the full text is in the expander.</small></span>
+                </label>
+                <p class="field-error" id="e-agree"><svg aria-hidden="true"><use href="#warn"/></svg><span>You'll need to agree to the Volunteer Agreement to sign up.</span></p>
+              </div>
+              <label class="check">
+                <input type="checkbox" id="news" name="news">
+                <span class="box" aria-hidden="true"><svg><use href="#tick"/></svg></span>
+                <span>Send me crew emails: build nights, schedule changes, and season news.<small>Optional. A few a season, never spam.</small></span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="submit-row">
+            <button class="btn btn-primary" type="submit">Sign me up</button>
+            <p class="demo-note">Demo — nothing is sent.</p>
+          </div>
+        </form>
+
+        <!-- Success state (swapped in after a valid submit) -->
+        <div class="success" id="success" role="status" aria-live="polite" tabindex="-1">
+          <div class="ring" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></div>
+          <h3 id="success-title">You're on the list.</h3>
+          <p class="lede" id="success-lede"></p>
+          <ul class="receipt" id="receipt"></ul>
+          <p class="demo-note" style="margin-bottom:1.2rem">Demo — nothing was sent. In production you'd get a confirmation email and a calendar invite for your walkthrough.</p>
+          <div class="actions">
+            <a class="btn btn-secondary" href="#stations">Back to the board</a>
+            <button class="btn btn-secondary" type="button" id="signup-again">Sign up someone else</button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="aside" aria-label="Signup help">
+        <div class="card">
+          <h3>How it works</h3>
+          <ol class="steps">
+            <li><span class="n">1</span><span><b>Pick your nights.</b> One is fine. All four gets you a very nice hoodie. (Kidding. Maybe.)</span></li>
+            <li><span class="n">2</span><span><b>Choose a zone and station.</b> Orange badges on the board are open right now.</span></li>
+            <li><span class="n">3</span><span><b>Pick a walkthrough.</b> Lights on, 45 minutes, meet your zone lead.</span></li>
+            <li><span class="n">4</span><span><b>Agree and submit.</b> Your waiver and your signup are the same step.</span></li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>Night of</h3>
+          <ul class="note-list">
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Be at your station, in costume, by <b>7:00 PM</b>. Guests start at 7:30.</span></li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg><span>Crew parking is on site at 6470 Harff Road. Follow the crew signs.</span></li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/></svg><span>No touching guests, ever. Scare them; don't grab them.</span></li>
+            <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14v13H5z"/><path d="M5 7l2-3h10l2 3"/><path d="M9 11h6"/></svg><span>Dress warm under the costume. October in the woods gets cold fast.</span></li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- Waiver summary ---------- -->
+<section class="section section-alt" id="waiver" aria-labelledby="waiver-title">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Volunteer agreement</p>
+        <h2 class="title" id="waiver-title">The short version</h2>
+        <p class="lede">What you're agreeing to when you check the box. The full agreement is in the expander below — read it once.</p>
+      </div>
+      <span class="pill pill-muted">Minnesota law applies</span>
+    </div>
+
+    <ul class="waiver-grid" aria-label="Volunteer agreement key points">
+      <li class="w-item"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></span><span><b>Unpaid volunteer</b>This is volunteering, not employment. No wages, no benefits.</span></li>
+      <li class="w-item"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span><b>Show up, stay put</b>Arrive on time and stay in your assigned area until your lead releases you.</span></li>
+      <li class="w-item"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11V7a5 5 0 0 1 10 0v4"/><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M4 4l16 16"/></svg></span><span><b>No physical contact</b>Never touch a guest. No chasing that could cause a fall or harm.</span></li>
+      <li class="w-item"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8l-1 7a3 3 0 0 1-6 0z"/><path d="M12 13v8M9 21h6"/><path d="M4 4l16 16"/></svg></span><span><b>No alcohol or substances</b>Not before, not during. Zero tolerance on haunt nights.</span></li>
+      <li class="w-item"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c2 4 6 6 6 11a6 6 0 0 1-12 0c0-3 2-4 2-6 1 1 2 2 2 3 0-3 1-6 2-8z"/></svg></span><span><b>Fire, emergency &amp; first aid</b>Follow procedures and your zone lead's calls. Know your exits.</span></li>
+      <li class="w-item"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 16H3z"/><path d="M12 10v4M12 17h.01"/></svg></span><span><b>Known hazards</b>Strobes, fog, darkness, confined spaces, uneven ground, weather, mud, wildlife.</span></li>
+      <li class="w-item"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><path d="M4 4l16 16"/></svg></span><span><b>Keep it secret</b>Layouts, scares, and tactics stay confidential. Don't post walkthrough video.</span></li>
+      <li class="w-item"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v7a7 7 0 0 1-14 0z"/><path d="M9 14c1.5 1.8 4.5 1.8 6 0"/><path d="M12 18v3M9 21h6"/></svg></span><span><b>Costumes &amp; props</b>Company property. Sign them out, bring them back.</span></li>
+      <li class="w-item"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></span><span><b>Photo &amp; video release</b>You may appear in our photos and video, and we can use them to promote the haunt.</span></li>
+      <li class="w-item"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></span><span><b>Assumption of risk &amp; release</b>You accept the risks of a night-time outdoor haunt and release the haunt from liability.</span></li>
+      <li class="w-item"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M5 8l7-5 7 5"/><path d="M3 12l2-4 2 4a2 2 0 0 1-4 0zM17 12l2-4 2 4a2 2 0 0 1-4 0z"/></svg></span><span><b>Minnesota law</b>The agreement is governed by the laws of the State of Minnesota.</span></li>
+      <li class="w-item"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg></span><span><b>One checkbox</b>Checking "I agree" on the signup form is your signature for the season.</span></li>
+    </ul>
+
+    <details class="full">
+      <summary><span>Read the full agreement</span><span class="faq-icon" aria-hidden="true"></span></summary>
+      <div class="full-body">
+        <div class="ph" role="note">
+          <h4>Full waiver text — supplied by owner</h4>
+          <p>1. Volunteer status. Placeholder paragraph. The owner's complete Volunteer Agreement &amp; Liability Waiver is inserted here verbatim before launch. This concept page summarizes its key points above and does not reproduce the legal text.</p>
+          <p>2. Conduct and safety. Placeholder paragraph covering arrival, assigned areas, no-contact policy, alcohol and substance policy, and fire, emergency, and first-aid procedures.</p>
+          <p>3. Hazards and assumption of risk. Placeholder paragraph listing strobes, fog, darkness, confined spaces, uneven ground, weather, mud, and wildlife, and the volunteer's acceptance of those risks.</p>
+          <p>4. Confidentiality, property, and media. Placeholder paragraph covering confidentiality of layouts and scare tactics, ownership of costumes and props, and the photo/video release.</p>
+          <p>5. Release of liability and governing law. Placeholder paragraph covering the release of liability and the application of Minnesota law.</p>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+</main>
+
+<!-- ---------- Crew footer ---------- -->
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="06-bonfire.html" aria-label="Nightmare on the Crow — public site">
+          <svg aria-hidden="true"><use href="#crow"/></svg>
+          <span class="brand-name">Nightmare on the Crow<small>Crew portal</small></span>
+        </a>
+        <p>Built by three neighbors and a volunteer crew that spends all year waiting for four nights. Thanks for being one of them.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Where</h4>
+        <ul>
+          <li>6470 Harff Road<br>Greenfield, MN 55373</li>
+          <li>Crew call: 7:00 PM<br>Haunt: 7:30 – 10:30 PM</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Links</h4>
+        <ul>
+          <li><a href="#">Questions? Contact us</a></li>
+          <li><a href="06-bonfire.html">Back to the public site</a></li>
+          <li><a href="#waiver">Volunteer agreement</a></li>
+          <li><button type="button" class="footer-signout" id="sign-out-2" style="padding:0;color:var(--muted);font-size:.93rem">Sign out</button></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Follow</h4>
+        <div class="socials">
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8h3.3z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5c2.8 0 3.1 0 4.2.1 2.8.1 4.1 1.5 4.2 4.2.1 1.1.1 1.4.1 4.2s0 3.1-.1 4.2c-.1 2.7-1.4 4.1-4.2 4.2-1.1.1-1.4.1-4.2.1s-3.1 0-4.2-.1c-2.8-.1-4.1-1.5-4.2-4.2C3.5 15.1 3.5 14.8 3.5 12s0-3.1.1-4.2C3.7 5.1 5 3.7 7.8 3.6c1.1-.1 1.4-.1 4.2-.1zM12 2C9.3 2 8.9 2 7.9 2.1 4.2 2.2 2.2 4.2 2.1 7.9 2 8.9 2 9.3 2 12s0 3.1.1 4.1c.1 3.7 2.1 5.7 5.8 5.8 1 .1 1.4.1 4.1.1s3.1 0 4.1-.1c3.7-.1 5.7-2.1 5.8-5.8.1-1 .1-1.4.1-4.1s0-3.1-.1-4.1c-.1-3.7-2.1-5.7-5.8-5.8C15.1 2 14.7 2 12 2zm0 4.9a5.1 5.1 0 1 0 0 10.2 5.1 5.1 0 0 0 0-10.2zm0 8.4a3.3 3.3 0 1 1 0-6.6 3.3 3.3 0 0 1 0 6.6zm5.3-9.8a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 2h-3.2v13.2a2.9 2.9 0 1 1-2.9-2.9c.3 0 .6 0 .9.1V9.1a6.2 6.2 0 1 0 5.2 6.1V8.6a7.4 7.4 0 0 0 4.4 1.4V6.8A4.4 4.4 0 0 1 16.5 2z"/></svg></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Nightmare on the Crow · Crew portal · Greenfield, Minnesota</span>
+      <span>Concept mockup — no data is stored or sent</span>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /portal -->
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite"><span class="dot" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></span><span id="toast-text"></span></div>
+
+<script>
+/* ==========================================================================
+   Behaviour. Isolated IIFEs with null-guards; no external libraries.
+   Demo only: the gate password is "crow", nothing is persisted beyond
+   sessionStorage, and the signup form never sends anything.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  var reduceMQ = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : { matches: false };
+  function $(id) { return document.getElementById(id); }
+  function onMQChange(mq, fn) {
+    if (!mq) return;
+    if (mq.addEventListener) mq.addEventListener('change', fn);
+    else if (mq.addListener) mq.addListener(fn);
+  }
+
+  /* ---------- Roster data (Opening Night baseline + per-night deltas) ---------- */
+  var ZONES = [
+    { id: 'I', name: 'Front & Operations', kind: 'help', stations: [
+      ['Tickets', 4, 4], ['In Charge', 1, 1], ['Front Entertainer', 0, 2, 'actor'],
+      ['Set Design', 4, 6, null, 'Ben leads the build'], ['Shirt Sales', 1, 1], ['Security', 3, 4]
+    ]},
+    { id: 'II', name: 'The Yard', kind: 'actor', stations: [
+      ["Ben's Shed", 0, 4], ['Bridge', 0, 1], ['Beetlejuice', 1, 1, null, 'Evan'],
+      ['Kids Shack', 8, 8], ['Butcher', 0, 1], ['Black Sheets', 0, 2], ['Blackout', 0, 1]
+    ]},
+    { id: 'III', name: 'The Woods', kind: 'actor', stations: [
+      ['Witch', 0, 1], ['Dark Harvest', 2, 5], ['Bus', 0, 1], ['Barn Hang', 0, 4],
+      ['Tunnel', 0, 2], ['Cage', 0, 1], ['Last Woods', 0, 1]
+    ]},
+    { id: 'IV', name: 'The Back Forty', kind: 'actor', stations: [
+      ['Garage/Shed', 0, 3, 'help'], ['Junk & Candy Van', 0, 3], ['Corn Field', 0, 3],
+      ['Graveyard', 0, 2], ['Camp', 0, 2], ['Crossing Camp', 0, 3], ['Saloon', 0, 2]
+    ]}
+  ];
+  var NIGHTS = [
+    { id: 'oct9',  short: 'Fri Oct 9',  long: 'Friday, October 9',    end: '2026-10-09T22:30:00-05:00', delta: {} },
+    { id: 'oct10', short: 'Sat Oct 10', long: 'Saturday, October 10', end: '2026-10-10T22:30:00-05:00',
+      delta: { 'Front Entertainer': 1, 'Bridge': 1, 'Butcher': 1, 'Tunnel': 1, 'Corn Field': 1, 'Set Design': 1 } },
+    { id: 'oct16', short: 'Fri Oct 16', long: 'Friday, October 16',   end: '2026-10-16T22:30:00-05:00',
+      delta: { 'Tickets': -1, 'Security': -1, 'Dark Harvest': -1, 'Kids Shack': -1 } },
+    { id: 'oct17', short: 'Sat Oct 17', long: 'Saturday, October 17', end: '2026-10-17T22:30:00-05:00',
+      delta: { 'Tickets': -1, 'Set Design': -1, 'Security': -1, 'Dark Harvest': -1, 'Kids Shack': -2, 'Black Sheets': 1 } }
+  ];
+  function nightById(id) { for (var i = 0; i < NIGHTS.length; i++) if (NIGHTS[i].id === id) return NIGHTS[i]; return NIGHTS[0]; }
+  function zoneById(id) { for (var i = 0; i < ZONES.length; i++) if (ZONES[i].id === id) return ZONES[i]; return null; }
+  function filledFor(st, night) {
+    var d = (night.delta && night.delta[st[0]]) || 0;
+    return Math.max(0, Math.min(st[2], st[1] + d));
+  }
+  function openCount(night) {
+    var n = 0;
+    for (var z = 0; z < ZONES.length; z++) for (var s = 0; s < ZONES[z].stations.length; s++) {
+      var st = ZONES[z].stations[s];
+      n += st[2] - filledFor(st, night);
+    }
+    return n;
+  }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+  var state = { night: 'oct9' };
+
+  /* ---------- Toast ---------- */
+  var toastTimer;
+  function toast(msg) {
+    var el = $('toast'), txt = $('toast-text');
+    if (!el || !txt) return;
+    txt.textContent = msg;
+    el.classList.add('is-on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove('is-on'); }, 4200);
+  }
+
+  /* ---------- Ember particle system (used by the gate and the top band) ---------- */
+  function embers(canvas, host, density) {
+    if (!canvas || !canvas.getContext) return;
+    var ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    var W = 0, H = 0, particles = [], raf = null, inView = true, last = 0;
+    var TAU = Math.PI * 2;
+
+    function resize() {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = canvas.clientWidth || (host && host.clientWidth) || 1;
+      H = canvas.clientHeight || (host && host.clientHeight) || 1;
+      canvas.width = Math.floor(W * dpr);
+      canvas.height = Math.floor(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    function spawn(p) {
+      p.x = Math.random() * W; p.y = H + Math.random() * 40;
+      p.r = 0.8 + Math.random() * 2.0; p.vy = 0.3 + Math.random() * 0.8; p.vx = (Math.random() - 0.5) * 0.3;
+      p.life = 0; p.max = 260 + Math.random() * 320; p.phase = Math.random() * TAU; p.freq = 0.012 + Math.random() * 0.02;
+      p.warm = Math.random() > 0.55 ? '255,179,71' : '255,106,0';
+      return p;
+    }
+    function init() {
+      particles = [];
+      var n = Math.min(140, Math.max(30, Math.floor(W / density)));
+      for (var i = 0; i < n; i++) { var p = spawn({}); p.y = Math.random() * H; p.life = Math.random() * p.max; particles.push(p); }
+    }
+    function frame(t) {
+      raf = null;
+      var dt = last ? Math.min(2.5, (t - last) / 16.67) : 1;
+      last = t;
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.life += dt; var s = p.life / p.max;
+        p.y -= p.vy * dt; p.x += (p.vx + Math.sin(p.life * p.freq + p.phase) * 0.38) * dt;
+        if (p.life >= p.max || p.y < -12) { spawn(p); continue; }
+        var a = Math.sin(Math.PI * s) * 0.95, r = p.r * (1 - s * 0.45);
+        ctx.beginPath(); ctx.fillStyle = 'rgba(' + p.warm + ',' + (a * 0.16).toFixed(3) + ')'; ctx.arc(p.x, p.y, r * 3.4, 0, TAU); ctx.fill();
+        ctx.beginPath(); ctx.fillStyle = 'rgba(' + p.warm + ',' + a.toFixed(3) + ')'; ctx.arc(p.x, p.y, r, 0, TAU); ctx.fill();
+      }
+      if (inView && !document.hidden && !reduceMQ.matches && !canvas.closest('[hidden]')) raf = requestAnimationFrame(frame);
+    }
+    function drawStatic() {
+      ctx.clearRect(0, 0, W, H);
+      var g = ctx.createRadialGradient(W / 2, H, 0, W / 2, H, Math.max(W, H) * 0.6);
+      g.addColorStop(0, 'rgba(255,106,0,.24)'); g.addColorStop(1, 'rgba(255,106,0,0)');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      for (var i = 0; i < 50; i++) {
+        var x = Math.random() * W, y = H - Math.random() * H * 0.55, r = 0.8 + Math.random() * 1.8;
+        ctx.beginPath(); ctx.fillStyle = 'rgba(255,179,71,' + (0.25 + Math.random() * 0.5).toFixed(2) + ')'; ctx.arc(x, y, r, 0, TAU); ctx.fill();
+      }
+    }
+    function start() {
+      if (reduceMQ.matches) { drawStatic(); return; }
+      if (!raf && inView && !document.hidden) { last = 0; raf = requestAnimationFrame(frame); }
+    }
+    var rt;
+    window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { resize(); init(); if (reduceMQ.matches) drawStatic(); }, 120); });
+    document.addEventListener('visibilitychange', start);
+    if ('IntersectionObserver' in window && host) {
+      new IntersectionObserver(function (entries) { inView = entries[0].isIntersecting; start(); }, { threshold: 0 }).observe(host);
+    }
+    onMQChange(reduceMQ, function () { if (raf) { cancelAnimationFrame(raf); raf = null; } init(); start(); });
+    return { restart: function () { resize(); init(); start(); }, stop: function () { if (raf) { cancelAnimationFrame(raf); raf = null; } } };
+  }
+
+  var gateFx = embers($('gate-embers'), $('gate'), 9);
+  var bandFx = null;
+
+  /* ---------- 1. Gate ---------- */
+  (function gate() {
+    var gate = $('gate'), portal = $('portal'), form = $('gate-form'), input = $('gate-pass');
+    var err = $('gate-err'), card = $('gate-card'), eye = $('gate-eye'), field = $('gate-field');
+    if (!gate || !portal || !form || !input) return;
+    var DEMO = 'crow'; // demo gate only — never the real site password
+    var KEY = 'notc-crew-demo';
+    var lines = [
+      'That\'s not the word. The gate stays shut.',
+      'Still not it. The crow is watching you type.',
+      'Nope. Hint: it\'s the bird on the sign.'
+    ];
+    var tries = 0;
+
+    function unlock(silent) {
+      portal.hidden = false;
+      gate.classList.add('is-out');
+      gate.setAttribute('aria-hidden', 'true');
+      if (gateFx) gateFx.stop();
+      setTimeout(function () { gate.hidden = true; }, 500);
+      try { sessionStorage.setItem(KEY, '1'); } catch (e) { /* storage unavailable — fine */ }
+      if (!bandFx) bandFx = embers($('band-embers'), document.querySelector('.band'), 12);
+      else bandFx.restart();
+      document.dispatchEvent(new CustomEvent('portal:open'));
+      if (!silent) {
+        toast('Welcome back. The board is live.');
+        var h = $('portal-title'); if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+      }
+    }
+    function lock() {
+      try { sessionStorage.removeItem(KEY); } catch (e) { /* ignore */ }
+      window.scrollTo(0, 0);
+      portal.hidden = true;
+      gate.hidden = false;
+      gate.classList.remove('is-out');
+      gate.removeAttribute('aria-hidden');
+      input.value = '';
+      if (field) field.classList.remove('is-invalid');
+      if (gateFx) gateFx.restart();
+      setTimeout(function () { input.focus(); }, 60);
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var v = (input.value || '').trim().toLowerCase();
+      if (v === DEMO) { unlock(false); return; }
+      tries++;
+      if (err) err.querySelector('span').textContent = v ? lines[Math.min(tries - 1, lines.length - 1)] : 'Enter the crew password to continue.';
+      if (field) field.classList.add('is-invalid');
+      input.setAttribute('aria-invalid', 'true');
+      if (card && !reduceMQ.matches) { card.classList.remove('is-shake'); void card.offsetWidth; card.classList.add('is-shake'); }
+      input.select();
+    });
+    input.addEventListener('input', function () {
+      if (field) field.classList.remove('is-invalid');
+      input.removeAttribute('aria-invalid');
+    });
+    if (eye) eye.addEventListener('click', function () {
+      var show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      eye.setAttribute('aria-pressed', show ? 'true' : 'false');
+      eye.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+      input.focus();
+    });
+
+    var so1 = $('sign-out'), so2 = $('sign-out-2');
+    if (so1) so1.addEventListener('click', lock);
+    if (so2) so2.addEventListener('click', lock);
+
+    // ?crew=open skips the gate (launcher preview); sessionStorage remembers a successful entry.
+    var skip = /[?&]crew=open(&|$)/.test(window.location.search);
+    var remembered = false;
+    try { remembered = sessionStorage.getItem(KEY) === '1'; } catch (e) { remembered = false; }
+    if (skip || remembered) { unlock(true); }
+    else { setTimeout(function () { input.focus(); }, 80); }
+  })();
+
+  /* ---------- 2. Header compact state ---------- */
+  (function scrollFx() {
+    var header = $('site-header');
+    if (!header) return;
+    var ticking = false;
+    function update() {
+      ticking = false;
+      var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+      header.classList.toggle('is-compact', y > 30);
+    }
+    window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    update();
+  })();
+
+  /* ---------- 3. Summary strip: nights left + countdown days ---------- */
+  (function summary() {
+    var nightsEl = $('sum-nights'), daysEl = $('sum-days'), daysS = $('sum-days-s');
+    var now = Date.now(), left = 0;
+    for (var i = 0; i < NIGHTS.length; i++) { var t = new Date(NIGHTS[i].end).getTime(); if (!isNaN(t) && t > now) left++; }
+    if (nightsEl) nightsEl.textContent = String(left);
+    var target = new Date('2026-10-09T19:30:00-05:00').getTime();
+    function tick() {
+      var diff = target - Date.now();
+      if (isNaN(diff)) diff = 0;
+      if (diff <= 0) {
+        if (daysEl) daysEl.textContent = 'Now';
+        if (daysS) daysS.textContent = 'Season is on — see you in the woods';
+        return;
+      }
+      var d = Math.floor(diff / 864e5), h = Math.floor(diff / 36e5) % 24;
+      if (daysEl) daysEl.textContent = d + 'd ' + h + 'h';
+    }
+    tick();
+    setInterval(tick, 60000);
+  })();
+
+  /* ---------- 4. Station board (tabs + zone panels) ---------- */
+  (function board() {
+    var panel = $('panel-board'), tabs = $('night-tabs');
+    if (!panel || !tabs) return;
+    var tabBtns = tabs.querySelectorAll('[role="tab"]');
+
+    function pips(filled, total) {
+      var out = '';
+      for (var i = 0; i < total; i++) {
+        out += i < filled
+          ? '<i class="pip filled"><svg aria-hidden="true"><use href="#tick"/></svg></i>'
+          : '<i class="pip open"></i>';
+      }
+      return out;
+    }
+    function render() {
+      var night = nightById(state.night);
+      var html = '';
+      for (var z = 0; z < ZONES.length; z++) {
+        var zone = ZONES[z], zOpen = 0, rows = '';
+        for (var s = 0; s < zone.stations.length; s++) {
+          var st = zone.stations[s];
+          var filled = filledFor(st, night), total = st[2], open = total - filled;
+          var kind = st[3] || zone.kind;
+          zOpen += open;
+          var sub = st[4] ? '<small>' + esc(st[4]) + '</small>' : '';
+          var pipHtml = '<span class="pips" aria-label="' + filled + ' of ' + total + ' filled">' + pips(filled, total) + '</span>';
+          if (open > 0) {
+            var badge = kind === 'help'
+              ? '<span class="badge badge-help">Need help · ' + open + '</span>'
+              : '<span class="badge badge-need">Need actor · ' + open + '</span>';
+            rows += '<button type="button" class="station is-open" data-zone="' + zone.id + '" data-station="' + esc(st[0]) + '" ' +
+              'aria-label="' + esc(st[0]) + ', Zone ' + zone.id + ': ' + open + ' open of ' + total + '. Sign up for this station.">' +
+              '<span class="st-name">' + esc(st[0]) + sub + '</span>' + pipHtml + badge + '</button>';
+          } else {
+            rows += '<div class="station is-full"><span class="st-name">' + esc(st[0]) + sub + '</span>' + pipHtml +
+              '<span class="badge badge-full">Full</span></div>';
+          }
+        }
+        html += '<section class="card zone" aria-labelledby="zone-' + zone.id + '">' +
+          '<div class="zone-head"><h3 id="zone-' + zone.id + '"><span class="roman">Zone ' + zone.id + '</span>' + esc(zone.name) + '</h3>' +
+          '<span class="zc"><b>' + zOpen + '</b> open · ' + zone.stations.length + ' stations</span></div>' +
+          '<div class="stations">' + rows + '</div></section>';
+      }
+      panel.innerHTML = html;
+      panel.setAttribute('aria-labelledby', 'tab-' + night.id);
+
+      var total = openCount(night);
+      var bo = $('board-open'), bn = $('board-night'), so = $('sum-open'), son = $('sum-open-night');
+      if (bo) bo.textContent = String(total);
+      if (bn) bn.textContent = night.long;
+      if (so) so.textContent = String(total);
+      if (son) son.textContent = night.short + ' · tap a night tab to change';
+      document.dispatchEvent(new CustomEvent('board:night', { detail: night }));
+    }
+
+    function select(btn, focus) {
+      for (var i = 0; i < tabBtns.length; i++) {
+        var on = tabBtns[i] === btn;
+        tabBtns[i].setAttribute('aria-selected', on ? 'true' : 'false');
+        tabBtns[i].setAttribute('tabindex', on ? '0' : '-1');
+      }
+      state.night = btn.getAttribute('data-night');
+      render();
+      if (focus) btn.focus();
+    }
+    for (var i = 0; i < tabBtns.length; i++) {
+      tabBtns[i].addEventListener('click', function () { select(this, false); });
+    }
+    tabs.addEventListener('keydown', function (e) {
+      var idx = -1;
+      for (var i = 0; i < tabBtns.length; i++) if (tabBtns[i] === document.activeElement) idx = i;
+      if (idx < 0) return;
+      var next = null;
+      if (e.key === 'ArrowRight') next = tabBtns[(idx + 1) % tabBtns.length];
+      else if (e.key === 'ArrowLeft') next = tabBtns[(idx - 1 + tabBtns.length) % tabBtns.length];
+      else if (e.key === 'Home') next = tabBtns[0];
+      else if (e.key === 'End') next = tabBtns[tabBtns.length - 1];
+      if (next) { e.preventDefault(); select(next, true); }
+    });
+
+    // Open-slot click → pre-fill the signup form and scroll to it.
+    panel.addEventListener('click', function (e) {
+      var btn = e.target.closest('.station.is-open');
+      if (!btn) return;
+      document.dispatchEvent(new CustomEvent('board:pick', { detail: {
+        zone: btn.getAttribute('data-zone'), station: btn.getAttribute('data-station'), night: state.night
+      }}));
+    });
+
+    render();
+  })();
+
+  /* ---------- 5. Signup form ---------- */
+  (function signup() {
+    var form = $('signup-form'), success = $('success'), receipt = $('receipt');
+    var zoneSel = $('zone'), stSel = $('station'), prefill = $('prefill'), prefillText = $('prefill-text');
+    var formErr = $('form-error');
+    if (!form || !zoneSel || !stSel) return;
+
+    // Populate zone select
+    for (var z = 0; z < ZONES.length; z++) {
+      var o = document.createElement('option');
+      o.value = ZONES[z].id; o.textContent = 'Zone ' + ZONES[z].id + ' · ' + ZONES[z].name;
+      zoneSel.appendChild(o);
+    }
+    function fillStations(zoneId, keep) {
+      var zone = zoneById(zoneId);
+      var night = nightById(state.night);
+      var prev = keep || stSel.value;
+      stSel.innerHTML = '';
+      var first = document.createElement('option');
+      first.value = ''; first.textContent = zone ? 'Choose a station' : 'Choose a zone first';
+      stSel.appendChild(first);
+      stSel.disabled = !zone;
+      if (!zone) return;
+      for (var i = 0; i < zone.stations.length; i++) {
+        var st = zone.stations[i], open = st[2] - filledFor(st, night);
+        var o = document.createElement('option');
+        o.value = st[0];
+        o.textContent = st[0] + (open > 0 ? ' — ' + open + ' open' : ' — full');
+        stSel.appendChild(o);
+      }
+      if (prev) stSel.value = prev;
+      if (stSel.value !== prev) stSel.value = '';
+    }
+    zoneSel.addEventListener('change', function () { fillStations(zoneSel.value, ''); clearErr('f-zone'); });
+    stSel.addEventListener('change', function () { clearErr('f-station'); });
+    document.addEventListener('board:night', function () { if (zoneSel.value) fillStations(zoneSel.value, stSel.value); });
+
+    // Pre-fill from the station board
+    document.addEventListener('board:pick', function (e) {
+      var d = e.detail;
+      // If the success card is showing, go back to the form first.
+      if (success && success.classList.contains('is-on')) reset(false);
+      zoneSel.value = d.zone;
+      fillStations(d.zone, d.station);
+      stSel.value = d.station;
+      var box = form.querySelector('input[name="nights"][value="' + d.night + '"]');
+      if (box) box.checked = true;
+      clearErr('f-zone'); clearErr('f-station'); clearErr('f-nights');
+      var zone = zoneById(d.zone), night = nightById(d.night);
+      if (prefill && prefillText) {
+        prefillText.textContent = d.station + ' · Zone ' + d.zone + (zone ? ' (' + zone.name + ')' : '') + ' · ' + night.short;
+        prefill.classList.add('is-on');
+      }
+      var target = $('signup');
+      if (target) target.scrollIntoView({ behavior: reduceMQ.matches ? 'auto' : 'smooth', block: 'start' });
+      var first = $('first');
+      if (first) setTimeout(function () { first.focus({ preventScroll: true }); }, reduceMQ.matches ? 0 : 450);
+      toast('Station added: ' + d.station + ' · ' + night.short);
+    });
+
+    function setErr(fieldId, on) {
+      var f = $(fieldId); if (!f) return;
+      f.classList.toggle('is-invalid', on);
+      var ctl = f.querySelector('input, select');
+      if (ctl && ctl.type !== 'checkbox') { if (on) ctl.setAttribute('aria-invalid', 'true'); else ctl.removeAttribute('aria-invalid'); }
+      if (fieldId === 'f-agree') { var l = $('agree-label'); if (l) l.classList.toggle('is-invalid', on); }
+    }
+    function clearErr(id) { setErr(id, false); }
+    var ids = ['first', 'last', 'email'];
+    for (var i = 0; i < ids.length; i++) (function (id) {
+      var el = $(id); if (el) el.addEventListener('input', function () { clearErr('f-' + id); });
+    })(ids[i]);
+    var walk = $('walk'); if (walk) walk.addEventListener('change', function () { clearErr('f-walk'); });
+    var agree = $('agree'); if (agree) agree.addEventListener('change', function () { clearErr('f-agree'); });
+    var nightBoxes = form.querySelectorAll('input[name="nights"]');
+    for (var n = 0; n < nightBoxes.length; n++) nightBoxes[n].addEventListener('change', function () { clearErr('f-nights'); });
+
+    function checkedNights() {
+      var out = [];
+      for (var i = 0; i < nightBoxes.length; i++) if (nightBoxes[i].checked) out.push(nightById(nightBoxes[i].value));
+      return out;
+    }
+    function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var firstBad = null;
+      function bad(fieldId, ctlId) { setErr(fieldId, true); if (!firstBad) firstBad = ctlId; }
+      var first = ($('first').value || '').trim(), last = ($('last').value || '').trim(), email = ($('email').value || '').trim();
+      if (!first) bad('f-first', 'first');
+      if (!last) bad('f-last', 'last');
+      if (!validEmail(email)) bad('f-email', 'email');
+      var nights = checkedNights();
+      if (!nights.length) bad('f-nights', nightBoxes[0] ? nightBoxes[0].id || null : null);
+      if (!zoneSel.value) bad('f-zone', 'zone');
+      if (!stSel.value) bad('f-station', 'station');
+      if (!walk || !walk.value) bad('f-walk', 'walk');
+      if (!agree || !agree.checked) bad('f-agree', 'agree');
+
+      if (firstBad !== null || form.querySelector('.field.is-invalid')) {
+        if (formErr) formErr.classList.add('is-on');
+        var focusEl = firstBad ? $(firstBad) : form.querySelector('.field.is-invalid input, .field.is-invalid select');
+        if (!focusEl) focusEl = form.querySelector('.field.is-invalid');
+        if (focusEl) { if (!focusEl.hasAttribute('tabindex') && !/^(INPUT|SELECT)$/.test(focusEl.tagName)) focusEl.setAttribute('tabindex', '-1'); focusEl.focus(); }
+        return;
+      }
+      if (formErr) formErr.classList.remove('is-on');
+
+      // Success state
+      var zone = zoneById(zoneSel.value);
+      var names = []; for (var i = 0; i < nights.length; i++) names.push(nights[i].short);
+      var nightsLabel = nights.length === 1 ? nights[0].short : (nights.length === 4 ? 'all four nights' : names.slice(0, -1).join(', ') + ' & ' + names[names.length - 1]);
+      $('success-title').textContent = first + ', you\'re on the list.';
+      $('success-lede').textContent = 'You\'re on the list for ' + nights.length + ' night' + (nights.length > 1 ? 's' : '') + ' — ' + nightsLabel + '. ' +
+        'Your zone lead will confirm your station before your walkthrough. Bring layers; the woods don\'t care what the forecast says.';
+      if (receipt) {
+        receipt.innerHTML =
+          '<li class="wide"><span>Nights</span><b>' + esc(names.join(' · ')) + '</b></li>' +
+          '<li><span>Zone</span><b>Zone ' + esc(zoneSel.value) + (zone ? ' · ' + esc(zone.name) : '') + '</b></li>' +
+          '<li><span>Station</span><b>' + esc(stSel.value) + '</b></li>' +
+          '<li><span>Walkthrough</span><b>' + esc(walk.value) + '</b></li>' +
+          '<li><span>Confirmation to</span><b>' + esc(email) + '</b></li>' +
+          '<li class="wide"><span>Waiver</span><b>Agreed ' + esc(new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })) + (($('news') && $('news').checked) ? ' · crew emails on' : '') + '</b></li>';
+      }
+      form.hidden = true;
+      if (success) { success.classList.add('is-on'); success.focus({ preventScroll: true }); }
+      var card = $('form-card'); if (card) card.scrollIntoView({ behavior: reduceMQ.matches ? 'auto' : 'smooth', block: 'start' });
+
+      var ss = $('sum-status'), sss = $('sum-status-s'), sc = $('sum-status-card');
+      if (ss) ss.textContent = 'On the list';
+      if (sss) sss.textContent = nights.length + ' night' + (nights.length > 1 ? 's' : '') + ' · ' + stSel.value + ' · Zone ' + zoneSel.value;
+      if (sc) sc.classList.add('ok');
+      toast('Signed up for ' + nights.length + ' night' + (nights.length > 1 ? 's' : '') + '. (Demo — nothing sent.)');
+    });
+
+    function reset(focus) {
+      form.reset();
+      fillStations('', '');
+      if (prefill) prefill.classList.remove('is-on');
+      if (formErr) formErr.classList.remove('is-on');
+      var bads = form.querySelectorAll('.is-invalid'); for (var i = 0; i < bads.length; i++) bads[i].classList.remove('is-invalid');
+      var invalids = form.querySelectorAll('[aria-invalid]'); for (var j = 0; j < invalids.length; j++) invalids[j].removeAttribute('aria-invalid');
+      if (success) success.classList.remove('is-on');
+      form.hidden = false;
+      if (focus) { var f = $('first'); if (f) f.focus(); }
+    }
+    var again = $('signup-again');
+    if (again) again.addEventListener('click', function () { reset(true); });
+  })();
+
+})();
+</script>
+</body>
+</html>

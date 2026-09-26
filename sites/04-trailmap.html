@@ -102,7 +102,8 @@ section{padding:72px 0}
 .nav__toggle span,.nav__toggle span::before,.nav__toggle span::after{display:block;width:20px;height:2px;background:var(--parch);position:relative;margin:0 auto;content:"";transition:transform .2s}
 .nav__toggle span::before{position:absolute;top:-6px}
 .nav__toggle span::after{position:absolute;top:6px}
-@media (max-width:1100px){
+.nav__crew{border:1px solid rgba(232,220,192,.35)}
+@media (max-width:1200px){
   .nav__toggle{display:block}
   .nav .btn--primary{display:none}
   .nav__links{
@@ -454,6 +455,7 @@ footer{background:#050807;border-top:1px solid rgba(232,220,192,.1);padding:40px
       <li><a href="#crew">Crew</a></li>
       <li><a href="#faq">FAQ</a></li>
       <li><a href="#directions">Directions</a></li>
+      <li><a href="04-trailmap-crew.html" class="nav__crew">Crew Log-in</a></li>
       <li><a href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a></li>
     </ul>
     <a class="btn btn--primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
@@ -787,21 +789,21 @@ footer{background:#050807;border-top:1px solid rgba(232,220,192,.1);padding:40px
     <div>
       <p class="eyebrow">Dates &amp; hours</p>
       <h2 id="nightsHeading">Trail Schedule</h2>
-      <p class="lead">Four nights only. The trail opens at 7:30 and the last group goes in at 10. Come early, eat something from the trucks, and let your eyes adjust.</p>
-      <p class="lead">Saturday, October 10 is a double: the lights-on Daylight Trail at noon for the kids, then the real thing after dark.</p>
+      <p class="lead">Four nights only. The trail opens at 7:30 and runs to 10:30; the last group goes in at 10. Come early, eat something from the trucks, and let your eyes adjust.</p>
+      <p class="lead">Saturday, October 10 is a double: the lights-on Daylight Trail at noon for the kids, then fireworks at 7:45 and the real thing after dark.</p>
       <a class="btn btn--primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
     </div>
     <div class="board" role="table" aria-label="2026 season schedule">
       <h3>2026 Season</h3>
-      <p class="board__sub">Gates 7:30 PM · Last entry 10:00 PM</p>
+      <p class="board__sub">Gates 7:30 PM · Trail runs to 10:30 PM · Last entry 10:00 PM</p>
       <ul class="board__rows">
-        <li role="row"><span class="day" role="cell">Oct 9<small>Friday</small></span><span class="what" role="cell">Opening night · haunted trail</span><span class="hrs" role="cell">7:30–10 PM</span></li>
+        <li role="row"><span class="day" role="cell">Oct 9<small>Friday</small></span><span class="what" role="cell">Opening night · haunted trail</span><span class="hrs" role="cell">7:30–10:30 PM</span></li>
         <li role="row" class="kids"><span class="day" role="cell">Oct 10<small>Saturday</small></span><span class="what" role="cell">Daylight Trail (Kids Day) · lights on</span><span class="hrs" role="cell">Noon–3 PM</span></li>
-        <li role="row"><span class="day" role="cell">Oct 10<small>Saturday</small></span><span class="what" role="cell">Haunted trail</span><span class="hrs" role="cell">7:30–10 PM</span></li>
-        <li role="row"><span class="day" role="cell">Oct 16<small>Friday</small></span><span class="what" role="cell">Haunted trail</span><span class="hrs" role="cell">7:30–10 PM</span></li>
-        <li role="row"><span class="day" role="cell">Oct 17<small>Saturday</small></span><span class="what" role="cell">Closing night · haunted trail</span><span class="hrs" role="cell">7:30–10 PM</span></li>
+        <li role="row"><span class="day" role="cell">Oct 10<small>Saturday</small></span><span class="what" role="cell"><strong style="color:#ffd77a">Fireworks at 7:45 PM</strong> · then the haunted trail</span><span class="hrs" role="cell">8–10:30 PM</span></li>
+        <li role="row"><span class="day" role="cell">Oct 16<small>Friday</small></span><span class="what" role="cell">Haunted trail</span><span class="hrs" role="cell">7:30–10:30 PM</span></li>
+        <li role="row"><span class="day" role="cell">Oct 17<small>Saturday</small></span><span class="what" role="cell">Closing night · haunted trail</span><span class="hrs" role="cell">7:30–10:30 PM</span></li>
       </ul>
-      <p class="board__foot">6470 Harff Road, Greenfield, MN · rain or shine, see FAQ</p>
+      <p class="board__foot">6470 Harff Road, Greenfield, MN · last entry 10 PM every night · rain or shine, see FAQ</p>
     </div>
   </div>
 </section>
@@ -819,7 +821,7 @@ footer{background:#050807;border-top:1px solid rgba(232,220,192,.1);padding:40px
           <p class="pass__kind">Trail pass · evening</p>
           <h3>Haunted Trail</h3>
           <p>The full trail, after dark: woods, tunnels, haunted buildings, corn maze, live actors. Valid any of the four nights.</p>
-          <p class="pass__meta">Oct 9 · 10 · 16 · 17 — 7:30 to 10 PM</p>
+          <p class="pass__meta">Oct 9 · 10 · 16 · 17 — 7:30 to 10:30 PM, last entry 10</p>
         </div>
         <div class="pass__stub"><span class="price"><sup>$</sup>20</span><small>admit one</small><span class="serial">NOTC-2026</span></div>
       </article>
@@ -877,6 +879,7 @@ footer{background:#050807;border-top:1px solid rgba(232,220,192,.1);padding:40px
         <li><b>$5</b><span>per ticket, all ages</span></li>
         <li><b>$5 off</b><span>Your Kids Day ticket is redeemable for $5 off an evening haunt ticket</span></li>
         <li><b>Lights on</b><span>Trick-or-treating and family activities on the trail</span></li>
+        <li><b>7:45 PM</b><span><strong>Come back at dark for fireworks</strong> — then the haunted trail runs 8:00 to 10:30 PM (last entry 10)</span></li>
       </ul>
       <a class="btn btn--primary" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Daylight Trail Tickets</a>
     </div>
@@ -942,8 +945,8 @@ footer{background:#050807;border-top:1px solid rgba(232,220,192,.1);padding:40px
         <li><b>You</b> — actor, builder, greeter, parking flashlight. Four nights, one crew, free hot food from the trucks (that part we can promise).</li>
       </ul>
       <div class="hero__cta">
-        <a class="btn btn--primary" href="#">Join the Crew</a>
-        <a class="btn btn--ghost" href="#">Actor login</a>
+        <a class="btn btn--primary" href="04-trailmap-crew.html#enlist">Join the Crew</a>
+        <a class="btn btn--ghost" href="04-trailmap-crew.html">Already on the crew? Log in</a>
       </div>
     </div>
   </div>
@@ -973,7 +976,7 @@ footer{background:#050807;border-top:1px solid rgba(232,220,192,.1);padding:40px
       </details>
       <details>
         <summary>How long does the trail take?</summary>
-        <p>Long enough. The path winds through the woods, the tunnels, the haunted buildings and the corn maze, and groups move at the pace of their slowest screamer. Plan on a good chunk of your evening, and get in line before the 10 PM last entry.</p>
+        <p>Long enough. The path winds through the woods, the tunnels, the haunted buildings and the corn maze, and groups move at the pace of their slowest screamer. Plan on a good chunk of your evening, and get in line before the 10 PM last entry — the trail runs until 10:30.</p>
       </details>
       <details>
         <summary>Will the actors touch me? Can I touch them?</summary>
@@ -1050,7 +1053,7 @@ footer{background:#050807;border-top:1px solid rgba(232,220,192,.1);padding:40px
         <ul>
           <li><a href="#ranger">Ranger's Notes</a></li>
           <li><a href="#crew">Join the Crew</a></li>
-          <li><a href="#">Actor login</a></li>
+          <li><a href="04-trailmap-crew.html">Crew Log-in</a></li>
           <li><a href="#directions">Directions</a></li>
           <li><a href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a></li>
         </ul>
@@ -1109,7 +1112,7 @@ footer{background:#050807;border-top:1px solid rgba(232,220,192,.1);padding:40px
       photo: 'PHOTO: trail in the trees, single lantern',
       body: [
         'The trail narrows, the lanterns thin out, and the forest along the Crow gets very quiet. The path winds — on purpose. You will lose sight of the group in front of you.',
-        'Live actors work these trees. Some of them are standing very still right now.'
+        'Live actors work these trees: the Witch, Dark Harvest, the Bus, the Barn Hang. Some of them are standing very still right now.'
       ],
       tip: 'Stay on the path. The path is the only thing we promise is ours.'
     },
@@ -1118,7 +1121,7 @@ footer{background:#050807;border-top:1px solid rgba(232,220,192,.1);padding:40px
       tag: 'Field note 03 · underground',
       photo: 'PHOTO: tunnel mouth, fog rolling out',
       body: [
-        'Low ceiling, no light, and walls that are closer than they were a second ago. The tunnels connect the woods to the buildings, and something is always in them.',
+        'Low ceiling, no light, and walls that are closer than they were a second ago. The Tunnel connects the woods to the buildings, and something is always in it.',
         'Keep one hand on the person ahead of you. Not because it helps. Because it feels better.'
       ],
       tip: 'Duck. Then keep ducking.'
@@ -1128,7 +1131,7 @@ footer{background:#050807;border-top:1px solid rgba(232,220,192,.1);padding:40px
       tag: 'Field note 04 · structures',
       photo: 'PHOTO: building interior, actor in doorway',
       body: [
-        'A cluster of buildings the neighbors have been filling for years: rooms of displays, dead ends, and live actors who know exactly where you’re about to look.',
+        'A cluster of buildings the neighbors have been filling for years — the Butcher, the Black Sheets, Blackout, the Saloon — rooms of displays, dead ends, and live actors who know exactly where you’re about to look.',
         'Every door on the trail leads somewhere. Not every somewhere leads out.'
       ],
       tip: 'If a room feels empty, it isn’t.'
@@ -1138,7 +1141,7 @@ footer{background:#050807;border-top:1px solid rgba(232,220,192,.1);padding:40px
       tag: 'Field note 05 · the corn',
       photo: 'PHOTO: corn rows at night, flashlight beam',
       body: [
-        'Eight feet of corn on every side and a maze that doesn’t match the one on this map. Interactive scares in here mean the corn talks back.',
+        'The Corn Field: eight feet of corn on every side and a maze that doesn’t match the one on this map. Interactive scares in here mean the corn talks back, and the Junk & Candy Van is parked somewhere it shouldn’t be.',
         'The rows are close enough to touch. We’d recommend not touching them.'
       ],
       tip: 'Left, left, right, scream, left.'
@@ -1158,7 +1161,7 @@ footer{background:#050807;border-top:1px solid rgba(232,220,192,.1);padding:40px
       tag: 'Field note 07 · last stop',
       photo: 'PHOTO: skeleton trapped in the cage',
       body: [
-        'The last thing between you and the way out: Ben’s skeleton, trapped in the cage, and whatever is standing guard over it tonight.',
+        'The last thing between you and the way out: the Cage — Ben’s skeleton, trapped — then the Last Woods, and whatever is standing guard over them tonight.',
         'Past this the trail loops back toward the parking field. You’ll know you’re out when you can see the barn lights again.'
       ],
       tip: 'Don’t run. Everyone runs. Don’t.'

@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Press Room — The Greenfield Gazette Crew Edition</title>
+<meta name="description" content="Staff-only Crew Edition of The Greenfield Gazette: newsroom bulletin, Help Wanted station board for all four nights, one-step volunteer enlistment form and Terms of Employment (unpaid) for the Nightmare on the Crow crew.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#efe6d0">
+
+<!-- Google Fonts: identical stack to the public Gazette page -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+<style>
+/* =====================================================================
+   CONCEPT #1 — THE GREENFIELD GAZETTE · CREW EDITION
+   The staff-only back room of the newspaper. Same paper, same ink, same
+   one red stamp. Sections: the Press Room door (gate), the Newsroom
+   Bulletin (message board), HELP WANTED classifieds (station board),
+   a Subscription / Enlistment coupon (signup) and Terms of Employment
+   (unpaid) (waiver). Everything visual is CSS or inline SVG.
+   ===================================================================== */
+
+/* ---------- Tokens (shared with 01-gazette.html) ---------- */
+:root{
+  --paper:#efe6d0;
+  --paper-2:#e6dbc1;
+  --paper-3:#f7f0de;
+  --ink:#1a1612;
+  --ink-2:#4a423a;
+  --ink-3:#8a8076;
+  --red:#a3231c;
+  --red-2:#c0392b;
+  --yellow:#f2d54a;
+  --ok:#2f6b3a;             /* filled-slot green, used sparingly */
+  --masthead:'UnifrakturCook','Playfair Display',Georgia,serif;
+  --head:'Playfair Display',Georgia,'Times New Roman',serif;
+  --body:'Libre Baskerville',Georgia,'Times New Roman',serif;
+  --small:'Old Standard TT','Libre Baskerville',Georgia,serif;
+  --type:'Courier New',Courier,'Lucida Console',monospace;   /* the typewriter */
+  --rule:1px solid var(--ink);
+  --gutter:clamp(16px,3vw,40px);
+  --maxw:1240px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html,body{overflow-x:hidden}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--body);font-size:1rem;line-height:1.6;
+  background-image:
+    radial-gradient(ellipse at 18% 12%, rgba(120,90,40,.10) 0, transparent 38%),
+    radial-gradient(ellipse at 82% 88%, rgba(120,90,40,.12) 0, transparent 40%),
+    radial-gradient(ellipse at 60% 40%, rgba(255,250,235,.55) 0, transparent 60%);
+  background-attachment:fixed;
+}
+/* .gated is set on <body> while the door is shut; the portal is [hidden] so the page is only as tall as the gate */
+
+/* Paper grain overlay */
+body::before{
+  content:"";position:fixed;inset:0;z-index:30;pointer-events:none;opacity:.18;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:220px 220px;
+}
+
+/* ---------- Skip link + focus ---------- */
+.skip{position:absolute;left:-999px;top:0;background:var(--ink);color:var(--paper);padding:.6em 1em;z-index:1000;font-family:var(--small)}
+.skip:focus{left:8px;top:8px}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px}
+a{color:var(--ink);text-decoration-thickness:1px;text-underline-offset:2px}
+a:hover{color:var(--red)}
+[hidden]{display:none !important}
+
+/* ---------- Layout ---------- */
+.wrap{position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;padding:0 var(--gutter)}
+.page{position:relative;z-index:1}
+.section{padding:40px var(--gutter) 24px}
+.section + .section{border-top:var(--rule)}
+p{margin:0 0 1em}
+
+/* ---------- Concept badge (required) ---------- */
+.concept-badge{
+  position:fixed;left:12px;bottom:12px;z-index:900;
+  font-family:var(--small);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;
+  background:var(--ink);color:var(--paper);padding:.45em .7em;border:1px solid var(--paper);box-shadow:0 0 0 2px var(--ink);
+}
+
+/* ---------- Common typographic pieces ---------- */
+.kicker{font-family:var(--small);font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-2);margin:0 0 6px}
+.kicker.red{color:var(--red);font-weight:700}
+.section-head{
+  display:flex;align-items:center;gap:14px;margin:0 0 18px;
+  font-family:var(--head);font-weight:900;font-size:clamp(1.35rem,3vw,1.9rem);letter-spacing:.02em;text-transform:uppercase
+}
+.section-head::before,.section-head::after{content:"";flex:1;border-top:3px double var(--ink)}
+.section-head span{flex:0 0 auto;text-align:center;padding:0 6px}
+.byline{font-family:var(--small);font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin:10px 0 14px}
+.byline b{color:var(--ink)}
+.small{font-family:var(--small);font-size:.82rem;color:var(--ink-2)}
+.fine{font-family:var(--small);font-size:.72rem;line-height:1.45;color:var(--ink-2)}
+.drop::first-letter{font-family:var(--head);font-weight:900;font-size:3.6em;line-height:.78;float:left;padding:.08em .12em 0 0;color:var(--ink)}
+
+/* Red rubber stamp */
+.stamp{
+  display:inline-block;border:3px double var(--red);color:var(--red);
+  font-family:var(--small);font-weight:700;font-size:.78rem;letter-spacing:.24em;text-transform:uppercase;
+  padding:.35em .7em .3em;transform:rotate(-4deg);mix-blend-mode:multiply;opacity:.92;background:transparent;white-space:nowrap;line-height:1.1
+}
+.stamp.big{font-size:1rem;padding:.45em .9em .4em;border-width:4px}
+.stamp.pos{position:absolute;right:8px;top:-14px;z-index:2}
+.stamp.ink{border-color:var(--ink);color:var(--ink)}
+
+/* Buttons */
+.btn{
+  display:inline-block;background:var(--ink);color:var(--paper);text-decoration:none;cursor:pointer;
+  font-family:var(--small);font-weight:700;letter-spacing:.2em;text-transform:uppercase;font-size:.85rem;
+  padding:.9em 1.4em;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--red);
+  transition:transform .12s ease,box-shadow .12s ease
+}
+.btn:hover{color:var(--paper);transform:translate(2px,2px);box-shadow:2px 2px 0 var(--red)}
+.btn.red{background:var(--red);border-color:var(--red);box-shadow:4px 4px 0 var(--ink)}
+.btn.red:hover{box-shadow:2px 2px 0 var(--ink)}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:none}
+.btn.ghost:hover{background:var(--ink);color:var(--paper);transform:none}
+.btn-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:18px 0 6px}
+
+/* =====================================================================
+   1. THE GATE — "Press Room — Staff Only"
+   ===================================================================== */
+.gate{
+  min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;
+  padding:40px var(--gutter);position:relative;z-index:1
+}
+.door{
+  width:min(560px,100%);border:4px double var(--ink);background:var(--paper-2);padding:28px 26px 22px;position:relative;text-align:center;
+  box-shadow:0 0 0 8px var(--paper-2),0 0 0 9px var(--ink-3)
+}
+.door .stamp.pos{right:-10px;top:-18px;transform:rotate(7deg)}
+.door .plate{
+  display:inline-block;border:2px solid var(--ink);padding:.35em 1em;margin:0 0 14px;
+  font-family:var(--small);font-size:.72rem;letter-spacing:.34em;text-transform:uppercase;font-weight:700
+}
+.door h1{font-family:var(--head);font-weight:900;font-size:clamp(1.8rem,6vw,2.8rem);line-height:1;margin:0 0 6px;text-transform:uppercase;letter-spacing:.01em}
+.door .masthead-mini{font-family:var(--masthead);font-size:clamp(1.2rem,4vw,1.6rem);margin:0 0 10px;line-height:1}
+.door p.lede{font-size:.95rem;margin:0 auto 18px;max-width:42ch}
+/* the typewritten slip */
+.slip{
+  position:relative;margin:0 auto;width:min(420px,100%);background:var(--paper-3);border:1px solid var(--ink-3);
+  padding:18px 18px 14px;text-align:left;transform:rotate(-1.2deg);
+  box-shadow:3px 4px 0 rgba(26,22,18,.18);
+  font-family:var(--type);font-size:.9rem;line-height:1.5;color:var(--ink)
+}
+.slip::before{ /* tape */
+  content:"";position:absolute;left:50%;top:-10px;width:70px;height:20px;transform:translateX(-50%) rotate(2deg);
+  background:rgba(242,213,74,.55);border:1px solid rgba(26,22,18,.15)
+}
+.slip label{display:block;text-transform:uppercase;letter-spacing:.12em;font-size:.72rem;margin-bottom:6px}
+.slip .row{display:flex;gap:10px;align-items:stretch}
+.slip input{
+  flex:1 1 auto;min-width:0;font:inherit;font-size:1.05rem;letter-spacing:.2em;padding:.5em .6em;
+  background:transparent;border:0;border-bottom:2px solid var(--ink);color:var(--ink);border-radius:0
+}
+.slip input::placeholder{color:var(--ink-3);letter-spacing:.05em}
+.slip button{
+  flex:0 0 auto;font-family:var(--small);font-weight:700;letter-spacing:.18em;text-transform:uppercase;font-size:.72rem;
+  background:var(--ink);color:var(--paper);border:2px solid var(--ink);padding:.5em .9em;cursor:pointer
+}
+.slip button:hover{background:var(--red);border-color:var(--red)}
+.slip .demo{margin:10px 0 0;font-size:.7rem;color:var(--ink-2);letter-spacing:.04em}
+.slip .demo b{color:var(--red)}
+.gate-err{
+  margin:14px auto 0;max-width:420px;font-family:var(--small);font-size:.82rem;color:var(--red);font-weight:700;letter-spacing:.04em;min-height:1.4em
+}
+.slip.shake{animation:shake .4s ease}
+@keyframes shake{0%,100%{transform:rotate(-1.2deg) translateX(0)}25%{transform:rotate(-1.2deg) translateX(-6px)}75%{transform:rotate(-1.2deg) translateX(6px)}}
+.gate .back{margin-top:22px;font-family:var(--small);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase}
+.door .crow{width:44px;height:auto;color:var(--ink);display:block;margin:0 auto 6px}
+
+/* =====================================================================
+   MASTHEAD — reused, with a Crew Edition kicker
+   ===================================================================== */
+.masthead{padding-top:14px;border-bottom:4px double var(--ink)}
+.ears{
+  display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:end;
+  font-family:var(--small);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);
+  padding:6px 0 10px;border-bottom:var(--rule)
+}
+.ear{border:1px solid var(--ink);padding:.55em .7em;background:var(--paper-2);max-width:260px;line-height:1.35}
+.ear.right{justify-self:end;text-align:right}
+.ear strong{color:var(--ink);display:block;letter-spacing:.15em}
+.ear .temp{font-family:var(--head);font-size:1.6rem;font-weight:900;color:var(--red);line-height:1;display:block;margin:.1em 0}
+.ears .mid{text-align:center;padding-bottom:4px}
+.title-block{text-align:center;padding:18px 0 12px}
+.edition-kicker{
+  display:inline-block;font-family:var(--small);font-weight:700;font-size:.74rem;letter-spacing:.4em;text-transform:uppercase;color:var(--red);
+  border-top:2px solid var(--red);border-bottom:2px solid var(--red);padding:.3em .8em;margin-bottom:12px
+}
+.gazette-title{
+  font-family:var(--masthead);font-weight:700;font-size:clamp(2.35rem,8.6vw,6.4rem);line-height:.95;margin:0;letter-spacing:.005em;
+  display:flex;align-items:center;justify-content:center;gap:clamp(8px,2vw,22px);flex-wrap:nowrap
+}
+.gazette-title .crow{width:clamp(48px,9vw,120px);height:auto;flex:0 0 auto;color:var(--ink)}
+.gazette-title .crow.flip{transform:scaleX(-1)}
+.masthead-sub{font-family:var(--small);font-size:clamp(.66rem,1.5vw,.88rem);letter-spacing:.32em;text-transform:uppercase;margin:12px 0 0;color:var(--ink-2)}
+.masthead-sub b{color:var(--ink);font-weight:700}
+.dateline{
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:var(--rule);border-bottom:var(--rule);padding:6px 0;margin-top:14px;
+  font-family:var(--small);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase
+}
+.dateline span{white-space:nowrap}
+.dateline .price{color:var(--red);font-weight:700}
+
+/* ---------- Sticky section nav ---------- */
+.sections{position:sticky;top:0;z-index:100;background:var(--paper);border-top:var(--rule);border-bottom:3px solid var(--ink);box-shadow:0 6px 12px -8px rgba(26,22,18,.45)}
+.sections .wrap{display:flex;align-items:stretch;gap:0}
+.sections ul{
+  list-style:none;margin:0;padding:0;display:flex;gap:0;flex:1 1 auto;min-width:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  font-family:var(--small);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase
+}
+.sections ul::-webkit-scrollbar{display:none}
+.sections li{flex:0 0 auto}
+.sections li a{display:block;padding:.85em .8em;text-decoration:none;color:var(--ink);white-space:nowrap;border-right:1px solid var(--ink-3)}
+.sections li a:hover,.sections li a.active{background:var(--ink);color:var(--paper)}
+.sections .cta-mini{
+  flex:0 0 auto;display:flex;align-items:center;padding:0 .9em;background:var(--red);color:#fff;text-decoration:none;
+  font-family:var(--small);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;border-left:1px solid var(--ink)
+}
+.sections .cta-mini:hover{background:var(--ink);color:var(--paper)}
+
+/* =====================================================================
+   2. NEWSROOM BULLETIN — message board
+   ===================================================================== */
+.board{display:grid;grid-template-columns:2fr 1fr;gap:34px;align-items:start;margin-top:8px}
+.posts{border-top:3px solid var(--ink)}
+.post{border-bottom:var(--rule);padding:16px 0 14px;position:relative;display:grid;grid-template-columns:118px 1fr;gap:18px}
+.post time{
+  font-family:var(--small);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);line-height:1.4;padding-top:6px
+}
+.post time b{display:block;font-family:var(--head);font-weight:900;font-size:1.5rem;letter-spacing:0;color:var(--ink);line-height:1;margin:2px 0 4px}
+.post h3{font-family:var(--head);font-weight:900;font-size:1.15rem;line-height:1.2;margin:0 0 6px;text-transform:uppercase}
+.post p{font-size:.95rem;margin:0 0 .5em}
+.post ul{margin:.2em 0 .6em;padding-left:1.2em;font-size:.95rem}
+.post li{margin:.15em 0}
+.post .stamp.pos{top:10px;right:0}
+.post .sig{font-family:var(--small);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin:4px 0 0}
+.hours-flag{
+  display:inline-grid;grid-template-columns:auto auto;gap:2px 14px;border:2px solid var(--ink);padding:8px 12px;margin:6px 0 10px;background:var(--paper-3);
+  font-family:var(--small);font-size:.82rem
+}
+.hours-flag b{font-family:var(--head);font-weight:900;font-size:1.05rem}
+.hours-flag .fw{color:var(--red);font-weight:700}
+/* pinned note */
+.pinned{
+  position:relative;border:1px solid var(--ink);background:var(--paper-3);padding:26px 20px 18px;transform:rotate(1.2deg);
+  box-shadow:4px 5px 0 rgba(26,22,18,.16);font-family:var(--type);font-size:.9rem;line-height:1.5
+}
+.pinned::before{ /* pushpin */
+  content:"";position:absolute;left:50%;top:-11px;width:22px;height:22px;border-radius:50%;transform:translateX(-50%);
+  background:radial-gradient(circle at 35% 35%,#d94a3f,var(--red) 60%,#6e140f);box-shadow:0 2px 0 rgba(26,22,18,.35)
+}
+.pinned .tag{display:block;font-family:var(--small);font-weight:700;font-size:.7rem;letter-spacing:.32em;text-transform:uppercase;color:var(--red);margin-bottom:6px}
+.pinned h3{font-family:var(--head);font-weight:900;font-size:1.2rem;line-height:1.15;margin:0 0 8px;text-transform:uppercase}
+.pinned p{margin:0 0 .6em}
+.pinned a{font-weight:700}
+.copydesk{margin-top:22px;border-top:3px solid var(--ink);padding-top:10px}
+.copydesk h3{font-family:var(--small);font-size:.76rem;letter-spacing:.26em;text-transform:uppercase;margin:0 0 6px}
+.copydesk ul{list-style:none;margin:0;padding:0;font-family:var(--small);font-size:.9rem}
+.copydesk li{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dotted var(--ink-3);padding:4px 0}
+.copydesk li span:last-child{color:var(--ink-2);font-style:italic;text-align:right}
+
+/* =====================================================================
+   3. HELP WANTED — classifieds station board
+   ===================================================================== */
+.editions{display:flex;gap:0;border:2px solid var(--ink);margin:8px 0 18px;background:var(--paper-2)}
+.editions button{
+  flex:1 1 0;min-width:0;font-family:var(--small);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+  background:transparent;border:0;border-right:1px solid var(--ink);color:var(--ink);padding:.7em .5em;cursor:pointer;line-height:1.3
+}
+.editions button:last-child{border-right:0}
+.editions button small{display:block;font-size:.64rem;letter-spacing:.08em;text-transform:none;font-style:italic;color:var(--ink-2)}
+.editions button[aria-selected="true"]{background:var(--ink);color:var(--paper)}
+.editions button[aria-selected="true"] small{color:var(--paper-2)}
+.editions button:hover:not([aria-selected="true"]){background:var(--paper-3)}
+.summary{
+  display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:space-between;
+  border-top:3px solid var(--ink);border-bottom:var(--rule);padding:10px 0;margin-bottom:18px;font-family:var(--small)
+}
+.summary .n{font-family:var(--head);font-weight:900;font-size:clamp(1.5rem,4vw,2.2rem);line-height:1;color:var(--red)}
+.summary .n small{font-family:var(--small);font-weight:400;font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2);margin-left:8px}
+.summary .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.summary .legend i{display:inline-block;width:.9em;height:.9em;border:1px solid var(--ink);vertical-align:-1px;margin-right:5px}
+.summary .legend i.on{background:var(--ink)}
+.summary .legend i.need{border-color:var(--red);box-shadow:inset 0 0 0 2px var(--paper),inset 0 0 0 3px var(--red)}
+
+.classifieds{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.zone{padding:0 16px 16px;border-right:1px solid var(--ink-3)}
+.zone:first-child{padding-left:0}
+.zone:last-child{border-right:0;padding-right:0}
+.zone h3{
+  font-family:var(--small);font-weight:700;font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;margin:0 0 10px;
+  border-top:3px solid var(--ink);border-bottom:var(--rule);padding:8px 0 6px;display:flex;justify-content:space-between;gap:8px;align-items:baseline
+}
+.zone h3 small{font-weight:400;letter-spacing:.1em;color:var(--ink-2);font-size:.68rem;white-space:nowrap}
+.zone ul{list-style:none;margin:0;padding:0}
+.ad{position:relative;border-bottom:1px dotted var(--ink-3);padding:10px 0 12px}
+.ad:last-child{border-bottom:0}
+.ad-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ad h4{font-family:var(--head);font-weight:900;font-size:1.02rem;line-height:1.15;margin:0;text-transform:uppercase}
+.ad .count{font-family:var(--small);font-size:.72rem;letter-spacing:.12em;color:var(--ink-2);white-space:nowrap}
+.ad .who{font-family:var(--small);font-size:.72rem;letter-spacing:.08em;color:var(--ink-2);font-style:italic;display:block;margin-top:2px}
+.pips{display:flex;gap:4px;flex-wrap:wrap;margin:7px 0 8px}
+.pips i{
+  width:18px;height:18px;border:1px solid var(--ink);display:inline-flex;align-items:center;justify-content:center;
+  font-style:normal;font-family:var(--small);font-size:.7rem;font-weight:700;color:var(--paper);background:transparent
+}
+.pips i.on{background:var(--ink)}
+.pips i.need{border-color:var(--red);box-shadow:inset 0 0 0 2px var(--paper),inset 0 0 0 3px var(--red)}
+.ad .full{font-family:var(--small);font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-2);border:1px solid var(--ink-3);padding:.25em .55em;display:inline-block}
+.ad .claim{
+  display:inline-flex;align-items:center;gap:8px;width:100%;justify-content:space-between;
+  font-family:var(--small);font-weight:700;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;
+  background:var(--paper-3);border:2px solid var(--red);color:var(--red);padding:.55em .7em;cursor:pointer;text-align:left;line-height:1.2;min-height:44px
+}
+.ad .claim:hover,.ad .claim:focus-visible{background:var(--red);color:#fff}
+.ad .claim .arrow{font-family:var(--head);font-weight:900}
+.ad.open h4{color:var(--ink)}
+.ad .stamp{position:absolute;right:-6px;top:6px;font-size:.62rem;letter-spacing:.2em;padding:.3em .55em .25em;border-width:2px;transform:rotate(-7deg);pointer-events:none}
+.ad .stamp.help{border-style:double;border-width:3px}
+.board-foot{margin-top:18px;border-top:var(--rule);padding-top:10px;display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+
+/* =====================================================================
+   4. SUBSCRIPTION / ENLISTMENT FORM — coupon border
+   ===================================================================== */
+.enlist{display:grid;grid-template-columns:1.5fr 1fr;gap:34px;align-items:start}
+.coupon{position:relative;border:3px dashed var(--ink);padding:28px 26px 22px;background:var(--paper-3);box-shadow:0 0 0 6px var(--paper-3),0 0 0 7px var(--ink-3)}
+.coupon .clip{
+  position:absolute;top:-16px;left:22px;background:var(--paper-3);padding:0 8px;
+  font-family:var(--small);font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;font-weight:700;display:flex;gap:8px;align-items:center
+}
+.coupon .clip svg{width:22px;height:22px}
+.coupon h3{font-family:var(--head);font-weight:900;font-size:clamp(1.5rem,3.4vw,2.2rem);line-height:1.05;margin:4px 0 6px;text-transform:uppercase}
+.coupon .lede{font-size:.95rem}
+.prefill{
+  display:none;border:2px solid var(--red);background:#fff8e6;padding:8px 12px;margin:0 0 14px;
+  font-family:var(--small);font-size:.82rem;letter-spacing:.04em
+}
+.prefill.show{display:block}
+.prefill b{color:var(--red);letter-spacing:.14em;text-transform:uppercase;font-size:.72rem;margin-right:6px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}
+.grid .full{grid-column:1 / -1}
+.field{display:flex;flex-direction:column;gap:5px}
+.field > label,.field > .lbl{font-family:var(--small);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2)}
+.field .req{color:var(--red)}
+.field input[type="text"],.field input[type="email"],.field input[type="tel"],.field select{
+  font-family:var(--type);font-size:.95rem;padding:.6em .7em;border:1px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:0;width:100%;min-height:44px
+}
+.field select{
+  appearance:none;-webkit-appearance:none;padding-right:2.2em;
+  background-image:url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='10'%3E%3Cpath d='M1 1l6 7 6-7' fill='none' stroke='%231a1612' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right .8em center
+}
+.field select:disabled{opacity:.55}
+.field.err input,.field.err select,.checks.err{border-color:var(--red);box-shadow:0 0 0 2px rgba(163,35,28,.25)}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+fieldset legend{font-family:var(--small);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2);padding:0;margin-bottom:6px}
+.checks{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;border:1px solid transparent;padding:2px}
+.check{
+  display:flex;align-items:center;gap:10px;border:1px solid var(--ink);padding:.55em .7em;background:var(--paper);cursor:pointer;
+  font-family:var(--small);font-size:.86rem;line-height:1.2;min-height:44px
+}
+.check:hover{background:var(--paper-2)}
+.check input{width:18px;height:18px;margin:0;accent-color:var(--red);flex:0 0 auto}
+.check small{display:block;font-size:.68rem;color:var(--ink-2);letter-spacing:.06em;text-transform:uppercase}
+.agree{display:flex;gap:12px;align-items:flex-start;border-top:var(--rule);padding-top:14px;margin-top:4px;font-family:var(--small);font-size:.88rem;line-height:1.4}
+.agree input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--red);flex:0 0 auto}
+.agree.err{color:var(--red)}
+.errors{
+  display:none;border:2px solid var(--red);background:#fff8e6;padding:10px 14px;margin:0 0 14px;
+  font-family:var(--small);font-size:.84rem
+}
+.errors.show{display:block}
+.errors b{color:var(--red);letter-spacing:.16em;text-transform:uppercase;font-size:.72rem;display:block;margin-bottom:4px}
+.errors ul{margin:0;padding-left:1.2em}
+.form-foot{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:18px}
+.form-foot .btn{border-radius:0;font-family:var(--small)}
+.confirm{position:relative;border:3px double var(--ink);padding:26px 24px;background:var(--paper-2)}
+.confirm h3{font-family:var(--head);font-weight:900;font-size:clamp(1.4rem,3.4vw,2rem);line-height:1.05;margin:0 0 10px;text-transform:uppercase}
+.confirm dl{margin:12px 0;font-family:var(--small);display:grid;grid-template-columns:auto 1fr;gap:4px 16px;font-size:.92rem}
+.confirm dt{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2);padding-top:3px}
+.confirm dd{margin:0}
+.confirm .stamp.pos{right:12px;top:-16px;transform:rotate(6deg)}
+/* the side column */
+.desk{display:flex;flex-direction:column;gap:18px}
+.desk-box{border:var(--rule);padding:16px 18px;background:var(--paper-2)}
+.desk-box h3{font-family:var(--small);font-size:.76rem;letter-spacing:.26em;text-transform:uppercase;margin:0 0 8px;border-bottom:var(--rule);padding-bottom:6px}
+.desk-box p{font-size:.92rem;margin:0 0 .6em}
+.desk-box ol{margin:0;padding-left:1.2em;font-size:.92rem}
+.desk-box li{margin:.25em 0}
+.photo{
+  position:relative;border:1px solid var(--ink);background:
+    repeating-radial-gradient(circle at 30% 30%, rgba(26,22,18,.18) 0 1px, transparent 1px 4px),
+    linear-gradient(160deg,#c9bda0 0%,#9e917a 55%,#5b5245 100%);
+  min-height:180px;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;
+  color:var(--paper);font-family:var(--small);letter-spacing:.14em;text-transform:uppercase;font-size:.72rem;line-height:1.6
+}
+.photo::after{content:"";position:absolute;inset:6px;border:1px dashed rgba(239,230,208,.7);pointer-events:none}
+.photo strong{display:block;font-size:.9rem;letter-spacing:.2em;color:#fff}
+.caption{font-family:var(--small);font-size:.74rem;line-height:1.45;color:var(--ink-2);margin:6px 0 0;border-bottom:var(--rule);padding-bottom:8px}
+.caption b{color:var(--ink);letter-spacing:.08em;text-transform:uppercase}
+
+/* =====================================================================
+   5. TERMS OF EMPLOYMENT (UNPAID) — waiver summary
+   ===================================================================== */
+.terms-wrap{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:start}
+.terms{list-style:none;margin:0;padding:0;column-count:2;column-gap:30px;column-rule:1px solid var(--ink-3)}
+.terms li{break-inside:avoid;border-bottom:1px dotted var(--ink-3);padding:8px 0 8px 30px;position:relative;font-size:.92rem}
+.terms li::before{
+  content:"§";position:absolute;left:0;top:8px;font-family:var(--head);font-weight:900;color:var(--red);font-size:1.1rem;line-height:1.3
+}
+.terms li b{font-family:var(--small);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;display:block;color:var(--ink-2)}
+.terms li.wide{column-span:all;border-top:var(--rule);border-bottom:0;margin-top:6px;padding-top:12px}
+.fulltext{border:var(--rule);margin-top:20px;background:var(--paper-2)}
+.fulltext summary{
+  cursor:pointer;list-style:none;padding:12px 40px 12px 16px;position:relative;
+  font-family:var(--small);font-weight:700;font-size:.8rem;letter-spacing:.24em;text-transform:uppercase
+}
+.fulltext summary::-webkit-details-marker{display:none}
+.fulltext summary::after{content:"+";position:absolute;right:14px;top:8px;font-size:1.4rem;color:var(--red);font-weight:400}
+.fulltext[open] summary::after{content:"–"}
+.fulltext .body{padding:0 16px 16px;font-family:var(--small);font-size:.86rem;color:var(--ink-2);column-count:2;column-gap:28px}
+.fulltext .body p{break-inside:avoid}
+.fulltext .ph{
+  border:1px dashed var(--ink-3);padding:8px 10px;margin:0 0 10px;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);background:var(--paper-3);break-inside:avoid;column-span:all
+}
+.terms-side .stamp.pos{top:-14px;right:10px}
+.terms-side{position:relative;border:3px double var(--ink);padding:20px 20px 16px;background:var(--paper-2)}
+.terms-side h3{font-family:var(--head);font-weight:900;font-size:1.3rem;margin:0 0 8px;text-transform:uppercase;line-height:1.1}
+.terms-side p{font-size:.92rem}
+.terms-side ul{margin:.4em 0 .8em;padding-left:1.2em;font-size:.92rem}
+
+/* =====================================================================
+   FOOTER
+   ===================================================================== */
+footer{border-top:4px double var(--ink);margin-top:40px;padding:26px 0 60px;font-family:var(--small)}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:30px}
+.foot-title{font-family:var(--masthead);font-size:1.8rem;margin:0 0 4px;line-height:1}
+.foot-grid h3{font-size:.74rem;letter-spacing:.26em;text-transform:uppercase;margin:0 0 8px;border-bottom:var(--rule);padding-bottom:4px}
+.foot-grid ul{list-style:none;margin:0;padding:0;font-size:.9rem}
+.foot-grid li{padding:3px 0}
+.socials{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.socials a{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--ink);padding:.4em .7em;text-decoration:none;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase}
+.socials a:hover{background:var(--ink);color:var(--paper)}
+.socials svg{width:16px;height:16px}
+.colophon{margin-top:26px;border-top:var(--rule);padding-top:12px;font-size:.72rem;color:var(--ink-2);letter-spacing:.06em;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1000px){
+  .classifieds{grid-template-columns:repeat(2,1fr)}
+  .zone:nth-child(2n){border-right:0;padding-right:0}
+  .zone:nth-child(2n+1){padding-left:0}
+  .zone:nth-child(-n+2){border-bottom:1px solid var(--ink-3);margin-bottom:16px}
+  .terms{column-count:1;column-rule:0}
+}
+@media (max-width:820px){
+  .board,.enlist,.terms-wrap{grid-template-columns:1fr}
+  .pinned{transform:none}
+  .foot-grid{grid-template-columns:1fr}
+  .ears{grid-template-columns:1fr 1fr}
+  .ears .mid{grid-column:1 / -1;order:3;padding-top:6px;border-top:1px dotted var(--ink-3)}
+  .ear{max-width:none}
+  .fulltext .body{column-count:1}
+  .checks{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:640px){
+  .classifieds{grid-template-columns:1fr}
+  .zone,.zone:nth-child(n){border-right:0;padding-left:0;padding-right:0;border-bottom:0;margin-bottom:8px}
+  .editions{flex-wrap:wrap}
+  .editions button{flex:1 1 50%;border-bottom:1px solid var(--ink)}
+  .editions button:nth-child(2n){border-right:0}
+  .editions button:nth-child(n+3){border-bottom:0}
+  .post{grid-template-columns:1fr;gap:6px}
+  .post time b{display:inline;font-size:1.1rem;margin:0 6px 0 0}
+  .post .stamp.pos{position:static;display:inline-block;margin:0 0 6px;transform:rotate(-3deg)}
+  .grid{grid-template-columns:1fr}
+  .gazette-title .crow.flip{display:none}
+  .gazette-title{gap:8px}
+  .ears{grid-template-columns:1fr}
+  .ear.right{justify-self:stretch;text-align:left}
+  .stamp.pos{position:static;display:inline-block;margin-bottom:8px}
+  .door .stamp.pos,.confirm .stamp.pos{position:absolute;margin:0}
+  .slip{transform:none}
+  .slip .row{flex-direction:column}
+  .confirm dl{grid-template-columns:1fr}
+  .terms-side .stamp.pos{position:static;margin-bottom:8px}
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition:none !important;animation:none !important}
+}
+
+/* ---------- Print ---------- */
+@media print{
+  .sections,.concept-badge,.gate{display:none}
+  body{background:#fff}
+  .portal[hidden]{display:block !important}
+}
+</style>
+</head>
+<body class="gated">
+<a class="skip" href="#bulletin">Skip to the bulletin</a>
+
+<div class="concept-badge" aria-label="Concept 1: The Greenfield Gazette, Crew Edition">Concept #1 — The Greenfield Gazette · Crew</div>
+
+<!-- ===================================================================
+     1. GATE — the Press Room door. DEMO ONLY. Password is "crow" and says so.
+     ?crew=open in the URL skips it (launcher preview).
+     =================================================================== -->
+<section class="gate" id="gate" aria-labelledby="gate-h">
+  <div class="door">
+    <span class="stamp pos big">Staff Only</span>
+    <svg class="crow" viewBox="0 0 100 70" aria-hidden="true" focusable="false">
+      <path fill="currentColor" d="M10 52c9-6 18-6 27-1 4-13 15-23 30-25 9-1 17 2 24 8l7 3-8 1c-1 9-7 17-15 22-8 5-18 7-28 5l-6 9 1-10C33 63 22 60 10 52z"/>
+      <path d="M2 62c20-2 40 1 60 3 12 1 24 0 36-3" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <circle cx="71" cy="34" r="1.7" fill="#efe6d0"/>
+    </svg>
+    <p class="masthead-mini">The Greenfield Gazette</p>
+    <span class="plate">Press Room · No Admittance</span>
+    <h1 id="gate-h">Crew Edition</h1>
+    <p class="lede">This door is for the people who make the noise, not the people who pay to hear it. Type the word on your slip and come in. Wipe your boots.</p>
+
+    <form class="slip" id="gate-form" novalidate>
+      <label for="gate-pw">Password, please — the night editor is listening</label>
+      <div class="row">
+        <input type="password" id="gate-pw" name="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type it here" aria-describedby="gate-demo gate-err">
+        <button type="submit">Open the door</button>
+      </div>
+      <p class="demo" id="gate-demo">Demo password: <b>crow</b> &nbsp;·&nbsp; This is a mock-up gate. The real one gets a real word.</p>
+    </form>
+    <p class="gate-err" id="gate-err" role="alert" aria-live="polite"></p>
+
+    <p class="back"><a href="01-gazette.html">← Back to the public edition</a></p>
+  </div>
+</section>
+
+<!-- ===================================================================
+     THE PORTAL — hidden until the gate opens
+     =================================================================== -->
+<div class="page portal" id="portal" hidden>
+
+<!-- ---------- MASTHEAD (Crew Edition) ---------- -->
+<header class="masthead">
+  <div class="wrap">
+    <div class="ears">
+      <div class="ear">
+        <strong>Crew Edition</strong>
+        Not for circulation<br>Staff, actors &amp; builders<br>Greenfield, Minn.
+      </div>
+      <div class="mid">“Somebody has to be the noise in the corn.”</div>
+      <div class="ear right" aria-label="Countdown to opening night">
+        <strong>Presses roll in</strong>
+        <span class="temp" id="days-out">—</span>
+        <span id="days-label">until opening night, Fri. Oct. 9</span>
+      </div>
+    </div>
+
+    <div class="title-block">
+      <span class="edition-kicker">Crew Edition · Staff Only</span>
+      <p class="gazette-title" role="heading" aria-level="1">
+        <svg class="crow" viewBox="0 0 100 70" role="img" aria-label="Crow silhouette perched on a branch">
+          <path fill="currentColor" d="M10 52c9-6 18-6 27-1 4-13 15-23 30-25 9-1 17 2 24 8l7 3-8 1c-1 9-7 17-15 22-8 5-18 7-28 5l-6 9 1-10C33 63 22 60 10 52z"/>
+          <path d="M2 62c20-2 40 1 60 3 12 1 24 0 36-3" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <circle cx="71" cy="34" r="1.7" fill="#efe6d0"/>
+        </svg>
+        <span>The Greenfield Gazette</span>
+        <svg class="crow flip" viewBox="0 0 100 70" aria-hidden="true" focusable="false">
+          <path fill="currentColor" d="M10 52c9-6 18-6 27-1 4-13 15-23 30-25 9-1 17 2 24 8l7 3-8 1c-1 9-7 17-15 22-8 5-18 7-28 5l-6 9 1-10C33 63 22 60 10 52z"/>
+          <path d="M2 62c20-2 40 1 60 3 12 1 24 0 36-3" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <circle cx="71" cy="34" r="1.7" fill="#efe6d0"/>
+        </svg>
+      </p>
+      <p class="masthead-sub">The <b>Press Room</b> &nbsp;·&nbsp; Volunteer crew of <b>Nightmare on the Crow</b> &nbsp;·&nbsp; Harff Road</p>
+    </div>
+
+    <div class="dateline">
+      <span>Greenfield, Minnesota</span>
+      <span>Bulletin updated Sept. 26, 2026</span>
+      <span class="price">Pay: none · Nightmares: complimentary</span>
+    </div>
+  </div>
+</header>
+
+<!-- ---------- STICKY SECTION NAV ---------- -->
+<nav class="sections" aria-label="Crew sections">
+  <div class="wrap">
+    <ul>
+      <li><a href="#bulletin">Bulletin</a></li>
+      <li><a href="#stations">Help Wanted</a></li>
+      <li><a href="#signup">Enlist</a></li>
+      <li><a href="#terms">Terms</a></li>
+      <li><a href="01-gazette.html">Public Edition ↗</a></li>
+    </ul>
+    <a class="cta-mini" href="#signup">Sign Up</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===================================================================
+     2. NEWSROOM BULLETIN — message board
+     =================================================================== -->
+<section class="section wrap" id="bulletin" aria-labelledby="bulletin-h">
+  <h2 class="section-head" id="bulletin-h"><span>Newsroom Bulletin</span></h2>
+  <p class="byline" style="text-align:center">Notes from the desk · Newest first · Read them all before you ask</p>
+
+  <div class="board">
+    <div class="posts" role="feed" aria-label="Crew message board">
+
+      <article class="post">
+        <span class="stamp pos">Latest</span>
+        <time datetime="2026-09-26">Sept<b>26</b>2026</time>
+        <div>
+          <h3>Hours are set. Fireworks on the 10th.</h3>
+          <p>Final word from the three neighbors: the haunt runs <b>7:30 to 10:30 PM</b> every night, <b>last entry 10:00</b>. If you’re on the trail, you’re on until the last group clears your station — plan on 10:45 before anyone hears the word “wrap.”</p>
+          <div class="hours-flag" role="group" aria-label="Hours">
+            <span>Oct 9 · 16 · 17</span><b>7:30 – 10:30 PM</b>
+            <span class="fw">Sat Oct 10</span><b class="fw">Fireworks 7:45 · Haunt 8:00 – 10:30</b>
+            <span>Every night</span><b>Last entry 10:00 PM</b>
+          </div>
+          <p>Saturday the 10th is different: <b>fireworks at 7:45</b>, then the first wagon goes at <b>8:00</b>. Crew call is unchanged — be in place, in makeup, before the first shell goes up. Nobody watches from the trail.</p>
+          <p class="sig">— The Editors (Jason, Dave &amp; Ben)</p>
+        </div>
+      </article>
+
+      <article class="post">
+        <time datetime="2026-08-25">Aug<b>25</b>2026</time>
+        <div>
+          <h3>Dates we need help</h3>
+          <p>All four. Every one of them. If you can only make two, make two — but tell us which two on the form so the station board stops lying to us.</p>
+          <ul>
+            <li><b>Fri Oct 9</b> — Opening Night. Everything breaks on opening night. Be there.</li>
+            <li><b>Sat Oct 10</b> — Kids Day noon–3 (lights on, gentle actors), fireworks 7:45, then the real thing 8–10:30.</li>
+            <li><b>Fri Oct 16</b> — Second weekend. The corn has had a week to think.</li>
+            <li><b>Sat Oct 17</b> — Final edition. Last wagon of the year. Then we strike the set.</li>
+          </ul>
+          <p>Look at the <a href="#stations">Help Wanted board</a>. Anything in red is a hole we can’t leave empty.</p>
+          <p class="sig">— Ben</p>
+        </div>
+      </article>
+
+      <article class="post">
+        <time datetime="2026-03-16">Mar<b>16</b>2026</time>
+        <div>
+          <h3>Monthly build nights are back</h3>
+          <p>Mid-month, mid-week, evening — one night a month through the summer for set design, props and half-baked ideas that turn into scenes. Bring a drill if you own one and an idea if you don’t. Ben has things that need to be taller and things that need to be scarier; both are volunteer positions.</p>
+          <p>Exact dates get posted here and on the crew socials the week before. Show up once and you’ll understand why the Cage looks the way it does.</p>
+          <p class="sig">— Ben &amp; Evan</p>
+        </div>
+      </article>
+
+    </div>
+
+    <aside aria-label="Pinned note and copy desk">
+      <div class="pinned">
+        <span class="tag">Pinned · Read this</span>
+        <h3>Walkthrough — pick a date</h3>
+        <p>Every crew member walks the trail with the lights on before opening night: where the tunnel doors are, where the fog hides the drop-off, where you stand, where you never stand.</p>
+        <p><b>Pick a walkthrough date when you sign up.</b> It’s a dropdown on the <a href="#signup">enlistment form</a>. If none of them work, pick the closest and tell Evan.</p>
+        <p style="margin:0">Wear boots. It’s a forest.</p>
+      </div>
+
+      <div class="copydesk">
+        <h3>Copy Desk · Who to ask</h3>
+        <ul>
+          <li><span>Evan</span><span>Beetlejuice · socials, tech, sign-ups</span></li>
+          <li><span>Ben</span><span>Set design · the Yard, the Graveyard</span></li>
+          <li><span>The front table</span><span>Shirts, tickets, lost people</span></li>
+        </ul>
+        <p class="fine" style="margin:8px 0 0">Questions go to the crew group chat first, the gate second, and the corn never.</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ===================================================================
+     3. HELP WANTED — station board as classifieds
+     =================================================================== -->
+<section class="section wrap" id="stations" aria-labelledby="stations-h">
+  <h2 class="section-head" id="stations-h"><span>Help Wanted</span></h2>
+  <p class="byline" style="text-align:center">Classifieds · One edition per night · Red means a hole in the trail</p>
+
+  <div class="editions" role="tablist" aria-label="Choose a night" id="editions"></div>
+
+  <div class="summary" aria-live="polite">
+    <div class="n"><span id="open-n">—</span><small id="open-label">open spots tonight</small></div>
+    <div class="legend" aria-hidden="true">
+      <span><i class="on"></i>Filled</span>
+      <span><i class="need"></i>Open — needs you</span>
+    </div>
+  </div>
+
+  <div class="classifieds" id="classifieds" role="list" aria-label="Stations by zone"></div>
+
+  <div class="board-foot">
+    <p class="fine" style="margin:0;max-width:60ch">Filled slots are shown as marks, not names — the roster lives with Evan. Tap any red ad to pre-fill the enlistment form for that night, zone and station. Counts are a demo snapshot; the live version would read from the roster.</p>
+    <a class="btn ghost" href="#signup">Enlist for any station ↓</a>
+  </div>
+</section>
+
+<!-- ===================================================================
+     4. SUBSCRIPTION / ENLISTMENT FORM — one step, no backend
+     =================================================================== -->
+<section class="section wrap" id="signup" aria-labelledby="signup-h">
+  <h2 class="section-head" id="signup-h"><span>Subscription · Enlistment</span></h2>
+  <div class="enlist">
+    <div class="coupon">
+      <div class="clip">
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.1 15.9M14.5 14.5L20 20M8.1 8.1L12 12"/></svg>
+        Fill this in
+      </div>
+
+      <form id="enlist-form" novalidate>
+        <h3>Enlistment Form</h3>
+        <p class="lede">One form. Name, nights, where you’d like to lurk, and a walkthrough date. That’s it — no spreadsheet, no second form, no chasing Evan across a parking lot.</p>
+
+        <div class="prefill" id="prefill" aria-live="polite"></div>
+        <div class="errors" id="errors" role="alert"></div>
+
+        <div class="grid">
+          <div class="field">
+            <label for="f-first">First name <span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="f-first" name="first" autocomplete="given-name" required>
+          </div>
+          <div class="field">
+            <label for="f-last">Last name <span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="f-last" name="last" autocomplete="family-name" required>
+          </div>
+          <div class="field">
+            <label for="f-email">Email <span class="req" aria-hidden="true">*</span></label>
+            <input type="email" id="f-email" name="email" autocomplete="email" inputmode="email" required>
+          </div>
+          <div class="field">
+            <label for="f-phone">Phone <span class="small">(optional)</span></label>
+            <input type="tel" id="f-phone" name="phone" autocomplete="tel" inputmode="tel">
+          </div>
+
+          <fieldset class="full">
+            <legend>Nights you can work <span class="req" aria-hidden="true">*</span></legend>
+            <div class="checks" id="nights">
+              <label class="check"><input type="checkbox" name="nights" value="oct9"><span>Fri Oct 9<small>Opening Night</small></span></label>
+              <label class="check"><input type="checkbox" name="nights" value="oct10"><span>Sat Oct 10<small>Fireworks 7:45</small></span></label>
+              <label class="check"><input type="checkbox" name="nights" value="oct16"><span>Fri Oct 16<small>Second weekend</small></span></label>
+              <label class="check"><input type="checkbox" name="nights" value="oct17"><span>Sat Oct 17<small>Final edition</small></span></label>
+            </div>
+          </fieldset>
+
+          <div class="field">
+            <label for="f-zone">Preferred zone <span class="req" aria-hidden="true">*</span></label>
+            <select id="f-zone" name="zone" required>
+              <option value="">Choose a zone…</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-station">Preferred station</label>
+            <select id="f-station" name="station" disabled>
+              <option value="">Pick a zone first</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label for="f-walk">Walkthrough date <span class="req" aria-hidden="true">*</span></label>
+            <select id="f-walk" name="walkthrough" required>
+              <option value="">Choose a walkthrough…</option>
+              <option>Tue Sept 29 · 6:30 PM — TBD by owner</option>
+              <option>Thu Oct 1 · 6:30 PM — TBD by owner</option>
+              <option>Sun Oct 4 · 5:00 PM — TBD by owner</option>
+              <option>Wed Oct 7 · 6:30 PM — TBD by owner (last chance)</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="agree" id="agree-wrap">
+          <input type="checkbox" id="f-agree" name="agree" required>
+          <span>I have read and agree to the <a href="#terms">Volunteer Agreement &amp; Liability Waiver</a> (“Terms of Employment, unpaid”). <span class="req" aria-hidden="true">*</span></span>
+        </label>
+        <label class="agree" style="border-top:0;padding-top:6px">
+          <input type="checkbox" id="f-news" name="newsletter">
+          <span>Put me on the crew newsletter — build nights, call times, and the occasional photo of Ben holding something that shouldn’t exist.</span>
+        </label>
+
+        <div class="form-foot">
+          <button type="submit" class="btn red">Enlist me</button>
+          <span class="fine">Demo — nothing is sent. In production this creates your roster entry and emails a confirmation.</span>
+        </div>
+      </form>
+
+      <div class="confirm" id="confirm" hidden aria-live="polite">
+        <span class="stamp pos big">Received</span>
+        <p class="kicker red">Copy desk · Confirmed</p>
+        <h3 id="confirm-h">You’re on the list.</h3>
+        <p id="confirm-lede"></p>
+        <dl id="confirm-dl"></dl>
+        <p class="small">A confirmation would go to <b id="confirm-email"></b>. Bring boots to the walkthrough. Bring nerve to opening night.</p>
+        <div class="btn-row" style="margin-bottom:0">
+          <a class="btn ghost" href="#stations">Back to the board</a>
+          <button type="button" class="btn ghost" id="again">Enlist someone else</button>
+        </div>
+        <p class="fine" style="margin:12px 0 0">Demo — nothing was sent.</p>
+      </div>
+    </div>
+
+    <aside class="desk">
+      <figure style="margin:0">
+        <div class="photo" role="img" aria-label="Photo placeholder: crew in makeup at the press room table before call">
+          <div><strong>Photo</strong>Crew at the makeup table —<br>twenty minutes to first wagon</div>
+        </div>
+        <figcaption class="caption"><b>Above:</b> Call is 6:30. Makeup is provided; the face under it is yours.</figcaption>
+      </figure>
+      <div class="desk-box">
+        <h3>What happens next</h3>
+        <ol>
+          <li>You get a confirmation and your walkthrough date.</li>
+          <li>Walk the trail with the lights on. Learn your station and your exits.</li>
+          <li>Show up at call on your nights. Makeup, costume, a flashlight and a radio for zone leads.</li>
+          <li>Be the noise in the corn until the last wagon clears.</li>
+        </ol>
+      </div>
+      <div class="desk-box">
+        <h3>House rules, short version</h3>
+        <p>Hands to yourself. Stay in your zone. Sober. Confidential. Full text under <a href="#terms">Terms of Employment</a>.</p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ===================================================================
+     5. TERMS OF EMPLOYMENT (UNPAID) — waiver summary + full-text placeholder
+     =================================================================== -->
+<section class="section wrap" id="terms" aria-labelledby="terms-h">
+  <h2 class="section-head" id="terms-h"><span>Terms of Employment (Unpaid)</span></h2>
+  <p class="byline" style="text-align:center">Volunteer Agreement &amp; Liability Waiver · Summary · The full text is below and governs</p>
+
+  <div class="terms-wrap">
+    <div>
+      <ul class="terms">
+        <li><b>Status</b>You are an unpaid volunteer. This is not employment, and nothing here creates it.</li>
+        <li><b>Show up</b>Arrive on time for call. Stay in your assigned area unless a zone lead moves you.</li>
+        <li><b>No contact</b>No physical contact with guests. No chasing, blocking or cornering that could cause a fall or harm.</li>
+        <li><b>Sober</b>No alcohol or substances before or during a shift. None.</li>
+        <li><b>Safety</b>Follow fire, emergency and first-aid procedures and the instructions of leads and the Hanover Fire Department.</li>
+        <li><b>Hazards</b>Strobes, fog, darkness, confined spaces, uneven ground, weather, mud and wildlife. You accept them.</li>
+        <li><b>Confidential</b>Trail layouts, scare tactics and what’s behind which door stay in the crew.</li>
+        <li><b>Property</b>Costumes, props and masks belong to Nightmare on the Crow and are returned at the end of the night.</li>
+        <li><b>Photo &amp; video</b>You may be photographed or filmed on the trail and consent to its use in promotion.</li>
+        <li><b>Risk &amp; release</b>You assume the risk of volunteering and release Nightmare on the Crow and its owners from liability.</li>
+        <li class="wide"><b>Governing law</b>This agreement is governed by the laws of the State of Minnesota.</li>
+      </ul>
+
+      <details class="fulltext" id="fulltext">
+        <summary>Read the full agreement</summary>
+        <div class="body">
+          <p class="ph">Full waiver text — supplied by owner</p>
+          <p>[Section 1 — Volunteer status. FULL WAIVER TEXT — supplied by owner. This placeholder holds the paragraph describing the unpaid, non-employment nature of the volunteer role and the volunteer’s acknowledgement of same.]</p>
+          <p>[Section 2 — Conduct and assigned areas. FULL WAIVER TEXT — supplied by owner. Arrival times, assigned stations, the no-contact and no-chasing rules, alcohol and substance policy, and the consequences of a violation.]</p>
+          <p>[Section 3 — Safety and emergency procedures. FULL WAIVER TEXT — supplied by owner. Fire, emergency, first-aid procedures, radio protocol, and the authority of zone leads and the Hanover Fire Department on site.]</p>
+          <p>[Section 4 — Known hazards. FULL WAIVER TEXT — supplied by owner. Strobe lighting, fog and haze, darkness, confined spaces, uneven terrain, weather, mud, wildlife and other conditions inherent to a forest trail at night.]</p>
+          <p>[Section 5 — Confidentiality and property. FULL WAIVER TEXT — supplied by owner. Non-disclosure of layouts and scare tactics; ownership and return of costumes, props and equipment.]</p>
+          <p>[Section 6 — Photo and video release. FULL WAIVER TEXT — supplied by owner.]</p>
+          <p>[Section 7 — Assumption of risk, release of liability, and governing law (Minnesota). FULL WAIVER TEXT — supplied by owner.]</p>
+        </div>
+      </details>
+    </div>
+
+    <aside class="terms-side" aria-label="How agreement works">
+      <span class="stamp pos">Sign Once</span>
+      <h3>How this works now</h3>
+      <p>On the old page, the waiver and the sign-up sheet didn’t talk to each other. Here, the “I agree” box on the <a href="#signup">enlistment form</a> is the signature, and it’s recorded with your roster entry — one step, one record.</p>
+      <ul>
+        <li>Under 18? A parent or guardian signs in production. The demo form doesn’t enforce it.</li>
+        <li>Agreement is per season. Returning crew sign again each year.</li>
+        <li>Questions about the terms go to the three neighbors, not the corn.</li>
+      </ul>
+      <p class="fine" style="margin:0">This summary is for reading. The full agreement is what you’re agreeing to.</p>
+    </aside>
+  </div>
+</section>
+
+</main>
+
+<!-- ===================================================================
+     CREW FOOTER
+     =================================================================== -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <p class="foot-title">The Greenfield Gazette</p>
+        <p class="small" style="margin:0 0 8px">Crew Edition · Not for circulation · Published for the volunteer crew of Nightmare on the Crow, a haunted trail built by three neighbors who love Halloween and giving back.</p>
+        <p class="small" style="margin:0">6470 Harff Road, Greenfield, MN 55373</p>
+        <div class="socials">
+          <a href="#" aria-label="Facebook (placeholder link)"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M14 8h3V4h-3c-2.8 0-5 2.2-5 5v2H6v4h3v9h4v-9h3l1-4h-4V9c0-.6.4-1 1-1z"/></svg>Facebook</a>
+          <a href="#" aria-label="Instagram (placeholder link)"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>Instagram</a>
+          <a href="#" aria-label="TikTok (placeholder link)"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M13 3h3c.3 2.4 1.9 4 4 4.3V10c-1.6 0-3-.5-4-1.3V15a6 6 0 1 1-6-6v3a3 3 0 1 0 3 3z"/></svg>TikTok</a>
+        </div>
+      </div>
+      <div>
+        <h3>Press Room</h3>
+        <ul>
+          <li><a href="#bulletin">Newsroom Bulletin</a></li>
+          <li><a href="#stations">Help Wanted · Station Board</a></li>
+          <li><a href="#signup">Enlistment Form</a></li>
+          <li><a href="#terms">Terms of Employment (Unpaid)</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>The Business End</h3>
+        <ul>
+          <li><a href="#" aria-label="Contact us (placeholder link)">Questions? Contact us</a></li>
+          <li><a href="01-gazette.html">← Back to the public Gazette</a></li>
+          <li><a href="01-gazette.html#dates">Public schedule &amp; hours</a></li>
+          <li><a href="https://maps.google.com/?q=6470+Harff+Road+Greenfield+MN+55373" target="_blank" rel="noopener">Directions to the gate</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="colophon">
+      <span>© 2026 Nightmare on the Crow · Greenfield, Minnesota</span>
+      <span>Crew Edition · Concept mockup, not the final site · Nothing on this page is sent anywhere</span>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /.portal -->
+
+<script>
+/* =====================================================================
+   0. DATA — zones, stations and per-night slot counts.
+   Base counts are Opening Night (Oct 9). Other nights apply a small,
+   deterministic delta so the editions visibly differ. Filled slots are
+   anonymous marks; only Evan (Beetlejuice) and Ben (sets) are named,
+   per the About page.
+   ===================================================================== */
+var ZONES = [
+  { id: 'I',   name: 'Front & Operations', kind: 'help',  stations: [
+      ['Tickets', 4, 4], ['In Charge', 1, 1], ['Front Entertainer', 0, 2, 'actor'],
+      ['Set Design', 4, 6, 'help', 'Ben, foreman'], ['Shirt Sales', 1, 1], ['Security', 3, 4] ] },
+  { id: 'II',  name: 'The Yard',           kind: 'actor', stations: [
+      ["Ben's Shed", 0, 4, 'help'], ['Bridge', 0, 1], ['Beetlejuice', 1, 1, 'actor', 'Evan'],
+      ['Kids Shack', 8, 8], ['Butcher', 0, 1], ['Black Sheets', 0, 2], ['Blackout', 0, 1] ] },
+  { id: 'III', name: 'The Woods',          kind: 'actor', stations: [
+      ['Witch', 0, 1], ['Dark Harvest', 2, 5], ['Bus', 0, 1], ['Barn Hang', 0, 4],
+      ['Tunnel', 0, 2], ['Cage', 0, 1], ['Last Woods', 0, 1] ] },
+  { id: 'IV',  name: 'The Back Forty',     kind: 'actor', stations: [
+      ['Garage/Shed', 0, 3, 'help'], ['Junk & Candy Van', 0, 3], ['Corn Field', 0, 3],
+      ['Graveyard', 0, 2], ['Camp', 0, 2], ['Crossing Camp', 0, 3], ['Saloon', 0, 2] ] }
+];
+
+var NIGHTS = [
+  { id: 'oct9',  short: 'Fri · Oct 9',  ed: 'Opening Night',   long: 'Friday, Oct 9',   delta: {} },
+  { id: 'oct10', short: 'Sat · Oct 10', ed: 'Fireworks 7:45',  long: 'Saturday, Oct 10',
+    delta: { 'Front Entertainer': 1, "Ben's Shed": 1, 'Dark Harvest': 1, 'Barn Hang': 1, 'Corn Field': 1, 'Saloon': 1 } },
+  { id: 'oct16', short: 'Fri · Oct 16', ed: 'Second weekend',  long: 'Friday, Oct 16',
+    delta: { 'Set Design': -1, 'Security': -1, 'Dark Harvest': -1, 'Kids Shack': -2 } },
+  { id: 'oct17', short: 'Sat · Oct 17', ed: 'Final edition',   long: 'Saturday, Oct 17',
+    delta: { 'Tickets': -1, 'Set Design': -1, 'Kids Shack': -3, 'Tunnel': 1, 'Graveyard': 1 } }
+];
+
+function clamp(n, lo, hi) { return Math.max(lo, Math.min(hi, n)); }
+function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+
+/* Resolve a station for a given night: {name, filled, total, kind, who} */
+function stationFor(zone, st, night) {
+  var d = night.delta[st[0]] || 0;
+  return {
+    name: st[0],
+    filled: clamp(st[1] + d, 0, st[2]),
+    total: st[2],
+    kind: st[3] || zone.kind,
+    who: st[4] || ''
+  };
+}
+
+/* =====================================================================
+   1. GATE — demo password "crow"; ?crew=open skips; remembered per tab.
+   ===================================================================== */
+(function () {
+  var gate = document.getElementById('gate');
+  var portal = document.getElementById('portal');
+  var form = document.getElementById('gate-form');
+  var input = document.getElementById('gate-pw');
+  var err = document.getElementById('gate-err');
+  if (!gate || !portal || !form || !input) return;
+
+  var DEMO_WORD = 'crow';   // demo only — never the real site password
+  var tries = 0;
+  var excuses = [
+    'Not the word. The night editor has made a note.',
+    'Still not it. The presses are listening, friend.',
+    'Wrong again. Check the slip in your coat pocket — the one with the coffee ring.',
+    'The corn knows you tried. Ask Evan for the word.'
+  ];
+
+  function open(remember) {
+    gate.hidden = true;
+    portal.hidden = false;
+    document.body.classList.remove('gated');
+    if (remember) { try { sessionStorage.setItem('gazette-crew-gate', 'open'); } catch (e) {} }
+  }
+
+  var skip = /[?&]crew=open(&|$)/.test(window.location.search);
+  if (!skip) { try { skip = sessionStorage.getItem('gazette-crew-gate') === 'open'; } catch (e) { skip = false; } }
+  if (skip) {
+    open(false);
+    // honor a deep link (#stations etc.) now that the portal exists
+    if (window.location.hash) {
+      var target = document.getElementById(window.location.hash.slice(1));
+      if (target) { setTimeout(function () { target.scrollIntoView(); }, 0); }
+    }
+    return;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var word = (input.value || '').trim().toLowerCase();
+    if (word === DEMO_WORD) {
+      err.textContent = '';
+      open(true);
+      window.scrollTo(0, 0);
+      return;
+    }
+    tries += 1;
+    err.textContent = excuses[Math.min(tries - 1, excuses.length - 1)];
+    form.classList.remove('shake');
+    void form.offsetWidth;                // restart the animation
+    form.classList.add('shake');
+    input.select();
+  });
+})();
+
+/* =====================================================================
+   2. DAYS-OUT EAR — tiny countdown (days only) to Oct 9 2026 7:30 PM CDT.
+   ===================================================================== */
+(function () {
+  var el = document.getElementById('days-out');
+  var label = document.getElementById('days-label');
+  if (!el || !label) return;
+  var target = new Date('2026-10-09T19:30:00-05:00').getTime();
+  var diff = target - Date.now();
+  if (isNaN(diff)) { el.textContent = '—'; return; }
+  if (diff <= 0) { el.textContent = 'NOW'; label.textContent = 'The presses are rolling.'; return; }
+  var days = Math.ceil(diff / 86400000);
+  el.textContent = days + (days === 1 ? ' day' : ' days');
+})();
+
+/* =====================================================================
+   3. STATION BOARD — night tabs, classifieds grid, open-slot claims.
+   ===================================================================== */
+(function () {
+  var tabs = document.getElementById('editions');
+  var grid = document.getElementById('classifieds');
+  var openN = document.getElementById('open-n');
+  var openLabel = document.getElementById('open-label');
+  if (!tabs || !grid || !openN) return;
+
+  var current = 0;
+
+  /* tabs */
+  NIGHTS.forEach(function (n, i) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('role', 'tab');
+    b.id = 'tab-' + n.id;
+    b.setAttribute('aria-controls', 'classifieds');
+    b.innerHTML = esc(n.short) + '<small>' + esc(n.ed) + '</small>';
+    b.addEventListener('click', function () { select(i); });
+    b.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { select((i + 1) % NIGHTS.length, true); }
+      if (e.key === 'ArrowLeft')  { select((i - 1 + NIGHTS.length) % NIGHTS.length, true); }
+    });
+    tabs.appendChild(b);
+  });
+
+  function select(i, focus) {
+    current = i;
+    Array.prototype.forEach.call(tabs.children, function (b, j) {
+      var on = j === i;
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+      b.setAttribute('tabindex', on ? '0' : '-1');
+      if (on && focus) b.focus();
+    });
+    render();
+  }
+
+  function render() {
+    var night = NIGHTS[current];
+    var openTotal = 0, needActor = 0, needHelp = 0;
+    var html = '';
+
+    ZONES.forEach(function (zone) {
+      var zoneOpen = 0, items = '';
+      zone.stations.forEach(function (raw) {
+        var st = stationFor(zone, raw, night);
+        var open = st.total - st.filled;
+        zoneOpen += open;
+        if (st.kind === 'actor') needActor += open; else needHelp += open;
+
+        var pips = '';
+        for (var k = 0; k < st.total; k++) {
+          pips += k < st.filled ? '<i class="on" aria-hidden="true">✓</i>' : '<i class="need" aria-hidden="true"></i>';
+        }
+        var needWord = st.kind === 'actor' ? 'Need Actor' : 'Need Help';
+        items +=
+          '<li class="ad ' + (open ? 'open' : 'filled') + '" role="listitem">' +
+            (open ? '<span class="stamp ' + (st.kind === 'actor' ? 'actor' : 'help') + '" aria-hidden="true">' + needWord + '</span>' : '') +
+            '<div class="ad-top"><h4>' + esc(st.name) + '</h4><span class="count">' + st.filled + '/' + st.total + '</span></div>' +
+            (st.who ? '<span class="who">' + esc(st.who) + '</span>' : '') +
+            '<div class="pips" role="img" aria-label="' + st.filled + ' of ' + st.total + ' filled">' + pips + '</div>' +
+            (open
+              ? '<button type="button" class="claim" data-zone="' + zone.id + '" data-station="' + esc(st.name) + '" aria-label="' + needWord + ': ' + esc(st.name) + ', ' + open + ' open on ' + esc(night.long) + '. Pre-fill the form.">' +
+                  '<span>' + needWord.toUpperCase() + ' · ' + open + ' open</span><span class="arrow">→</span></button>'
+              : '<span class="full">Cast full</span>') +
+          '</li>';
+      });
+      openTotal += zoneOpen;
+      html +=
+        '<div class="zone" role="listitem">' +
+          '<h3><span>Zone ' + zone.id + ' · ' + esc(zone.name) + '</span><small>' + (zoneOpen ? zoneOpen + ' open' : 'full') + '</small></h3>' +
+          '<ul>' + items + '</ul>' +
+        '</div>';
+    });
+
+    grid.innerHTML = html;
+    openN.textContent = openTotal;
+    openLabel.textContent = 'open spots ' + night.long + ' · ' + needActor + ' actors · ' + needHelp + ' help';
+  }
+
+  /* claim → pre-fill the form */
+  grid.addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('.claim') : null;
+    if (!btn) return;
+    var night = NIGHTS[current];
+    if (window.prefillEnlist) {
+      window.prefillEnlist(btn.getAttribute('data-zone'), btn.getAttribute('data-station'), night);
+    }
+  });
+
+  select(0);
+})();
+
+/* =====================================================================
+   4. ENLISTMENT FORM — zone→station filter, prefill, validation, confirm.
+   No backend: nothing is sent.
+   ===================================================================== */
+(function () {
+  var form = document.getElementById('enlist-form');
+  var zoneSel = document.getElementById('f-zone');
+  var stSel = document.getElementById('f-station');
+  var prefill = document.getElementById('prefill');
+  var errors = document.getElementById('errors');
+  var confirm = document.getElementById('confirm');
+  if (!form || !zoneSel || !stSel) return;
+
+  /* zones */
+  ZONES.forEach(function (z) {
+    var o = document.createElement('option');
+    o.value = z.id;
+    o.textContent = 'Zone ' + z.id + ' · ' + z.name;
+    zoneSel.appendChild(o);
+  });
+
+  function fillStations(zoneId, pick) {
+    stSel.innerHTML = '';
+    var zone = null;
+    ZONES.forEach(function (z) { if (z.id === zoneId) zone = z; });
+    if (!zone) {
+      stSel.disabled = true;
+      stSel.appendChild(new Option('Pick a zone first', ''));
+      return;
+    }
+    stSel.disabled = false;
+    stSel.appendChild(new Option('No preference — put me where the hole is', ''));
+    zone.stations.forEach(function (s) { stSel.appendChild(new Option(s[0], s[0])); });
+    if (pick) stSel.value = pick;
+  }
+  zoneSel.addEventListener('change', function () { fillStations(zoneSel.value); });
+
+  /* called by the station board */
+  window.prefillEnlist = function (zoneId, station, night) {
+    zoneSel.value = zoneId;
+    fillStations(zoneId, station);
+    var box = document.querySelector('#nights input[value="' + night.id + '"]');
+    if (box) box.checked = true;
+    var zoneName = '';
+    ZONES.forEach(function (z) { if (z.id === zoneId) zoneName = z.name; });
+    prefill.innerHTML = '<b>Pre-filled</b> ' + esc(night.long) + ' · Zone ' + esc(zoneId) + ' · ' + esc(zoneName) + ' · ' + esc(station) + '. Change anything you like.';
+    prefill.classList.add('show');
+    confirm.hidden = true;
+    form.hidden = false;
+    var sec = document.getElementById('signup');
+    if (sec) sec.scrollIntoView({ block: 'start' });
+    var first = document.getElementById('f-first');
+    if (first) setTimeout(function () { first.focus({ preventScroll: true }); }, 350);
+  };
+
+  /* validation */
+  function val(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+  function mark(id, bad) {
+    var el = document.getElementById(id);
+    var field = el && el.closest ? el.closest('.field') : null;
+    if (field) field.classList.toggle('err', !!bad);
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var problems = [];
+    var first = val('f-first'), last = val('f-last'), email = val('f-email');
+    var nights = Array.prototype.slice.call(document.querySelectorAll('#nights input:checked'));
+    var agree = document.getElementById('f-agree').checked;
+
+    mark('f-first', !first);   if (!first) problems.push('A first name. Stage names accepted.');
+    mark('f-last', !last);     if (!last)  problems.push('A last name.');
+    var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    mark('f-email', !emailOk); if (!emailOk) problems.push('A real email address, so the confirmation has somewhere to go.');
+    document.getElementById('nights').classList.toggle('err', !nights.length);
+    if (!nights.length) problems.push('At least one night. The corn is flexible; the calendar is not.');
+    mark('f-zone', !zoneSel.value); if (!zoneSel.value) problems.push('A preferred zone.');
+    mark('f-walk', !val('f-walk')); if (!val('f-walk')) problems.push('A walkthrough date.');
+    document.getElementById('agree-wrap').classList.toggle('err', !agree);
+    if (!agree) problems.push('Agreement to the Terms of Employment (unpaid). Read them; then check the box.');
+
+    if (problems.length) {
+      errors.innerHTML = '<b>The copy desk returned your form — it needs:</b><ul>' +
+        problems.map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ul>';
+      errors.classList.add('show');
+      errors.scrollIntoView({ block: 'nearest' });
+      return;
+    }
+    errors.classList.remove('show');
+
+    /* build the confirmation */
+    var nightNames = nights.map(function (b) {
+      var n = null; NIGHTS.forEach(function (x) { if (x.id === b.value) n = x; });
+      return n ? n.long : b.value;
+    });
+    var zoneName = zoneSel.options[zoneSel.selectedIndex].text;
+    var station = stSel.value || 'No preference — wherever the hole is';
+    var n = nightNames.length;
+    var lede = 'You’re on the list for ' + n + (n === 1 ? ' night' : ' nights') + ' — ' + nightNames.join(', ') + '. ' +
+      (stSel.value ? 'Preferred post: ' + station + ', ' + zoneName + '.' : 'Preferred zone: ' + zoneName + '; we’ll find you a hole to fill.') +
+      ' Report to Evan or Ben at call. Wear the boots.';
+
+    document.getElementById('confirm-h').textContent = 'You’re on the list, ' + first + '.';
+    document.getElementById('confirm-lede').textContent = lede;
+    document.getElementById('confirm-email').textContent = email;
+    document.getElementById('confirm-dl').innerHTML =
+      '<dt>Crew</dt><dd>' + esc(first + ' ' + last) + (val('f-phone') ? ' · ' + esc(val('f-phone')) : '') + '</dd>' +
+      '<dt>Nights</dt><dd>' + esc(nightNames.join(' · ')) + '</dd>' +
+      '<dt>Zone</dt><dd>' + esc(zoneName) + '</dd>' +
+      '<dt>Station</dt><dd>' + esc(station) + '</dd>' +
+      '<dt>Walkthrough</dt><dd>' + esc(val('f-walk')) + '</dd>' +
+      '<dt>Waiver</dt><dd>Agreed · ' + new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + '</dd>' +
+      '<dt>Newsletter</dt><dd>' + (document.getElementById('f-news').checked ? 'Yes — build nights and call times' : 'No') + '</dd>';
+
+    form.hidden = true;
+    confirm.hidden = false;
+    confirm.scrollIntoView({ block: 'start' });
+  });
+
+  var again = document.getElementById('again');
+  if (again) {
+    again.addEventListener('click', function () {
+      form.reset();
+      fillStations('');
+      prefill.classList.remove('show');
+      Array.prototype.forEach.call(form.querySelectorAll('.err'), function (el) { el.classList.remove('err'); });
+      confirm.hidden = true;
+      form.hidden = false;
+      form.scrollIntoView({ block: 'start' });
+    });
+  }
+})();
+
+/* =====================================================================
+   5. SECTION NAV — highlight the section in view.
+   ===================================================================== */
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  var links = document.querySelectorAll('.sections li a[href^="#"]');
+  var map = {};
+  Array.prototype.forEach.call(links, function (a) {
+    var id = a.getAttribute('href').slice(1);
+    if (document.getElementById(id)) map[id] = a;
+  });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (en.isIntersecting) {
+        Array.prototype.forEach.call(links, function (a) { a.classList.remove('active'); });
+        var a = map[en.target.id];
+        if (a) {
+          a.classList.add('active');
+          var strip = a.parentNode && a.parentNode.parentNode;
+          if (strip && strip.scrollWidth > strip.clientWidth) {
+            strip.scrollLeft = Math.max(0, a.offsetLeft - (strip.clientWidth - a.offsetWidth) / 2);
+          }
+        }
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+  Object.keys(map).forEach(function (id) { io.observe(document.getElementById(id)); });
+})();
+</script>
+</body>
+</html>

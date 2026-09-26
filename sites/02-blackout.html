@@ -123,7 +123,7 @@ section{ position:relative; overflow:hidden; padding:clamp(5rem,14vh,10rem) 0; b
 .menu-btn{ display:none; background:none; border:1px solid #3a3a3a; color:var(--ink); border-radius:4px; width:42px; height:42px; cursor:pointer; align-items:center; justify-content:center; }
 .menu-btn svg{ width:20px; height:20px; }
 
-@media (max-width:1060px){
+@media (max-width:1180px){
   .links{ display:none; position:absolute; top:var(--nav-h); left:0; right:0; flex-direction:column; gap:0; background:#0b0b0b; border-bottom:1px solid var(--line); padding:.5rem 0 1rem; }
   .links li{ padding:0 var(--gutter); }
   .links a{ display:block; padding:.9rem 0; border-bottom:1px solid var(--line); font-size:1rem; }
@@ -419,6 +419,7 @@ footer .fine{ margin-top:2.5rem; border-top:1px solid var(--line); padding-top:1
       <li><a href="#crew">Join the Crew</a></li>
       <li><a href="#faq">FAQ</a></li>
       <li><a href="#where">Directions</a></li>
+      <li><a href="02-blackout-crew.html">Crew Log-in</a></li>
     </ul>
     <div class="nav-actions">
       <button class="lights" id="lights" type="button" aria-pressed="false" title="Toggle the flashlight effect">
@@ -450,7 +451,7 @@ footer .fine{ margin-top:2.5rem; border-top:1px solid var(--line); padding-top:1
   <svg class="sil trees" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-label="Treeline at the edge of the woods" role="img"><use href="#s-trees"/></svg>
 
   <div class="wrap">
-    <p class="eyebrow">Greenfield, MN &nbsp;·&nbsp; Oct 9 · 10 · 16 · 17 &nbsp;·&nbsp; 7:30–10 PM</p>
+    <p class="eyebrow">Greenfield, MN &nbsp;·&nbsp; Oct 9 · 10 · 16 · 17 &nbsp;·&nbsp; 7:30–10:30 PM · Last entry 10</p>
     <h1 id="hero-h">You brought a flashlight. <span class="good">Good.</span></h1>
     <p class="sub">Nightmare on the Crow <span class="sep">—</span> Greenfield, MN <span class="sep">—</span> <span class="nowrap">4 nights only</span></p>
     <p class="lead">A haunted trail through the forest off Harff Road, built by three neighbors who love Halloween a little too much. It all begins with a hayride.</p>
@@ -491,22 +492,22 @@ footer .fine{ margin-top:2.5rem; border-top:1px solid var(--line); padding-top:1
       <li>
         <span class="num" aria-hidden="true">01</span>
         <h3>The Trail</h3>
-        <p>A winding path through the forest where the dark is the least of your problems.</p>
+        <p>A winding path through the forest — past the Bridge, the Witch and the Last Woods — where the dark is the least of your problems.</p>
       </li>
       <li>
         <span class="num" aria-hidden="true">02</span>
         <h3>The Tunnels</h3>
-        <p>Low, tight, and longer than they look. Something in there is breathing with you.</p>
+        <p>The Tunnel is low, tight, and longer than it looks. Something in there is breathing with you. The Cage is at the far end.</p>
       </li>
       <li>
         <span class="num" aria-hidden="true">03</span>
         <h3>The Buildings</h3>
-        <p>Rooms full of live actors and things Ben built that you’ll be seeing again at 3 a.m.</p>
+        <p>Beetlejuice. The Butcher. The Saloon. Rooms full of live actors and things Ben built that you’ll be seeing again at 3 a.m.</p>
       </li>
       <li>
         <span class="num" aria-hidden="true">04</span>
         <h3>The Corn</h3>
-        <p>An eerie maze. Every stalk looks the same. Not everything in it is a stalk.</p>
+        <p>Dark Harvest. An eerie maze where every stalk looks the same. Not everything in it is a stalk.</p>
       </li>
     </ol>
     <p class="att-note">Live actors the whole way. Interactive scares. Displays that move when you don’t. And yes — it all begins with a hayride.</p>
@@ -520,11 +521,12 @@ footer .fine{ margin-top:2.5rem; border-top:1px solid var(--line); padding-top:1
     <p class="eyebrow">2026 season</p>
     <h2 id="dates-h" class="h2">Four nights.<br>Then it’s gone.</h2>
     <ul class="dates-list">
-      <li><span class="dow">Fri</span><span class="day">09</span><span class="mon">Oct</span><span class="time">7:30 – 10:00 PM · Last entry 10</span></li>
-      <li><span class="dow">Sat</span><span class="day">10</span><span class="mon">Oct</span><span class="time">7:30 – 10:00 PM · Last entry 10 · <a href="#kids">Kids Day noon–3</a></span></li>
-      <li><span class="dow">Fri</span><span class="day">16</span><span class="mon">Oct</span><span class="time">7:30 – 10:00 PM · Last entry 10</span></li>
-      <li><span class="dow">Sat</span><span class="day">17</span><span class="mon">Oct</span><span class="time">7:30 – 10:00 PM · Last entry 10</span></li>
+      <li><span class="dow">Fri</span><span class="day">09</span><span class="mon">Oct</span><span class="time">7:30 – 10:30 PM · Last entry 10</span></li>
+      <li><span class="dow">Sat</span><span class="day">10</span><span class="mon">Oct</span><span class="time"><span class="orange">Fireworks 7:45</span> · Haunt 8:00 – 10:30 PM · Last entry 10 · <a href="#kids">Kids Day noon–3</a></span></li>
+      <li><span class="dow">Fri</span><span class="day">16</span><span class="mon">Oct</span><span class="time">7:30 – 10:30 PM · Last entry 10</span></li>
+      <li><span class="dow">Sat</span><span class="day">17</span><span class="mon">Oct</span><span class="time">7:30 – 10:30 PM · Last entry 10</span></li>
     </ul>
+    <p class="att-note">Saturday Oct 10: fireworks at 7:45 PM, then the trail opens at 8. Every other night, gates open 7:30. Last entry is always 10 PM.</p>
     <div class="btn-row">
       <a class="btn btn-solid" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a>
     </div>
@@ -585,6 +587,7 @@ footer .fine{ margin-top:2.5rem; border-top:1px solid var(--line); padding-top:1
         <p class="stat"><span>Sat Oct 10</span> <span class="dot">·</span> <span>Noon–3 PM</span> <span class="dot">·</span> <span>$5</span></p>
         <p class="lead">Lights-on trail. Trick-or-treating. Family activities. The same woods, none of the nightmares.</p>
         <p>Your Kids Day ticket is good for <strong>$5 off</strong> an evening haunt ticket — for the grown-ups who want to come back after dark.</p>
+        <p><strong>Come back at dark for fireworks.</strong> Saturday Oct 10, 7:45 PM — then the haunt runs 8:00 to 10:30.</p>
         <div class="btn-row">
           <a class="btn btn-solid" href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Kids Day Tickets — $5</a>
           <a class="btn btn-ghost" href="#faq">Is it too scary?</a>
@@ -629,8 +632,8 @@ footer .fine{ margin-top:2.5rem; border-top:1px solid var(--line); padding-top:1
         <h2 id="crew-h" class="h2">Be the thing in the dark.</h2>
         <p>We run on volunteer actors. Evan plays Beetlejuice and runs our socials and tech. Ben designs the sets — the skeleton trapped in the cage and the zombie graveyard are his. There’s room in the woods for you.</p>
         <div class="btn-row">
-          <a class="btn btn-solid" href="#">Join the Crew</a>
-          <a class="btn btn-ghost" href="#">Actor login</a>
+          <a class="btn btn-solid" href="02-blackout-crew.html">Join the Crew</a>
+          <a class="btn btn-ghost" href="02-blackout-crew.html">Already on the crew? Log in</a>
         </div>
       </div>
     </div>
@@ -669,7 +672,7 @@ footer .fine{ margin-top:2.5rem; border-top:1px solid var(--line); padding-top:1
       </details>
       <details class="q">
         <summary>How long does it take? <span class="plus" aria-hidden="true"></span></summary>
-        <div class="a"><p>Plan on a good chunk of your evening from the hayride to the far side of the corn — how long depends on how fast you walk, and how fast you run. Gates are open 7:30 to 10 PM; last entry is 10.</p></div>
+        <div class="a"><p>Plan on a good chunk of your evening from the hayride to the far side of the corn — how long depends on how fast you walk, and how fast you run. Gates are open 7:30 to 10:30 PM (8:00 on Oct 10, after the fireworks); last entry is 10.</p></div>
       </details>
       <details class="q">
         <summary>Will the actors touch me? <span class="plus" aria-hidden="true"></span></summary>
@@ -717,7 +720,7 @@ footer .fine{ margin-top:2.5rem; border-top:1px solid var(--line); padding-top:1
       <div>
         <a class="brand" href="#top"><svg viewBox="0 0 120 80" aria-hidden="true"><use href="#s-crow"/></svg><span>Nightmare on the Crow</span></a>
         <p class="tag">It All Begins with a Hayride!</p>
-        <p style="margin-top:.75rem">6470 Harff Road, Greenfield, MN 55373<br>Oct 9 · 10 · 16 · 17, 2026 · 7:30–10 PM</p>
+        <p style="margin-top:.75rem">6470 Harff Road, Greenfield, MN 55373<br>Oct 9 · 10 · 16 · 17, 2026 · 7:30–10:30 PM · Last entry 10</p>
       </div>
       <nav aria-label="Social links">
         <ul>
@@ -730,7 +733,7 @@ footer .fine{ margin-top:2.5rem; border-top:1px solid var(--line); padding-top:1
         <ul>
           <li><a href="https://app.hauntpay.com/events/nightmare-on-the-crow-haunted-trail" target="_blank" rel="noopener">Get Tickets</a></li>
           <li><a href="#crew">Join the Crew</a></li>
-          <li><a href="#">Actor login</a></li>
+          <li><a href="02-blackout-crew.html">Crew Log-in</a></li>
           <li><a href="#faq">FAQ</a></li>
         </ul>
       </nav>
